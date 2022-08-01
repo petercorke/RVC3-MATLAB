@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toolset id="user_apps_toolset" template="false">
+   <tool app_file_path="tripleangle_App.mlapp" handler_class="com.mathworks.deployment.desktop.toolstrip.ToolboxToolSetExtensionHandler" id="78cd1e23-61a8-4c2a-b3e6-944dfe39f669:tripleangle_App.mlapp" label="tripleangle_App" quick_access_eligible="false" toolset_id="user_apps_toolset">
+      <callback>tripleangle_App</callback>
+      <icon filename="matlab_app_generic_icon_24"/>
+      <icon filename="matlab_app_generic_icon_16"/>
+      <parent_tool id="my_apps" toolset_id="apps_toolset"/>
+   </tool>
+</toolset>
