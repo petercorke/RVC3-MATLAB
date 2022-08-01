@@ -1,0 +1,29 @@
+Few questions:
+
+do we want to support unit = 'deg' or "deg"
+
+    rotmx has this code, none of the other similar functions do
+
+        p = inputParser;
+        addRequired(p, 'theta', @(x) (isreal(x) & isscalar(x)) | isa(x, 'sym'));
+        addOptional(p, 'unit', "rad", isstring(x));
+        p.parse(theta, varargin{:});
+
+    which I hacked to
+
+        p = inputParser;
+        addRequired(p, 'theta', @(x) (isreal(x) & isscalar(x)) | isa(x, 'sym'));
+        addOptional(p, 'unit', "rad", @(x) isstring(x) | ischar(x) );
+        p.parse(theta, varargin{:});
+
+    it seems like a lot of overhead on a very simple function.
+
+
+My old units tests do stuff like:
+
+    verifyError(tc, @()rotmx([1 2 3]),'SMTB:rotx:badarg');
+
+    but is this still the way to do things?
+
+Design decision, skew -> vector, should it be row or column?
+
