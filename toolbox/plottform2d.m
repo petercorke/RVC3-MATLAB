@@ -1,24 +1,25 @@
-%TRPLOT2 Plot a 2D coordinate frame
+%PLOTTFORM2D Add a 2D coordinate frame to plot
 %
-% TRPLOT2(T, OPTIONS) draws a 2D coordinate frame represented by the SE(2)
-% homogeneous transform T (3x3).
+% PLOTTFORM2D(T) draws a 2D coordinate frame represented by the
+% SE(2) homogeneous transform T (3x3).
 %
-% H = TRPLOT2(T, OPTIONS) as above but returns a handle.
+% PLOTTFORM2D(R) as above but the coordinate frame is rotated
+% about the origin according to the SO(2) rotation matrix R (2x2).
 %
-% TRPLOT(R, OPTIONS) as above but the coordinate frame is rotated about the
-% origin according to the orthonormal rotation matrix R (2x2).
+% PLOTTFORM2D() creates a default frame EYE(2,2) at the origin.
 %
-% H = TRPLOT(R, OPTIONS) as above but returns a handle.
+% H = PLOTTFORM2D(...) as above but returns a handle that allows the frame
+% to be animated.
 %
-% H = TRPLOT2() creates a default frame EYE(2,2) at the origin and returns a
-% handle.
+% PLOTTFORM2D(..., axhandle=A) draw in the MATLAB axes specified by the
+% axis handle A
 %
-% Animation::
+% PLOTTFORM2D(..., color=C) draw the axes in color C which is a MATLAB
+% ColorSpec
 %
-% Firstly, create a plot and keep the the handle as per above.
+% PLOTTFORM2D(..., axis=[xmin xmax ymin ymax]) set axis bounds
 %
-% TRPLOT2(H, T) moves the coordinate frame described by the handle H to
-% the SE(2) pose T (3x3).
+% PLOTTFORM2D(..., frame=F) set name of frame to string F
 %
 % Options::
 % 'handle',h             Update the specified handle
@@ -30,7 +31,7 @@
 % 'frame',F              The frame is named {F} and the subscript on the axis labels is F.
 % 'framelabel',F         The coordinate frame is named {F}, axes have no subscripts.
 % 'framelabeloffset',O   Offset O=[DX DY] frame labels in units of text box height
-% 'text_opts', opt       A cell array of Matlab text properties
+% 'text_opts', opt       A cell array of MATLAB text properties
 % 'length',s             Length of the coordinate frame arms (default 1)
 % 'thick',t              Thickness of lines (default 0.5)
 % 'text'                 Enable display of X,Y,Z labels on the frame (default true)
@@ -41,41 +42,22 @@
 %
 % Examples::
 %
-%       trplot2(T, 'frame', 'A')
-%       trplot2(T, 'frame', 'A', 'color', 'b')
-%       trplot2(T1, 'frame', 'A', 'text_opts', {'FontSize', 10, 'FontWeight', 'bold'})
+%       plotform2d(T, frame="A")
+%       plotform2d(T, frame="A", color="b")
+%       plotform2d(T1, frame="A", text_opts={'FontSize', 10, 'FontWeight', 'bold'})
 %
+% To animate a coordinate frame, firstly, create a plot and keep the the
+% handle as per above:
+%
+%     h = plottform2d(T0) % create the frame at its initial pose
+%     plottform2d(T, handle=h) % moves the frame to new pose T
+
 % Notes::
-% - Multiple frames can be added using the HOLD command
 % - When animating a coordinate frame it is best to set the axis bounds initially.
 % - The 'arrow' option requires https://www.mathworks.com/matlabcentral/fileexchange/14056-arrow3
 %
-% See also TRPLOT.
+% See also PLOTTFORM.
 
-%## 2d homogeneous graphics
-
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-% 
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
 
 %   'frame', name   name of the frame, used for axis subscripts and origin
 %   'color', color  Matlab color specificication for the frame and annotations
@@ -83,7 +65,11 @@
 %   'arrow'         use the contributed arrow3 function to draw the frame axes
 %   'width', width  width of lines to draw if using arrow3
 
-function hout = trplot2(T, varargin)
+% behaviour:
+%  adds plots to current axes
+%  if axis is given, call axis()
+
+function hout = plotform2d(T, varargin)
 
     if nargin == 0
         T = eye(2,2);
@@ -110,11 +96,6 @@ function hout = trplot2(T, varargin)
 
 
     [opt,args] = tb_optparse(opt, varargin);
-
-    if opt.arrow && ~exist('arrow3')
-        opt.arrow = false;
-        warning('SMTB:trplot:badarg', 'arrow option requires arrow3 from FileExchange');
-    end
     
     if isscalar(T) && ishandle(T)
         warning('SMTB:trplot2:deprecated', 'Use ''handle'' option');
@@ -143,15 +124,6 @@ function hout = trplot2(T, varargin)
         opt.text_opts = {};
     end
     
-    % figure the dimensions of the axes, if not given
-    if isempty(opt.axis)
-        if all(size(T) == [3 3]) || norm(transl(T)) < eps
-            c = transl2(T);
-            d = 1.2;
-            opt.axis = [c(1)-d c(1)+d c(2)-d c(2)+d];
-        end
-    end
-
     if ~isempty(opt.axhandle)
         hax = opt.axhandle;
         hold(hax);
@@ -160,8 +132,9 @@ function hout = trplot2(T, varargin)
         ih = ishold;
         if ~ih
             % if hold is not on, then clear the axes and set scaling
-            cla
             if ~isempty(opt.axis)
+                            cla
+
                 axis(opt.axis);
             end
             %axis equal
@@ -199,7 +172,9 @@ function hout = trplot2(T, varargin)
         % draw the 2 arrows
         S = [opt.color num2str(opt.width)];
         daspect([1 1 1]);
-        ha = arrow3(mstart, mend, S);
+        diff = mend - mstart;
+        ha = quiver(mstart(1,:), mstart(2,:), diff(1,:), diff(2,:), ...
+            AutoScale=false, Color=opt.color)
         for h=ha'
             set(h, 'Parent', hg);
         end
