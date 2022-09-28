@@ -1,77 +1,65 @@
-%PLOTELLIPSE Draw an ellipse or ellipsoid
+function handles = plotellipse(E, varargin)
+%PLOTELLIPSE Draw an ellipse
 %
-% PLOTELLIPSE(E, OPTIONS) draws an ellipse defined by X'EX = 1
-% on the current plot, centered at the origin.  E is 2x2.
+%   PLOTELLIPSE(E) draws an ellipse defined by X'EX = 1
+%   on the current plot, centered at the origin. E is a 2-by-2 matrix. 
+%   The ellipse is added to the current plot irrespective of hold status.
 %
-% PLOTELLIPSE(E, OPTIONS) draws an ellipse defined by E=[a b alpha] which
-% are the radius in the x and y directions, and the angle of rotation.
+%   PLOTELLIPSE(EV) draws an ellipse defined by EV = [A B ALPHA],  
+%   which are the radius in the x and y directions, and the angle of
+%   rotation, ALPHA, in radians.
 %
-% PLOTELLIPSE(E, C, OPTIONS) as above but centered at C=[X,Y].  If
-% C=[X,Y,Z] the ellipse is parallel to the XY plane but at height Z.
+%   PLOTELLIPSE(..., C) as above but the ellipse is centered at C = [X Y].  
 %
-% PLOTELLIPSE([rmin, rmax, orientation], [cx, cy], OPTIONS)
-% plots ellipse given its min, max radii and orientation in radians 
-% [rmin, rmax, orientation], and center [cx, cy].
+%   H = PLOTELLIPSE(...) returns a graphic handle, H, to the plotted
+%   ellipse. 
+%   
+%   PLOTELLIPSE(..., Name=Value) specifies additional
+%   options using one or more name-value pair arguments.
+%   Specify the options after all other input arguments.
+% 
+%   confidence - Confidence interval, range 0 to 1. If a confidence interval 
+%                is given then E is interpretted as an inverse covariance
+%                matrix and the ellipse size is computed using an inverse 
+%                chi-squared function. This uses CHI2INV, if available, or
+%                an internal implementation.
+%                Default: 1
+%   inverted   - If true, E is inverted (e.g. covariance matrix)
+%                Default: false   
+%   alter      - Alter existing ellipses with handle H. This can be used to
+%                create a smooth animation.
+%   npoints    - Use N points to define the ellipse
+%                Default: 40
+%   edgecolor  - Color of the ellipse boundary edge, MATLAB color spec
+%                Default: "black"
+%   fillcolor  - Color of the ellipses's interior, MATLAB color spec
+%                Default: "none"
+%   alpha      - Transparency of the fillcolored ellipse: 0=transparent, 1=solid
+%                Default: 1
 %
-% H = PLOTELLIPSE(...) additionally returns a graphic handle.
-%
-% Options::
-% 'confidence',C   confidence interval, range 0 to 1
-% 'inverted',I     true if E is inverted (eg. covariance matrix), logical
-% 'alter',H        alter existing ellipses with handle H
-% 'npoints',N      use N points to define the ellipse (default 40)
-% 'edgecolor'      color of the ellipse boundary edge, MATLAB color spec
-% 'fillcolor'      the color of the ellipses's interior, MATLAB color spec
-% 'alpha'          transparency of the fillcolored ellipse: 0=transparent, 1=solid
-%
-% - For an unfilled ellipse:
+%   For an unfilled ellipse:
 %   - any standard MATLAB LineStyle such as 'r' or 'b---'.
 %   - any MATLAB LineProperty options can be given such as 'LineWidth', 2.
-% - For a filled ellipse any MATLAB PatchProperty options can be given.
+%   For a filled ellipse any MATLAB PatchProperty options can be given.
 %
-% Example::
 %
-%          H = PLOTELLIPSE(diag([1 2]), [3 4], 'r'); % draw red ellipse
-%          PLOTELLIPSE(diag([1 2]), [5 6], alter=H); % move the ellipse
-%          PLOTELLIPSE(diag([1 2]), [5 6], alter=H, LineColor='k'); % change color
+%   Example:
+%      % Draw red ellipse
+%      H = PLOTELLIPSE(diag([1 2]), [3 4], "r");
+% 
+%      % Move the ellipse
+%      PLOTELLIPSE(diag([1 2]), [5 6], alter=H);
+% 
+%      % Change color to black
+%      PLOTELLIPSE(diag([1 2]), [5 6], alter=H, LineColor="k");
 %
-%          PLOTELLIPSE(COVAR, confidence=0.95); % draw 95% confidence ellipse
+%      % Draw 95% confidence ellipse
+%      PLOTELLIPSE(COVAR, confidence=0.95);
 %
-% Notes::
-% - The 'alter' option can be used to create a smooth animation.
-% - The ellipse is added to the current plot irrespective of hold status.
-% - If a confidence interval is given then E is interpretted as an inverse covariance
-%   matrix and the ellipse size is computed using an inverse chi-squared function.
-%   This requires CHI2INV in the Statistics and Machine Learning Toolbox or
-%   CHI2INV_RTB from the Robotics Toolbox for MATLAB.
 %
-% See also PLOT_ELLIPSE_INV, PLOT_CIRCLE, PLOT_BOX, PLOT_POLY, CH2INV.
+% See also PLOTCIRCLE, PLOT_BOX, CHI2INV.
 
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
-
-
-function handles = plotellipse(E, varargin)
+% Copyright 2022-2023 Peter Corke, Witek Jachimczyk, Remo Pillat
 
     opt.fillcolor = 'none';
     opt.alpha = 1;
