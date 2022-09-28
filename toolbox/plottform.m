@@ -1,122 +1,95 @@
-%TFORMPLOT Plot a 3D coordinate frame
+%PLOTTFORM Add a 3D coordinate frame to plot
 %
-% TFORMPLOT(T, OPTIONS) draws a 3D coordinate frame represented by the SE(3) homogeneous
-% transform T (4x4).
+% PLOTTFORM(T) draws a 3D coordinate frame represented by the
+% SE(3) homogeneous transform T (4x4).
 %
-% H = TFORMPLOT(T, OPTIONS) as above but returns a handle.
+% PLOTTFORM(R) as above but the coordinate frame is rotated
+% about the origin according to the SO(3) rotation matrix R (3x3).
 %
-% TFORMPLOT(R, OPTIONS) as above but the coordinate frame is rotated about the
-% origin according to the orthonormal rotation matrix R (3x3).
+% PLOTTFORM() creates a default frame EYE(3,3) at the origin.
 %
-% H = TFORMPLOT(R, OPTIONS) as above but returns a handle.
+% H = PLOTTFORM(...) as above but returns a handle that allows the frame
+% to be animated.
 %
-% H = TFORMPLOT() creates a default frame EYE(3,3) at the origin and returns a
-% handle.
+% PLOTTFORM(..., color=C) draw the axes, axis label and frame label in
+% color C which is a MATLAB ColorSpec.  If style is set it overrides the
+% colors of the axes and axis labels.
 %
-% Animation::
+% PLOTTFORM(..., frame=F) label the frame {F} and the subscripts on axis
+% labels are F (if labelstyle="axis_frame").
 %
-% Firstly, create a plot and keep the the handle as per above.
+% PLOTTFORM(..., style='rgb') override the color of the axes so that they
+% are colored red (x-axis), green (y-axis) and blue (z-axis).
 %
-% TFORMPLOT(H, T) moves the coordinate frame described by the handle H to
-% the pose T (4x4).
+% PLOTTFORM(..., style='rviz') draw RVIZ style axes with thick axis lines,
+% no arrows, and colored red (x-axis), green (y-axis) and blue (z-axis).
 %
-% Options::
-% 'handle',h             Update the specified handle
-% 'axhandle',A           Draw in the MATLAB axes specified by the axis handle A
+% PLOTTFORM(..., labels='none') suppress axis labels.
 %
-% 'color',C              The color to draw the axes, MATLAB ColorSpec
-% 'axes'                 Show the MATLAB axes, box and ticks (default true)
-% 'axis',A               Set dimensions of the MATLAB axes to A=[xmin xmax ymin ymax zmin zmax]
-% 'frame',F              The coordinate frame is named {F} and the subscript on the axis labels is F.
-% 'framelabel',F         The coordinate frame is named {F}, axes have no subscripts.
-% 'framelabeloffset',O   Offset O=[DX DY] frame labels in units of text box height
-% 'text_opts', opt       A cell array of MATLAB text properties
-% 'length',s             Length of the coordinate frame arms (default 1)
-% 'thick',t              Thickness of lines (default 0.5)
-% 'text'                 Enable display of X,Y,Z labels on the frame (default true)
-% 'labels',L             Label the X,Y,Z axes with the 1st, 2nd, 3rd character of the string L
-% 'rgb'                  Display X,Y,Z axes in colors red, green, blue respectively
-% 'rviz'                 Display chunky rviz style axes%
-% 'arrow'                Use arrows rather than line segments for the axes
-% 'width', w             Width of arrow tips (default 1)
+% PLOTTFORM(..., labels=L) label the X,Y,Z axes with the 1st, 2nd, 3rd
+% character of the string L
 %
-% 'perspective'          Display the axes with perspective projection (default off)
-% '3d'                   Plot in 3D using anaglyph graphics
-% 'anaglyph',A           Specify anaglyph colors for '3d' as 2 characters for
-%                        left and right (default colors 'rc'): chosen from
-%                        r)ed, g)reen, b)lue, c)yan, m)agenta.
-% 'dispar',D             Disparity for 3d display (default 0.1)
-% 'view',V               Set plot view parameters V=[az el] angles, or 'auto'
-%                        for view toward origin of coordinate frame
-% 'lefty'                Draw left-handed frame (dangerous)
+% PLOTTFORM(..., length=L) length of the coordinate frame arms, defaults to
+% 1.
 %
-% Examples::
+% PLOTTFORM(..., thick=T) thickness of lines, defaults to 0.5.
 %
-%       TFORMPLOT(T, 'frame', 'A')
-%       TFORMPLOT(T, 'frame', 'A', 'color', 'b')
-%       TFORMPLOT(T1, 'frame', 'A', 'text_opts', {'FontSize', 10, 'FontWeight', 'bold'})
-%       TFORMPLOT(T1, 'labels', 'NOA');
+% PLOTTFORM(..., arrow="none") axes are plain lines, not arrows.
 %
-%       h = TFORMPLOT(T, 'frame', 'A', 'color', 'b');
-%       TFORMPLOT(h, T2);
+% PLOTTFORM(..., labelstyle="none") no text labels on axes.
 %
-% 3D anaglyph plot
-%       TFORMPLOT(T, '3d');
+% PLOTTFORM(..., labelstyle="axis") label axes with labels only, see
+% labels.
 %
-% Notes::
-% - Multiple frames can be added using the HOLD command
-% - When animating a coordinate frame it is best to set the axis bounds initially.
-% - The 'rviz' option is equivalent to 'rgb', 'notext', 'noarrow',
-%   'thick', 5.
-% - The 'arrow' option requires https://www.mathworks.com/matlabcentral/fileexchange/14056-arrow3
-
-%## 3d homogeneous graphics
-
-% Copyright (C) 1993-2019 Peter I. Corke
+% PLOTTFORM(..., labelstyle="axis_frame") label axes with labels, see
+% labels, and subscript which is frame label, see frame. (default)
 %
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
+% PLOTTFORM(..., framelabeloffset=[DX DY]) frame label displacement from
+% frame origin in units of text box height, defaults to [0 0].
 %
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
+% PLOTTFORM(..., axis=[xmin xmax ymin ymax zmin zmax]) set axis bounds,
+% default behaviour is to leave these unchanged. 
 %
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
+% PLOTTFORM(..., view=[az el]) set the view parameters azimuth and
+% elevation, as returned by the VIEW command.
 %
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+% PLOTTFORM(..., projection=P) set the 3D projection to either 
+% 'orthographic' (default) or 'perspective.
 %
-% https://github.com/petercorke/spatial-math
+% PLOTTFORM(..., anaglyph=LR) create an analglyph where the left and right
+% images are drawn using single-letter color codes in the string LR
+% chosen from r)ed, g)reen, b)lue, c)yan, m)agenta.
+%
+% PLOTTFORM(..., disparity=D) sets the stereo disparity for anaglyph
+% display, in normalized width units. Defaults to 0.1.
+%
+% PLOTTFORM(..., handle=H) modify the pose of the previously drawn frame
+% with handle H.  Appearance parameters like color, line thickness cannot
+% be changed.
+%
+% PLOTTFORM(..., axhandle=A) draw in the MATLAB axes specified by the
+% axis handle A.
+%
+% PLOTTFORM(..., OPTIONS) remaining options are passed to TEXT and control
+% the appearance of the text used for the frame label and axis labels.
+%
+% Examples:
+%    PLOTTFORM(T, frame="A")
+%    PLOTTFORM(T, frame="A", color="b")
+%    PLOTTFORM(T, frame='A', FontSize=10, FontWeight="bold")
+%    PLOTTFORM(T, labels="NOA");
+%    PLOTTFORM(T, anaglyph="rc"); % 3D anaglyph plot
+%
+% To animate a coordinate frame, firstly, create a plot, as per above, but
+% keep the handle:
+%    h = PLOTTFORM(T0);      % create the frame at its initial pose
+%    PLOTTFORM(T, handle=h); % moves the frame to new pose T
+%
+% See also PLOTTFORM2D.
 
 %TODO:
 % 'rviz', chunky RGB lines, no arrows
 
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-%
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-%
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-%
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
 
 % TODO
 %  need to decide how to handle scaling
@@ -128,11 +101,6 @@ if nargin == 0
     T = eye(4);
 end
 
-if isscalar(X) && ishandle(X)
-    warning('SMTB:tformplot:deprecated', 'Use ''handle'' option');
-    % tformplot(H, T)
-    opt.handle = X; X = args{1};
-end
 
 % convert various forms to to hom transform
 if isrot(X)
@@ -168,7 +136,7 @@ opt.framelabel = [];
 opt.text_opts = [];
 opt.view = [];
 opt.width = 1;
-opt.arrow = false;
+opt.arrow = true;
 opt.labels = 'XYZ';
 opt.axhandle = [];
 opt.anaglyph = 'rc';
@@ -177,7 +145,6 @@ opt.dispar = 0.1;
 opt.thick = 0.5;
 opt.length = 1;
 opt.text = 1;
-opt.lefty = false;
 opt.rviz = false;
 opt.framelabeloffset = [0 0];
 opt.handle = [];
@@ -282,11 +249,7 @@ hg = hgtransform('Parent', hax);
 o =  [0 0 0]';
 x1 = opt.length*[1 0 0]';
 y1 = opt.length*[0 1 0]';
-if opt.lefty
-    z1 = opt.length*[0 0 -1]';
-else
-    z1 = opt.length*[0 0 1]';
-end
+
 
 % draw the axes
 
@@ -307,10 +270,10 @@ if opt.arrow
     %             set(h, 'Parent', hg);
     %         end
     daspect([1,1,1])
-    for i=1:3
-        ha = arrow3(mstart(i,1:3), mend(i,1:3), axcolors{i}, opt.width);
-        set(ha, 'Parent', hg);
-    end
+    diff = mend - mstart;
+    quiver3(mstart(1,:), mstart(2,:), mstart(3,:), ...
+        diff(1,:), diff(2,:), diff(3,:), ...
+        AutoScale=false, Color=opt.color, Parent=hg);
 else
     for i=1:3
         plot3([mstart(i,1) mend(i,1)], ...

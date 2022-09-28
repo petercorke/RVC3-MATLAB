@@ -1,57 +1,35 @@
-%TRANIMATE Animate a 3D coordinate frame
+%ANIMTFORM Animate a 3D coordinate frame
 %
-% TRANIMATE(P1, P2, OPTIONS) animates a 3D coordinate frame moving from pose X1
-% to pose X2.  Poses X1 and X2 can be represented by:
-%   - SE(3) homogeneous transformation matrices (4x4)
-%   - SO(3) orthonormal rotation matrices (3x3)
+% ANIMTFORM(X) animates a coordinate frame moving from the identity pose to
+% the 3D pose or orientation X.  A pose is described by an SE(3) matrix as
+% a 4x4 matrix, se3 object, rigid3d object. A rotation is described by an
+% SO(3) rotation matrix as a 3x3 matrix or so3 object, or by a quaternion
+% object.
 %
-% TRANIMATE(X, OPTIONS) animates a coordinate frame moving from the identity pose
-% to the pose X represented by any of the types listed above.
+% ANIMTFORM(X1, X2) as above but animates a coordinate frame moving from X1
+% to X2.
 %
-% TRANIMATE(XSEQ, OPTIONS) animates a trajectory, where XSEQ is any of
-%   - SE(3) homogeneous transformation matrix sequence (4x4xN)
-%   - SO(3) orthonormal rotation matrix sequence (3x3xN)
+% ANIMTFORM(XS) animates a trajectory, where XS is a sequence of SE(3)
+% homogeneous transformation matrices (4x4xN) or a 3D rotation expressed as
+% an SO(3) orthonormal rotation matrix (3x3)  (3x3xN).
 %
-% Options::
-%  'fps', fps    Number of frames per second to display (default 10)
-%  'nsteps', n   The number of steps along the path (default 50)
-%  'axis',A      Axis bounds [xmin, xmax, ymin, ymax, zmin, zmax]
-%  'movie',M     Save frames as a movie or sequence of frames
-%  'cleanup'     Remove the frame at end of animation
-%  'noxyz'       Don't label the axes
-%  'rgb'         Color the axes in the order x=red, y=green, z=blue
-%  'retain'      Retain frames, don't animate
+% ANIMTFORM(..., fps=F) number of frames per second to display (default
+% 10).
+% ANIMTFORM(..., axis=[xmin, xmax, ymin, ymax, zmin, zmax]) set axis
+% bounds.
+%
+% ANIMTFORM(..., movie=M) save frames as a movie file, where M is the
+% filename and the movie type is specified by the file extension.
+%
+% ANIMTFORM(..., retain=true) retain each frame in the animation.
+%
+
 %  Additional options are passed through to tformplot.
 %
 % Notes::
 % - Uses the Animate helper class to record the frames.
 %
 % See also tformplot, Animate, SE3.animate.
-
-%## 3d rotation trajectory graphics
-
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
 
 % TODO
 %  auto detect the axis scaling
@@ -61,7 +39,6 @@ opt.fps = 10;
 opt.nsteps = 50;
 opt.axis = [];
 opt.movie = [];
-opt.cleanup = false;
 opt.retain = false;
 opt.time = [];
 
@@ -226,7 +203,7 @@ end
 if ud.opt.retain
     plottform(T, ud.args{:});
 else
-    plottform(T, 'handle', ud.hg);
+    plottform(T, handle=ud.hg);
 end
 
 if ~isempty(ud.opt.movie)
