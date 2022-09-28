@@ -40,21 +40,15 @@
 % 'width', w             Width of arrow tips
 % 'lefty'                Draw left-handed frame (dangerous)
 %
-% Examples::
+% Examples:
+%    PLOTTFORM2D(T, frame="A")
+%    PLOTTFORM2D(T, frame="A", color="b")
+%    PLOTTFORM2D(T1, frame="A", text_opts={'FontSize', 10, 'FontWeight', 'bold'})
 %
-%       plotform2d(T, frame="A")
-%       plotform2d(T, frame="A", color="b")
-%       plotform2d(T1, frame="A", text_opts={'FontSize', 10, 'FontWeight', 'bold'})
-%
-% To animate a coordinate frame, firstly, create a plot and keep the the
-% handle as per above:
-%
-%     h = plottform2d(T0) % create the frame at its initial pose
-%     plottform2d(T, handle=h) % moves the frame to new pose T
-
-% Notes::
-% - When animating a coordinate frame it is best to set the axis bounds initially.
-% - The 'arrow' option requires https://www.mathworks.com/matlabcentral/fileexchange/14056-arrow3
+% To animate a coordinate frame, firstly, create a plot, as per above, and
+% keep the the handle:
+%    h = PLOTTFORM2D(T0);      % create the frame at its initial pose
+%    PLOTTFORM2D(T, handle=h); % moves the frame to new pose T
 %
 % See also PLOTTFORM.
 
@@ -83,7 +77,7 @@ function hout = plotform2d(T, varargin)
     opt.framelabel = [];
     opt.text_opts = [];
     opt.width = 1;
-    opt.arrow = false;
+    opt.arrow = true;
     opt.handle = [];
     opt.axhandle = [];
     opt.length = 1;
@@ -173,11 +167,8 @@ function hout = plotform2d(T, varargin)
         S = [opt.color num2str(opt.width)];
         daspect([1 1 1]);
         diff = mend - mstart;
-        ha = quiver(mstart(1,:), mstart(2,:), diff(1,:), diff(2,:), ...
-            AutoScale=false, Color=opt.color)
-        for h=ha'
-            set(h, 'Parent', hg);
-        end
+        quiver(mstart(1,:), mstart(2,:), diff(1,:), diff(2,:), ...
+            AutoScale=false, Color=opt.color, Parent=hg);
     else
         for i=1:2
             plot2([mstart(i,1:2); mend(i,1:2)], 'Color', opt.color, ...
