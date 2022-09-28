@@ -1,30 +1,80 @@
 %BicycleVehicle Car-like vehicle class
 %
-% This concrete class models the kinematics of a car-like vehicle (bicycle
-% or Ackerman model) on a plane.  For given steering and velocity inputs it
-% updates the true vehicle state and returns noise-corrupted odometry
-% readings.
+%   This concrete class models the kinematics of a car-like vehicle (bicycle
+%   or Ackermann model) on a plane.  For given steering and velocity inputs it
+%   updates the true vehicle state and returns noise-corrupted odometry
+%   readings.
 %
-% Methods::
-%   BicycleVehicle      constructor
-%   addDriver   attach a driver object to this vehicle
-%   control      generate the control inputs for the vehicle
-%   derivative        derivative of state given inputs
-%   init         initialize vehicle state
-%   f            predict next state based on odometry
-%   Fx           Jacobian of f wrt x
-%   Fv           Jacobian of f wrt odometry noise
-%   update       update the vehicle state
-%   run          run for multiple time steps
-%   step         move one time step and return noisy odometry
+%   V = BicycleVehicle creates a BicycleVehicle object with the kinematics of a
+%   bicycle (or Ackermann) vehicle. The properties for wheel base, maximum
+%   steering angle, and maximum acceleration will be set to default values.
+%   
+%   V = BicycleVehicle(Name=Value) specifies additional
+%   options using one or more name-value pair arguments.
+%   Specify the options after all other input arguments.
+% 
+%   MaxSteeringAngle - Maximum steer angle [rad]
+%                      Default: 0.5
+%   MaxAcceleration  - Maximum acceleration [m/s^2]
+%                      Default: Inf
+%   WheelBase        - Wheel base [m]
+%                      Default: 1
+%   Covariance       - Odometry covariance (2x2)
+%                      Default: zeros(2)
 %
-% Plotting/display methods::
-%   char             convert to string
-%   display          display state/parameters in human readable form
-%   plot             plot/animate vehicle on current figure
-%   plotxy           plot the true path of the vehicle
-%   Vehicle.plotv    plot/animate a pose on current figure
 %
+%   BicycleVehicle methods:
+%      addDriver  - Attach a driver object to this vehicle
+%      control    - Generate the control inputs for the vehicle
+%      derivative - Derivative of state given inputs
+%      init       - Initialize vehicle state
+%      f          - Predict next state based on odometry
+%      Fx         - Jacobian of f wrt x
+%      Fv         - Jacobian of f wrt odometry noise
+%      update     - Update the vehicle state
+%      run        - Run for multiple time steps
+%      step       - Move one time step and return noisy odometry  
+%      char       - Convert to string
+%      plot       - Plot/animate vehicle on current figure
+%      plotxy     - Plot the true path of the vehicle
+%      plotv      - Plot/animate a pose on current figure
+%
+%   BicycleVehicle properties:
+%      MaxSteeringAngle - Maximum steer angle [rad]
+%                         Default: 0.5
+%      MaxAcceleration  - Maximum acceleration [m/s^2]
+%                         Default: Inf
+%      WheelBase        - Wheel base [m]
+%                         Default: 1
+%      q0               - Initial state (x,y,theta)
+%                         Default: [0 0 0]
+%      dt               - Time interval [s]
+%                         Default: 0.1
+%      rdim             - Robot size as fraction of plot window
+%                         Default: 0.2
+%      verbose          - True if command-line printouts should be verbose
+%                         Default: false
+%
+%   Examples:
+%
+%      % Odometry covariance (per time step) is
+%      V = diag([0.02, 0.5*pi/180].^2);
+% 
+%      % Create a vehicle with this noisy odometry
+%      v = BicycleVehicle( Covariance=diag([0.1 0.01].^2));
+%  
+%      % and display its initial state
+%      v
+%
+%   Reference:
+%      Robotics, Vision & Control, Chap 6
+%      Peter Corke,
+%      Springer 2011
+%
+% See also RandomPath, EKF.
+
+
+
 % Properties (read/write)::
 %   x               true vehicle state: x, y, theta (3x1)
 %   V               odometry covariance (2x2)
@@ -38,15 +88,8 @@
 %   qhist          history of true vehicle state (Nx3)
 %   driver          reference to the driver object
 %   q0              initial state, restored on init()
-%
-% Examples::
-%
-% Odometry covariance (per timstep) is
-%       V = diag([0.02, 0.5*pi/180].^2);
-% Create a vehicle with this noisy odometry
-%       v = BicycleVehicle( 'Covariance', diag([0.1 0.01].^2 );
-% and display its initial state
-%       v
+
+
 % now apply a speed (0.2m/s) and steer angle (0.1rad) for 1 time step
 %       odo = v.step(0.2, 0.1)
 % where odo is the noisy odometry estimate, and the new true vehicle state
@@ -63,15 +106,6 @@
 % Notes::
 % - Subclasses the MATLAB handle class which means that pass by reference semantics
 %   apply.
-%
-% Reference::
-%
-%   Robotics, Vision & Control, Chap 6
-%   Peter Corke,
-%   Springer 2011
-%
-% See also RandomPath, EKF.
-
 
 
 % Copyright (C) 1993-2017, by Peter I. Corke
