@@ -5,21 +5,25 @@
 %   updates the true vehicle state and returns noise-corrupted odometry
 %   readings.
 %
-%   V = BicycleVehicle creates a BicycleVehicle object with the kinematics of a
+%   VEH = BicycleVehicle creates a BicycleVehicle object with the kinematics of a
 %   bicycle (or Ackermann) vehicle. The properties for wheel base, maximum
 %   steering angle, and maximum acceleration will be set to default values.
 %   
-%   V = BicycleVehicle(Name=Value) specifies additional
+%   VEH = BicycleVehicle(Name=Value) specifies additional
 %   options using one or more name-value pair arguments.
 %   Specify the options after all other input arguments.
 % 
-%   MaxSteeringAngle - Maximum steer angle [rad]
+%   MaxSteeringAngle - Maximum steer angle (in radians)
 %                      Default: 0.5
-%   MaxAcceleration  - Maximum acceleration [m/s^2]
+%   MaxAcceleration  - Maximum acceleration (in m/s^2)
 %                      Default: Inf
-%   WheelBase        - Wheel base [m]
+%   MaxSpeed         - Maximum speed (in m/s)
+%                      Default: 1
+%   WheelBase        - Wheel base (in meters)
 %                      Default: 1
 %   Covariance       - Odometry covariance (2x2)
+%                      The covariance is used by a "hidden" random number 
+%                      generator within the class.
 %                      Default: zeros(2)
 %
 %
@@ -40,100 +44,73 @@
 %      plotv      - Plot/animate a pose on current figure
 %
 %   BicycleVehicle properties:
-%      MaxSteeringAngle - Maximum steer angle [rad]
-%                         Default: 0.5
-%      MaxAcceleration  - Maximum acceleration [m/s^2]
-%                         Default: Inf
-%      WheelBase        - Wheel base [m]
-%                         Default: 1
+%      MaxSteeringAngle - Maximum steered-wheel angle (in radians)
+%      MaxAcceleration  - Maximum acceleration (in m/s^2)
+%      MaxSpeed         - Maximum speed (in m/s)
+%      WheelBase        - Wheel base of vehicle (in meters)
+%      q                - True vehicle state (x,y,theta)
 %      q0               - Initial state (x,y,theta)
-%                         Default: [0 0 0]
-%      dt               - Time interval [s]
-%                         Default: 0.1
+%      qhist            - History of true vehicle state
+%      odometry         - Distance moved in the last interval                   
+%      V                - Odometry covariance matrix
+%      dt               - Sample time interval (in seconds)
 %      rdim             - Robot size as fraction of plot window
-%                         Default: 0.2
+%      driver           - Driver object
 %      verbose          - True if command-line printouts should be verbose
-%                         Default: false
+%
 %
 %   Examples:
 %
 %      % Odometry covariance (per time step) is
-%      V = diag([0.02, 0.5*pi/180].^2);
+%      V = diag([0.02 deg2rad(0.5)].^2);
 % 
 %      % Create a vehicle with this noisy odometry
-%      v = BicycleVehicle( Covariance=diag([0.1 0.01].^2));
+%      vehicle = BicycleVehicle(Covariance=V);
 %  
-%      % and display its initial state
-%      v
+%      % Display its initial state
+%      vehicle.q'
+%
+%      % Apply a speed (0.2 m/s) and steered-wheel angle (0.1 rad) 
+%      % for 1 time step
+%      odo = vehicle.step(0.2,0.1)
+%
+%      % Where odo is the noisy odometry estimate, and the new true
+%      % vehicle state is
+%      vehicle.q'
+%
+%      % We can add a driver object
+%      vehicle.addDriver( RandomDriver(10) )
+%
+%      % Which will move the vehicle within the region -10<x<10, -10<y<10 
+%      % which we can see by
+%      vehicle.run(1000)
+% 
+%      % Which shows an animation of the vehicle moving for 1000 time steps
+%      % between randomly selected waypoints.
+%
 %
 %   Reference:
 %      Robotics, Vision & Control, Chap 6
 %      Peter Corke,
 %      Springer 2011
 %
-% See also RandomPath, EKF.
+% See also RandomDriver, EKF.
 
-
-
-% Properties (read/write)::
-%   x               true vehicle state: x, y, theta (3x1)
-%   V               odometry covariance (2x2)
-%   odometry        distance moved in the last interval (2x1)
-%   rdim            dimension of the robot (for drawing)
-%   WheelBase       length of the vehicle (wheel base)
-%   MaxSteeringAngle steering wheel limit
-%   MaxSpeed        maximum vehicle speed
-%   T               sample interval
-%   verbose         verbosity
-%   qhist          history of true vehicle state (Nx3)
-%   driver          reference to the driver object
-%   q0              initial state, restored on init()
-
-
-% now apply a speed (0.2m/s) and steer angle (0.1rad) for 1 time step
-%       odo = v.step(0.2, 0.1)
-% where odo is the noisy odometry estimate, and the new true vehicle state
-%       v
-%
-% We can add a driver object
-%      v.addDriver( RandomPath(10) )
-% which will move the vehicle within the region -10<x<10, -10<y<10 which we
-% can see by
-%      v.run(1000)
-% which shows an animation of the vehicle moving for 1000 time steps
-% between randomly selected wayoints.
-%
-% Notes::
-% - Subclasses the MATLAB handle class which means that pass by reference semantics
-%   apply.
-
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-%
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-%
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-%
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
+% Copyright 2022-2023 Peter Corke, Witek Jachimczyk, Remo Pillat
 
 classdef BicycleVehicle < Vehicle
 
     properties
-        % state
-        WheelBase           % length of vehicle
+        %WheelBase - Wheel base of vehicle (in meters)
+        %   Default: 1
+        WheelBase
 
+        %MaxSteeringAngle - Maximum steered-wheel angle (in radians)
+        %   Default: 0.5
         MaxSteeringAngle
+
+        %MaxAcceleration - Maximum acceleration (in m/s^2)
+        %   Default: Inf
         MaxAcceleration
     end
 
@@ -146,31 +123,7 @@ classdef BicycleVehicle < Vehicle
     methods
 
         function veh = BicycleVehicle(varargin)
-            %BicycleVehicle.BicycleVehicle Vehicle object constructor
-            %
-            % V = BicycleVehicle(OPTIONS)  creates a BicycleVehicle object with the kinematics of a
-            % bicycle (or Ackerman) vehicle.
-            %
-            % Options::
-            % 'MaxSteeringAngle',M    Maximum steer angle [rad] (default 0.5)
-            % 'MaxAcceleration',M    Maximum acceleration [m/s2] (default Inf)
-            %--
-            % 'Covariance',C       specify odometry covariance (2x2) (default 0)
-            % 'MaxSpeed',S    Maximum speed (default 1m/s)
-            % 'WheelBase',WheelBase           Wheel base (default 1m)
-            % 'q0',q0         Initial state (default (0,0,0) )
-            % 'dt',T          Time interval (default 0.1)
-            % 'rdim',R        Robot size as fraction of plot window (default 0.2)
-            % 'verbose'       Be verbose
-            %
-            % Notes::
-            % - The covariance is used by a "hidden" random number generator within the class.
-            % - Subclasses the MATLAB handle class which means that pass by reference semantics
-            %   apply.
-            %
-            % Notes::
-            % - Subclasses the MATLAB handle class which means that pass by reference semantics
-            %   apply.
+            %BicycleVehicle Construct object
 
             veh = veh@Vehicle(varargin{:});
 
@@ -189,16 +142,20 @@ classdef BicycleVehicle < Vehicle
                 [-veh.MaxSpeed, veh.MaxSpeed], "MaxSteeringAngle", opt.MaxSteeringAngle);
         end
 
-        function xnext = f(~, x, odo, w)
-            %BicycleVehicle.f Predict next state based on odometry
+        function qnext = f(~, q, odo, w)
+            %F Predict next state based on odometry
             %
-            % XN = V.f(X, ODO) is the predicted next state XN (1x3) based on current
-            % state X (1x3) and odometry ODO (1x2) = [distance, heading_change].
+            %   QN = VEH.F(Q, ODO) is the predicted next state QN (1-by-3) based 
+            %   on current state Q (1-by-3 vector) and odometry ODO
+            %   (1-by-2) = [distance dtheta] where distance = norm([dx dy])
+            %   and dtheta is the heading change (in radians).
             %
-            % XN = V.f(X, ODO, W) as above but with odometry noise W.
+            %   QN = VEH.F(Q, ODO, W) also applies the odometry noise, W,
+            %   which is a 1-by-2 vector of additive distance and dtheta
+            %   noise.
             %
-            % Notes::
-            % - Supports vectorized operation where X and XN (Nx3).
+            %   This function supports vectorized inputs where Q and QN are 
+            %   matrices of size N-by-3.
             if nargin < 4
                 w = [0 0];
             end
@@ -206,28 +163,26 @@ classdef BicycleVehicle < Vehicle
             dd = odo(1) + w(1); dth = odo(2) + w(2);
 
             % straightforward code:
-            % thp = x(3) + dth;
-            % xnext = zeros(1,3);
-            % xnext(1) = x(1) + (dd + w(1))*cos(thp);
-            % xnext(2) = x(2) + (dd + w(1))*sin(thp);
-            % xnext(3) = x(3) + dth + w(2);
+            % thp = q(3) + dth;
+            % qnext = zeros(1,3);
+            % qnext(1) = q(1) + (dd + w(1))*cos(thp);
+            % qnext(2) = q(2) + (dd + w(1))*sin(thp);
+            % qnext(3) = q(3) + dth + w(2);
             %
             % vectorized code:
 
-            thp = x(:,3) + dth;
-            %xnext = x + [(dd+w(1))*cos(thp)  (dd+w(1))*sin(thp) ones(size(x,1),1)*dth+w(2)];
-            xnext = x + [dd*cos(thp)  dd*sin(thp) ones(size(x,1),1)*dth];
+            thp = q(:,3) + dth;
+            qnext = q + [dd*cos(thp)  dd*sin(thp) ones(size(q,1),1)*dth];
         end
 
-        function dx = derivative(veh, ~, x, u)
-            %BicycleVehicle.derivative  Time derivative of state
+        function dq = derivative(veh, ~, q, u)
+            %DERIVATIVE Time derivative of state
             %
-            % DX = V.derivative(T, X, U) is the time derivative of state (3x1) at the state
-            % X (3x1) with input U (2x1).
+            %   DQ = VEH.DERIVATIVE(T,Q,U) is the time derivative of state 
+            %   (3-by-1) at the state Q (3-by-1) with input U (2-by-1).
             %
-            % Notes::
-            % - The parameter T is ignored but called from a continuous time integrator such as ode45 or
-            %   Simulink.
+            %   The parameter T is ignored but called from a continuous time 
+            %   integrator such as ode45 or Simulink.
 
             % implement acceleration limit if required
             if ~isinf(veh.MaxAcceleration)
@@ -240,7 +195,7 @@ classdef BicycleVehicle < Vehicle
             end
 
             % Use the standard kinematics model to calculate the kinematics
-            dx = veh.Kinematics.derivative(x, u);
+            dq = veh.Kinematics.derivative(q, u);
 
 %             % Reflect speed and steer angle limits in control input
 %             u(1) = min(veh.MaxSpeed, max(u(1), -veh.MaxSpeed));
@@ -248,14 +203,15 @@ classdef BicycleVehicle < Vehicle
         end
 
         function odo = update(veh, u)
-            %BicycleVehicle.update Update the vehicle state
+            %UPDATE Update the vehicle state
             %
-            % ODO = V.update(U) is the true odometry value for
-            % motion with U=[speed,steer].
+            %   ODO = VEH.UPDATE(U) is the true odometry value for
+            %   motion with U = [speed steer].
             %
-            % Notes::
-            % - Appends new state to state history property qhist.
-            % - Odometry is also saved as property odometry.
+            %   This appends new state to state history property qhist.
+            %   The odometry output ODO is also saved as property odometry.
+            %
+            %   See also qhist, odometry.
 
             % update the state
             dx = veh.dt * veh.derivative([], veh.q, u);
@@ -269,15 +225,17 @@ classdef BicycleVehicle < Vehicle
         end
 
 
-        function J = Fx(~, x, odo)
-            %BicycleVehicle.Fx  Jacobian df/dx
+        function J = Fx(~, q, odo)
+            %Fx Jacobian df/dq
             %
-            % J = V.Fx(X, ODO) is the Jacobian df/dx (3x3) at the state X, for
-            % odometry input ODO (1x2) = [distance, heading_change].
+            %   J = VEH.Fx(Q, ODO) is the Jacobian df/dq (3-by-3) at the state 
+            %   Q, for odometry input ODO (1-by-2) = [distance  heading_change].
             %
-            % See also BicycleVehicle.f, Vehicle.Fv.
-            dd = odo(1); dth = odo(2);
-            theta = x(3);
+            %   See also f, Fv.
+
+            dd = odo(1); 
+            %dth = odo(2);
+            theta = q(3);
 
             J = [
                 1   0   -dd*sin(theta)
@@ -287,12 +245,14 @@ classdef BicycleVehicle < Vehicle
         end
 
         function J = Fv(~, x, ~)
-            %BicycleVehicle.Fv  Jacobian df/dv
+            %Fv Jacobian df/dv
             %
-            % J = V.Fv(X, ODO) is the Jacobian df/dv (3x2) at the state X, for
-            % odometry input ODO (1x2) = [distance, heading_change].
+            %   J = VEH.Fv(Q, ODO) is the Jacobian df/dv (3-by-2) at the 
+            %   state Q, for odometry input ODO (1-by-2) = 
+            %   [distance, heading_change].
             %
-            % See also BicycleVehicle.F, Vehicle.Fx.
+            %   See also F, Fx.
+
             thp = x(3);
 
             J = [
@@ -303,12 +263,12 @@ classdef BicycleVehicle < Vehicle
         end
 
         function s = char(veh)
-            %BicycleVehicle.char Convert to a string
+            %CHAR Convert to a string
             %
-            % s = V.char() is a string showing vehicle parameters and state in
-            % a compact human readable format.
+            %   s = VEH.CHAR is a string showing vehicle parameters and 
+            %   state in a compact human readable format.
             %
-            % See also BicycleVehicle.display.
+            %   See also DISP.
 
             ss = char@Vehicle(veh);
 
