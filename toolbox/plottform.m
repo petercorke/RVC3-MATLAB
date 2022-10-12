@@ -11,67 +11,37 @@
 % H = PLOTTFORM(...) as above but returns a handle that allows the frame
 % to be animated.
 %
-% PLOTTFORM(..., color=C) draw the axes, axis label and frame label in
-% color C which is a MATLAB ColorSpec.  If style is set it overrides the
-% colors of the axes and axis labels.
+% Options:
 %
-% PLOTTFORM(..., frame=F) label the frame {F} and the subscripts on axis
-% labels are F (if labelstyle="axis_frame").
+% handle -             Update the specified handle
+% axhandle -           Draw in the MATLAB axes specified by the axis handle
 %
-% PLOTTFORM(..., style='rgb') override the color of the axes so that they
-% are colored red (x-axis), green (y-axis) and blue (z-axis).
+% color -              The color to draw the axes, MATLAB ColorSpec
+% axes -               Show the MATLAB axes, box and ticks (default true)
+% axis -               Set dimensions of the MATLAB axes to A=[xmin xmax ymin ymax zmin zmax]
+% frame -              The coordinate frame is named {F} and the subscript on the axis labels is F.
+% labelstyle -         Frame axis labels are "none"; "axis" for labels given
+%                      by labels option; or "axis_frame" (default) for labels given by
+%                      labels option and subscript from frame label.
+% framelabeloffset -   Offset O=[DX DY] frame labels in units of text box height
+% text_options -       A struct of MATLAB text properties
+% length -             Length of the coordinate frame arms (default 1)
+% LineWidth -          Thickness of lines (default 0.5)
+% text -               Enable display of X,Y,Z labels on the frame (default true)
+% labels -             Label the X,Y,Z axes with the 1st, 2nd, 3rd character of the string L
+% style -              axis line and color style. "plain" drawn using color
+%                      and LineWidth; "rgb" are colored red (x-axis), green (y-axis) and blue (z-axis).
+%                      and LineWidth; "rviz" drawn in RVIZ style axes with thick axis lines,
+%                      no arrows, and colored red (x-axis), green (y-axis) and blue (z-axis).
+% arrow -              Use arrows rather than line segments for the axes
 %
-% PLOTTFORM(..., style='rviz') draw RVIZ style axes with thick axis lines,
-% no arrows, and colored red (x-axis), green (y-axis) and blue (z-axis).
-%
-% PLOTTFORM(..., labels='none') suppress axis labels.
-%
-% PLOTTFORM(..., labels=L) label the X,Y,Z axes with the 1st, 2nd, 3rd
-% character of the string L
-%
-% PLOTTFORM(..., length=L) length of the coordinate frame arms, defaults to
-% 1.
-%
-% PLOTTFORM(..., thick=T) thickness of lines, defaults to 0.5.
-%
-% PLOTTFORM(..., arrow="none") axes are plain lines, not arrows.
-%
-% PLOTTFORM(..., labelstyle="none") no text labels on axes.
-%
-% PLOTTFORM(..., labelstyle="axis") label axes with labels only, see
-% labels.
-%
-% PLOTTFORM(..., labelstyle="axis_frame") label axes with labels, see
-% labels, and subscript which is frame label, see frame. (default)
-%
-% PLOTTFORM(..., framelabeloffset=[DX DY]) frame label displacement from
-% frame origin in units of text box height, defaults to [0 0].
-%
-% PLOTTFORM(..., axis=[xmin xmax ymin ymax zmin zmax]) set axis bounds,
-% default behaviour is to leave these unchanged. 
-%
-% PLOTTFORM(..., view=[az el]) set the view parameters azimuth and
-% elevation, as returned by the VIEW command.
-%
-% PLOTTFORM(..., projection=P) set the 3D projection to either 
-% 'orthographic' (default) or 'perspective.
-%
-% PLOTTFORM(..., anaglyph=LR) create an analglyph where the left and right
-% images are drawn using single-letter color codes in the string LR
-% chosen from r)ed, g)reen, b)lue, c)yan, m)agenta.
-%
-% PLOTTFORM(..., disparity=D) sets the stereo disparity for anaglyph
-% display, in normalized width units. Defaults to 0.1.
-%
-% PLOTTFORM(..., handle=H) modify the pose of the previously drawn frame
-% with handle H.  Appearance parameters like color, line thickness cannot
-% be changed.
-%
-% PLOTTFORM(..., axhandle=A) draw in the MATLAB axes specified by the
-% axis handle A.
-%
-% PLOTTFORM(..., OPTIONS) remaining options are passed to TEXT and control
-% the appearance of the text used for the frame label and axis labels.
+% projection -         set the 3D projection to either "orthographic" (default) or "perspective".
+% anaglyph -           create an analglyph where the left and right
+%                      images are drawn using single-letter color codes in the string LR
+%                      chosen from r)ed, g)reen, b)lue, c)yan, m)agenta.
+% disparity -          Disparity for 3d display (default 0.1)
+% view -               set the view parameters azimuth and
+%                      elevation, as returned by the VIEW command.
 %
 % Examples:
 %    PLOTTFORM(T, frame="A")
@@ -87,317 +57,288 @@
 %
 % See also PLOTTFORM2D.
 
-%TODO:
-% 'rviz', chunky RGB lines, no arrows
 
-
-% TODO
-%  need to decide how to handle scaling
-%  what does hold on mean?  don't touch scaling?
-
-function hout = tformplot(X, varargin)
-
-if nargin == 0
-    T = eye(4);
-end
-
-
-% convert various forms to to hom transform
-if isrot(X)
-    T = r2t(X);
-elseif ishomog(X)
-    T = X;
-elseif isa(X, 'se3')
-    T = X.tform();
-elseif isa(X, 'rigid3d')
-    T = X.T();
-elseif isa(X, 'Twist')
-    T = X.tform();
-elseif isa(X, 'so3')
-    T = rotm2tform(X.rotm());
-elseif isa(X, 'quaternion')
-    T = rotm2tform(X.rotmat("point"));
-else
-    error('RVC3:animtform:badarg', 'argument must be 3x3 or 4x4 matrix, so3, se3, quaternion or Twist');
-end
-
-if size(T,3) > 1
-    error('SMTB:tformplot:badarg', 'tformplot cannot operate on a sequence');
-end
-
-
-opt.color = 'b';
-opt.textcolor = [];
-opt.rgb = false;
-opt.axes = true;
-opt.axis = [];
-opt.frame = [];
-opt.framelabel = [];
-opt.text_opts = [];
-opt.view = [];
-opt.width = 1;
-opt.arrow = true;
-opt.labels = 'XYZ';
-opt.axhandle = [];
-opt.anaglyph = 'rc';
-opt.d_3d = false;
-opt.dispar = 0.1;
-opt.thick = 0.5;
-opt.length = 1;
-opt.text = 1;
-opt.rviz = false;
-opt.framelabeloffset = [0 0];
-opt.handle = [];
-opt.perspective = false;
-
-[opt,args] = tb_optparse(opt, varargin);
-
-if opt.arrow && ~exist('arrow3','file')
-    opt.arrow = false;
-    warning('SMTB:tformplot:badarg', 'arrow option requires arrow3 from FileExchange');
-end
-
-% ensure it's SE(3)
-if isrot(X)
-    X = r2t(X);
-end
-
-if ~isempty(opt.handle)
-    opt.handle.Matrix = T;
-    % for the 3D case retrieve the right hgtransform and set it
-    hg2 = opt.handle.UserData;
-    if ~isempty(hg2)
-        hg2.Matrix = X;
+function hout = plottform(X, options)
+    arguments
+        X double = eye(3,3)
+        options.color (1,1) string = "b"
+        options.textcolor (1,1) string = ""
+        options.axes = true;
+        options.axis = [];
+        options.axhandle = [];
+        options.frame (1,1) string = ""
+        options.labelstyle (1,1) string {mustBeMember(options.labelstyle, ["none", "axis", "axis_frame"])} = "axis_frame";
+        options.style (1,1) string {mustBeMember(options.style, ["plain", "rgb", "rviz"])} = "rgb";
+        options.arrow (1,1) logical = true
+        options.length = 1;
+        options.framelabeloffset (1,3) double = [0 0 0]
+        options.handle (1,1)
+        options.LineWidth (1,1) double = 0.5
+        options.labels (1,3) char = 'XYZ'
+        options.text_options = struct
+        options.projection (1,1) string {mustBeMember(options.projection, ["perspective", "orthographic"])} = "perspective";
+        options.anaglyph (1,1) string = ""
+        options.view = "auto"
+        options.disparity (1,1) double = 0.1
     end
-    if nargout > 0
-        hout = opt.handle;
+
+    % convert various forms to to hom transform
+    if isrot(X)
+        T = r2t(X);
+    elseif ishomog(X)
+        T = X;
+    elseif isa(X, 'se3')
+        T = X.tform();
+    elseif isa(X, 'rigid3d')
+        T = X.T();
+    elseif isa(X, 'Twist')
+        T = X.tform();
+    elseif isa(X, 'so3')
+        T = rotm2tform(X.rotm());
+    elseif isa(X, 'quaternion')
+        T = rotm2tform(X.rotmat("point"));
+    else
+        error('RVC3:plottform:badarg', 'argument must be 3x3 or 4x4 matrix, so3, se3, quaternion or Twist');
     end
-    return;
-end
-
-if opt.rviz
-    opt.thick = 5;
-    opt.arrow = false;
-    opt.rgb = true;
-    opt.text = false;
-end
-
-if opt.rgb && opt.d_3d
-    error('SMTB:tformplot:badarg', 'cannot specify ''rgb'' and ''3d'', use ''anaglyph'' option');
-end
-if isempty(opt.textcolor)
-    opt.textcolor = opt.color;
-end
-if isempty(opt.text_opts)
-    opt.text_opts = {};
-end
-
-if opt.d_3d
-    opt.color = ag_color(opt.anaglyph(1));
-end
-
-% figure the dimensions of the axes, if not given
-if isempty(opt.axis)
-    % determine some default axis dimensions
     
-    % get the origin of the frame
-    c = tform2trvec(T);
-
-    d = 1.2;
-    opt.axis = [c(1)-d c(1)+d c(2)-d c(2)+d c(3)-d c(3)+d];
+    if size(T,3) > 1
+        error('RVC3:plottform:badarg', 'plottform cannot operate on a sequence');
+    end
     
-end
-
-if ~isempty(opt.axhandle)
-    hax = opt.axhandle;
-    hold(hax);
-else
-    ih = ishold;
-    if ~ih
-        % if hold is not on, then clear the axes and set scaling
-        cla
-        if ~isempty(opt.axis)
-            axis(opt.axis);
+    % ensure it's SE(3)
+    if isrot(X)
+        X = r2t(X);
+    end
+    
+    if isfield(options, "handle")
+        options.handle.Matrix = T;
+        % for the 3D case retrieve the right hgtransform and set it
+        hg2 = options.handle.UserData;
+        if ~isempty(hg2)
+            hg2.Matrix = X;
         end
-        daspect([1 1 1]);
+        if nargout > 0
+            hout = options.handle;
+        end
+        return;
+    end
+    
+    % sort out the colors of axes and text
+    if options.anaglyph == ""
+        % no anaglyph
+        if options.style == "plain"
+            axcolors = [options.color options.color options.color];
+        elseif options.style == "rgb"
+            axcolors = ["r" "g" "b"];
+        elseif options.style == "rviz"
+            options.LineWidth = 5;
+            options.arrow = false;
+        end
+    else
+        % anaglyph, color choice overrides
+        color = options.anaglyph.extractBetween(1,1);
+        axcolors = [color color color];
+    end
         
-        if opt.axes
-            xlabel( 'X');
-            ylabel( 'Y');
-            zlabel( 'Z');
-            rotate3d on
+    % figure the dimensions of the axes, if not given
+    if isempty(options.axis)
+        % determine some default axis dimensions
+        
+        % get the origin of the frame
+        c = tform2trvec(T);
+    
+        d = 1.2;
+        options.axis = [c(1)-d c(1)+d c(2)-d c(2)+d c(3)-d c(3)+d];
+        
+    end
+    
+    if ~isempty(options.axhandle)
+        hax = options.axhandle;
+        hold(hax, "on");
+    else
+        ih = ishold;
+        if ~ih
+            % if hold is not on, then clear the axes and set scaling
+            cla
+            if ~isempty(options.axis)
+                axis(options.axis);
+            end
+            daspect([1 1 1]);
+            
+            if options.axes
+                xlabel(options.labels(1));
+                ylabel(options.labels(2));
+                zlabel(options.labels(3));
+                rotate3d on
+            end
+        end
+        hax = gca;
+        hold on
+    end
+    % hax is the handle for the axis we will work with, either new or
+    % passed by option 'handle'
+    
+    % convert text options from a struct to a cell array
+    names = fieldnames(options.text_options);
+    values = struct2cell(options.text_options);
+    text_options_cell = {};
+    for i=1:length(names)
+        text_options_cell{end+1} = names{i};
+        text_options_cell{end+1} = values{i};
+    end
+    
+    hax.Projection = options.projection;
+    hg = hgtransform('Parent', hax);    
+    
+    % create unit vectors
+    o =  [0 0 0]';
+    x1 = options.length*[1 0 0 1]';
+    y1 = options.length*[0 1 0 1]';
+    z1 = options.length*[0 0 1 1]';
+    
+    % draw the axes
+    mstart = [o o o];
+    mend = [x1 y1 z1];
+    mend = mend(1:3, :);
+
+    if options.arrow
+        %         % draw the 3 arrows
+        %         S = [options.color num2str(options.width)];
+        %         ha = arrow3(mstart, mend, S);
+        %         for h=ha'
+        %             set(h, 'Parent', hg);
+        %         end
+        daspect([1,1,1])
+        diff = mend - mstart;
+        for i=1:3
+            quiver3(mstart(1,i), mstart(2,i), mstart(3,i), ...
+                diff(1,i), diff(2,i), diff(3,i), ...
+                AutoScale=false, Color=axcolors(i), Parent=hg);
+        end
+    else
+        for i=1:3
+            plot3([mstart(i,1) mend(i,1)], ...
+                 [mstart(i,2) mend(i,2)], ...
+                 [mstart(i,3) mend(i,3)], ...
+                 Color=axcolor(i), ...
+                 LineWidth=options.LineWidth, ...
+                 Parent=hg);
         end
     end
-    hax = gca;
-    hold on
-end
-% hax is the handle for the axis we will work with, either new or
-% passed by option 'handle'
+    
+    % label the axes
+    if options.labelstyle ~= "none"
+        if options.labelstyle == "axis"
+            fmt = '%c';
+        elseif options.labelstyle == "axis_frame"
+            fmt = sprintf('%%c_{%s}', options.frame);
+        end
 
-opt.text_opts = [opt.text_opts, 'Color', opt.color];
-
-if opt.perspective
-    hax.Projection = 'perspective';
-end
-hg = hgtransform('Parent', hax);
-
-
-% tformplot( Q.R, fmt, color);
-
-
-% create unit vectors
-o =  [0 0 0]';
-x1 = opt.length*[1 0 0]';
-y1 = opt.length*[0 1 0]';
-
-
-% draw the axes
-
-mstart = [o o o]';
-mend = [x1 y1 z1]';
-
-if opt.rgb
-    axcolors = {'r', 'g', 'b'};
-else
-    axcolors = { opt.color, opt.color, opt.color};
-end
-
-if opt.arrow
-    %         % draw the 3 arrows
-    %         S = [opt.color num2str(opt.width)];
-    %         ha = arrow3(mstart, mend, S);
-    %         for h=ha'
-    %             set(h, 'Parent', hg);
-    %         end
-    daspect([1,1,1])
-    diff = mend - mstart;
-    quiver3(mstart(1,:), mstart(2,:), mstart(3,:), ...
-        diff(1,:), diff(2,:), diff(3,:), ...
-        AutoScale=false, Color=opt.color, Parent=hg);
-else
-    for i=1:3
-        plot3([mstart(i,1) mend(i,1)], ...
-             [mstart(i,2) mend(i,2)], ...
-             [mstart(i,3) mend(i,3)], ...
-             'Color', axcolors{i}, ...
-             'LineWidth', opt.thick, ...
-             'Parent', hg);
+        % add the labels to each axis
+        h = text(x1(1), x1(2), x1(3), sprintf(fmt, options.labels(1)), ...
+            "Parent", hg, "Color", axcolors(1), text_options_cell{:});
+        h = text(y1(1), y1(2), y1(3), sprintf(fmt, options.labels(2)), ...
+            "Parent", hg, "Color", axcolors(2), text_options_cell{:});
+        h = text(z1(1), z1(2), z1(3), sprintf(fmt, options.labels(3)), ...
+            "Parent", hg, "Color", axcolors(3), text_options_cell{:});
     end
-end
-
-% label the axes
-if isempty(opt.frame)
-    fmt = '%c';
-else
-    fmt = sprintf('%%c_{%s}', opt.frame);
-end
-
-if opt.text
-    % add the labels to each axis
-    h = text(x1(1), x1(2), x1(3), sprintf(fmt, opt.labels(1)), 'Parent', hg);
-    set(h, opt.text_opts{:});
-    
-    h = text(y1(1), y1(2), y1(3), sprintf(fmt, opt.labels(2)), 'Parent', hg);
-    set(h, opt.text_opts{:});
-    
-    h = text(z1(1), z1(2), z1(3), sprintf(fmt, opt.labels(3)), 'Parent', hg);
-    set(h, opt.text_opts{:});
-end
-
-if ~isempty(opt.framelabel)
-    opt.frame = opt.framelabel;
-end
-% label the frame
-if ~isempty(opt.frame)
-    h = text(o(1), o(2), o(3), ...
-        ['\{' opt.frame '\}'], 'Parent', hg);
-    set(h, 'VerticalAlignment', 'top', ...
-        'HorizontalAlignment', 'center', opt.text_opts{:}, ...
-        'FontUnits', 'normalized');
-    e = get(h, 'Extent');
-    d = e(4); % use height of text box as a scale factor
-    e(1:2) = e(1:2) - opt.framelabeloffset * d;
-    set(h, 'Position', e(1:2));
-    
-end
-
-if ~opt.axes
-    set(gca, 'visible', 'off');
-end
-if ischar(opt.view) && strcmp(opt.view, 'auto')
-    cam = x1+y1+z1;
-    view(cam(1:3));
-elseif ~isempty(opt.view)
-    view(opt.view);
-end
-if isempty(opt.handle) && ~ih
-    grid on
-    hold off
-end
-
-% now place the frame in the desired pose
-set(hg, 'Matrix', T);
 
 
-if opt.d_3d
-    % 3D display.  The original axes are for the left eye, and we add
-    % another set of axes to the figure for the right eye view and
-    % displace its camera to the right of that of that for the left eye.
-    % Then we recursively call tformplot() to create the right eye view.
+    % label the frame
+    if ~isempty(options.frame)
+        h = text(o(1), o(2), o(3), ...
+            "\{" + options.frame + "\}", ...
+            "Parent", hg, ...
+            "VerticalAlignment", "middle", ...
+            "HorizontalAlignment", "center", ...
+            "FontUnits", "normalized", ...
+            text_options_cell{:});
+        e = h.Extent;
+        d = e(4); % use height of text box as a scale factor
+        e(1:3) = e(1:3) - options.framelabeloffset * d;
+        h.Position = e(1:3);
+    end
     
-    left = gca;
-    right = axes;
-    
-    % compute the offset in world coordinates
-    off = -t2r(view(left))'*[opt.dispar 0 0]';
-    pos = get(left, 'CameraPosition');
-    
-    set(right, 'CameraPosition', pos+off');
-    set(right, 'CameraViewAngle', get(left, 'CameraViewAngle'));
-    set(right, 'CameraUpVector', get(left, 'CameraUpVector'));
-    target = get(left, 'CameraTarget');
-    set(right, 'CameraTarget', target+off');
-    
-    % set perspective projections
-    set(left, 'Projection', 'perspective');
-    set(right, 'Projection', 'perspective');
-    
-    % turn off axes for right view
-    set(right, 'Visible', 'Off');
-    
-    % set color for right view
-    hg2 = tformplot(X, 'color', ag_color(opt.anaglyph(2)));
-    
-    % the hgtransform for the right view is user data for the left
-    % view hgtransform, we need to change both when we rotate the
-    % frame.
-    set(hg, 'UserData', hg2);
-end
+    if ~options.axes
+        set(gca, 'visible', 'off');
+    end
+    if (ischar(options.view) || isstring(options.view)) && options.view == "auto"
+        cam = x1+y1+z1;
+        view(cam(1:3));
+    elseif ~isempty(options.view)
+        view(options.view);
+    end
 
-% optionally return the handle, for later modification of pose
-if nargout > 0
-    hout = hg;
-end
+%     if isempty(options.handle) && ~ih
+%         grid on
+%         hold off
+%     end
+    
+    % now place the frame in the desired pose
+    set(hg, 'Matrix', T);
+    
+    
+    if options.anaglyph ~= ""
+        % 3D display.  The original axes are for the left eye, and we add
+        % another set of axes to the figure for the right eye view and
+        % displace its camera to the right of that of that for the left eye.
+        % Then we recursively call tformplot() to create the right eye view.
+        
+        left = gca;
+        right = axes;
+        
+        % compute the offset in world coordinates
+        off = -t2r(view(left))'*[options.disparity 0 0]';
+        off = off(:)';
+        pos = left.CameraPosition;
+        
+        right.CameraPosition = pos+off;
+        right.CameraViewAngle =  left.CameraViewAngle;
+        right.CameraUpVector = left.CameraUpVector;
+
+        target = left.CameraTarget;
+        right.CameraTarget = target+off;
+        
+        % set perspective projections
+        left.Projection = "perspective";
+        right.Projection = "perspective";
+        
+        % turn off axes for right view
+        right.Visible = "Off";
+        
+        % set color for right view
+        hg2 = plottform(X, axhandle=right, color=options.anaglyph.extractBetween(2,2));
+        
+        % the hgtransform for the right view is user data for the left
+        % view hgtransform, we need to change both when we rotate the
+        % frame.
+        hg.UserData = hg2;
+    end
+    
+    % optionally return the handle, for later modification of pose
+    if nargout > 0
+        hout = hg;
+    end
 end
 
 function out = ag_color(c)
 
-% map color character to an color triple, same as anaglyph.m
-
-% map single letter color codes to image planes
-switch c
-    case 'r'
-        out = [1 0 0];        % red
-    case 'g'
-        out = [0 1 0];        % green
-    case 'b'
-        % blue
-        out = [0 0 1];
-    case 'c'
-        out = [0 1 1];        % cyan
-    case 'm'
-        out = [1 0 1];        % magenta
-    case 'o'
-        out = [1 1 0];        % orange
-end
+    % map color character to an color triple, same as anaglyph.m
+    
+    % map single letter color codes to image planes
+    switch c
+        case 'r'
+            out = [1 0 0];        % red
+        case 'g'
+            out = [0 1 0];        % green
+        case 'b'
+            % blue
+            out = [0 0 1];
+        case 'c'
+            out = [0 1 1];        % cyan
+        case 'm'
+            out = [1 0 1];        % magenta
+        case 'o'
+            out = [1 1 0];        % orange
+    end
 end
