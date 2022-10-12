@@ -1,240 +1,344 @@
-%PLOTTFORM2D Add a 2D coordinate frame to plot
+%PLOTTFORM Add a 3D coordinate frame to plot
 %
-% PLOTTFORM2D(T) draws a 2D coordinate frame represented by the
-% SE(2) homogeneous transform T (3x3).
+% PLOTTFORM(T) draws a 3D coordinate frame represented by the
+% SE(3) homogeneous transform T (4x4).
 %
-% PLOTTFORM2D(R) as above but the coordinate frame is rotated
-% about the origin according to the SO(2) rotation matrix R (2x2).
+% PLOTTFORM(R) as above but the coordinate frame is rotated
+% about the origin according to the SO(3) rotation matrix R (3x3).
 %
-% PLOTTFORM2D() creates a default frame EYE(2,2) at the origin.
+% PLOTTFORM() creates a default frame EYE(3,3) at the origin.
 %
-% H = PLOTTFORM2D(...) as above but returns a handle that allows the frame
+% H = PLOTTFORM(...) as above but returns a handle that allows the frame
 % to be animated.
 %
-% PLOTTFORM2D(..., axhandle=A) draw in the MATLAB axes specified by the
-% axis handle A
+% Options:
 %
-% PLOTTFORM2D(..., color=C) draw the axes in color C which is a MATLAB
-% ColorSpec
+% handle -             Update the specified handle
+% axhandle -           Draw in the MATLAB axes specified by the axis handle
 %
-% PLOTTFORM2D(..., axis=[xmin xmax ymin ymax]) set axis bounds
+% color -              The color to draw the axes, MATLAB ColorSpec
+% axes -               Show the MATLAB axes, box and ticks (default true)
+% axis -               Set dimensions of the MATLAB axes to A=[xmin xmax ymin ymax zmin zmax]
+% frame -              The coordinate frame is named {F} and the subscript on the axis labels is F.
+% labelstyle -         Frame axis labels are "none"; "axis" for labels given
+%                      by labels option; or "axis_frame" (default) for labels given by
+%                      labels option and subscript from frame label.
+% framelabeloffset -   Offset O=[DX DY] frame labels in units of text box height
+% text_options -       A struct of MATLAB text properties
+% length -             Length of the coordinate frame arms (default 1)
+% LineWidth -          Thickness of lines (default 0.5)
+% text -               Enable display of X,Y,Z labels on the frame (default true)
+% labels -             Label the X,Y,Z axes with the 1st, 2nd, 3rd character of the string L
+% style -              axis line and color style. "plain" drawn using color
+%                      and LineWidth; "rgb" are colored red (x-axis), green (y-axis) and blue (z-axis).
+%                      and LineWidth; "rviz" drawn in RVIZ style axes with thick axis lines,
+%                      no arrows, and colored red (x-axis), green (y-axis) and blue (z-axis).
+% arrow -              Use arrows rather than line segments for the axes
 %
-% PLOTTFORM2D(..., frame=F) set name of frame to string F
-%
-% Options::
-% 'handle',h             Update the specified handle
-% 'axhandle',A           Draw in the MATLAB axes specified by the axis handle A
-%
-% 'color', c             The color to draw the axes, MATLAB ColorSpec
-% 'axes'                 Show the MATLAB axes, box and ticks (default true)
-% 'axis',A               Set dimensions of the MATLAB axes to A=[xmin xmax ymin ymax]
-% 'frame',F              The frame is named {F} and the subscript on the axis labels is F.
-% 'framelabel',F         The coordinate frame is named {F}, axes have no subscripts.
-% 'framelabeloffset',O   Offset O=[DX DY] frame labels in units of text box height
-% 'text_opts', opt       A cell array of MATLAB text properties
-% 'length',s             Length of the coordinate frame arms (default 1)
-% 'thick',t              Thickness of lines (default 0.5)
-% 'text'                 Enable display of X,Y,Z labels on the frame (default true)
-% 'labels',L             Label the X,Y,Z axes with the 1st and 2nd character of the string L
-% 'arrow'                Use arrows rather than line segments for the axes
-% 'width', w             Width of arrow tips
-% 'lefty'                Draw left-handed frame (dangerous)
+% projection -         set the 3D projection to either "orthographic" (default) or "perspective".
+% anaglyph -           create an analglyph where the left and right
+%                      images are drawn using single-letter color codes in the string LR
+%                      chosen from r)ed, g)reen, b)lue, c)yan, m)agenta.
+% disparity -          Disparity for 3d display (default 0.1)
+% view -               set the view parameters azimuth and
+%                      elevation, as returned by the VIEW command.
 %
 % Examples:
-%    PLOTTFORM2D(T, frame="A")
-%    PLOTTFORM2D(T, frame="A", color="b")
-%    PLOTTFORM2D(T1, frame="A", text_opts={'FontSize', 10, 'FontWeight', 'bold'})
+%    PLOTTFORM(T, frame="A")
+%    PLOTTFORM(T, frame="A", color="b")
+%    PLOTTFORM(T, frame='A', FontSize=10, FontWeight="bold")
+%    PLOTTFORM(T, labels="NOA");
+%    PLOTTFORM(T, anaglyph="rc"); % 3D anaglyph plot
 %
-% To animate a coordinate frame, firstly, create a plot, as per above, and
-% keep the the handle:
-%    h = PLOTTFORM2D(T0);      % create the frame at its initial pose
-%    PLOTTFORM2D(T, handle=h); % moves the frame to new pose T
+% To animate a coordinate frame, firstly, create a plot, as per above, but
+% keep the handle:
+%    h = PLOTTFORM(T0);      % create the frame at its initial pose
+%    PLOTTFORM(T, handle=h); % moves the frame to new pose T
 %
-% See also PLOTTFORM.
+% See also PLOTTFORM2D.
 
 
-%   'frame', name   name of the frame, used for axis subscripts and origin
-%   'color', color  Matlab color specificication for the frame and annotations
-%   'noaxes'        show the frame but no Matlab axes
-%   'arrow'         use the contributed arrow3 function to draw the frame axes
-%   'width', width  width of lines to draw if using arrow3
+function hout = plottform(X, options)
+    arguments
+        X double = eye(3,3)
+        options.color (1,1) string = "b"
+        options.textcolor (1,1) string = ""
+        options.axes = true;
+        options.axis = [];
+        options.axhandle = [];
+        options.frame (1,1) string = ""
+        options.labelstyle (1,1) string {mustBeMember(options.labelstyle, ["none", "axis", "axis_frame"])} = "axis_frame";
+        options.style (1,1) string {mustBeMember(options.style, ["plain", "rgb", "rviz"])} = "rgb";
+        options.arrow (1,1) logical = true
+        options.length = 1;
+        options.framelabeloffset (1,3) double = [0 0 0]
+        options.handle (1,1)
+        options.LineWidth (1,1) double = 0.5
+        options.labels (1,3) char = 'XYZ'
+        options.text_options = struct
+        options.projection (1,1) string {mustBeMember(options.projection, ["perspective", "orthographic"])} = "perspective";
+        options.anaglyph (1,1) string = ""
+        options.view = "auto"
+        options.disparity (1,1) double = 0.1
+    end
 
-% behaviour:
-%  adds plots to current axes
-%  if axis is given, call axis()
-
-function hout = plotform2d(T, varargin)
-
-    if nargin == 0
-        T = eye(2,2);
+    % convert various forms to to hom transform
+    if isrot(X)
+        T = r2t(X);
+    elseif ishomog(X)
+        T = X;
+    elseif isa(X, 'se3')
+        T = X.tform();
+    elseif isa(X, 'rigid3d')
+        T = X.T();
+    elseif isa(X, 'Twist')
+        T = X.tform();
+    elseif isa(X, 'so3')
+        T = rotm2tform(X.rotm());
+    elseif isa(X, 'quaternion')
+        T = rotm2tform(X.rotmat("point"));
+    else
+        error('RVC3:plottform:badarg', 'argument must be 3x3 or 4x4 matrix, so3, se3, quaternion or Twist');
     end
     
-    opt.color = 'b';
-    opt.textcolor = [];
-    opt.axes = true;
-    opt.axis = [];
-    opt.frame = [];
-    opt.framelabel = [];
-    opt.text_opts = [];
-    opt.width = 1;
-    opt.arrow = true;
-    opt.handle = [];
-    opt.axhandle = [];
-    opt.length = 1;
-    opt.lefty = false;
-    opt.framelabeloffset = 0.2*[1 1];
-    opt.handle = [];
-    opt.thick = 0.5;
-    opt.labels = 'XY';
-    opt.text = true;
-
-
-    [opt,args] = tb_optparse(opt, varargin);
-    
-    if isscalar(T) && ishandle(T)
-        warning('SMTB:trplot2:deprecated', 'Use ''handle'' option');
-        % trplot(H, T)
-        opt.handle = T; T = args{1};
+    if size(T,3) > 1
+        error('RVC3:plottform:badarg', 'plottform cannot operate on a sequence');
     end
     
-    % ensure it's SE(2)
-    if all(size(T) == [2 2])
-        T = [T [0; 0]; 0 0 1];
+    % ensure it's SE(3)
+    if isrot(X)
+        X = r2t(X);
     end
     
-    if ~isempty(opt.handle)
-        set(opt.handle, 'Matrix', se2t3(T));
+    if isfield(options, "handle")
+        options.handle.Matrix = T;
+        % for the 3D case retrieve the right hgtransform and set it
+        hg2 = options.handle.UserData;
+        if ~isempty(hg2)
+            hg2.Matrix = X;
+        end
         if nargout > 0
-            hout = opt.handle;
+            hout = options.handle;
         end
         return;
     end
     
-    if isempty(opt.textcolor)
-        opt.textcolor = opt.color;
+    % sort out the colors of axes and text
+    if options.anaglyph == ""
+        % no anaglyph
+        if options.style == "plain"
+            axcolors = [options.color options.color options.color];
+        elseif options.style == "rgb"
+            axcolors = ["r" "g" "b"];
+        elseif options.style == "rviz"
+            options.LineWidth = 5;
+            options.arrow = false;
+        end
+    else
+        % anaglyph, color choice overrides
+        color = options.anaglyph.extractBetween(1,1);
+        axcolors = [color color color];
     end
-   
-    if isempty(opt.text_opts)
-        opt.text_opts = {};
+        
+    % figure the dimensions of the axes, if not given
+    if isempty(options.axis)
+        % determine some default axis dimensions
+        
+        % get the origin of the frame
+        c = tform2trvec(T);
+    
+        d = 1.2;
+        options.axis = [c(1)-d c(1)+d c(2)-d c(2)+d c(3)-d c(3)+d];
+        
     end
     
-    if ~isempty(opt.axhandle)
-        hax = opt.axhandle;
-        hold(hax);
-        ih = ishold;
+    if ~isempty(options.axhandle)
+        hax = options.axhandle;
+        hold(hax, "on");
     else
         ih = ishold;
         if ~ih
             % if hold is not on, then clear the axes and set scaling
-            if ~isempty(opt.axis)
-                            cla
-
-                axis(opt.axis);
+            cla
+            if ~isempty(options.axis)
+                axis(options.axis);
             end
-            %axis equal
-            daspect([1 1 1])
+            daspect([1 1 1]);
             
-            if opt.axes
-                xlabel( 'X');
-                ylabel( 'Y');
+            if options.axes
+                xlabel(options.labels(1));
+                ylabel(options.labels(2));
+                zlabel(options.labels(3));
+                rotate3d on
             end
         end
         hax = gca;
         hold on
     end
+    % hax is the handle for the axis we will work with, either new or
+    % passed by option 'handle'
+    
+    % convert text options from a struct to a cell array
+    names = fieldnames(options.text_options);
+    values = struct2cell(options.text_options);
+    text_options_cell = {};
+    for i=1:length(names)
+        text_options_cell{end+1} = names{i};
+        text_options_cell{end+1} = values{i};
+    end
+    
+    hax.Projection = options.projection;
+    hg = hgtransform('Parent', hax);    
     
     % create unit vectors
-    o =  opt.length*[0 0 1]'; o = o(1:2);
-    x1 = opt.length*[1 0 1]'; x1 = x1(1:2);
-    
-    if opt.lefty
-        y1 = opt.length*[0 -1 1]'; y1 = y1(1:2);
-    else
-        y1 = opt.length*[0 1 1]'; y1 = y1(1:2);
-    end
-    
-    opt.text_opts = [opt.text_opts, 'Color', opt.color];
-    
+    o =  [0 0 0]';
+    x1 = options.length*[1 0 0 1]';
+    y1 = options.length*[0 1 0 1]';
+    z1 = options.length*[0 0 1 1]';
     
     % draw the axes
-    
-    mstart = [o o]';
-    mend = [x1 y1]';
-    
-    hg = hgtransform('Parent', hax);
-    if opt.arrow
-        % draw the 2 arrows
-        S = [opt.color num2str(opt.width)];
-        daspect([1 1 1]);
+    mstart = [o o o];
+    mend = [x1 y1 z1];
+    mend = mend(1:3, :);
+
+    if options.arrow
+        %         % draw the 3 arrows
+        %         S = [options.color num2str(options.width)];
+        %         ha = arrow3(mstart, mend, S);
+        %         for h=ha'
+        %             set(h, 'Parent', hg);
+        %         end
+        daspect([1,1,1])
         diff = mend - mstart;
-        quiver(mstart(1,:), mstart(2,:), diff(1,:), diff(2,:), ...
-            AutoScale=false, Color=opt.color, Parent=hg);
+        for i=1:3
+            quiver3(mstart(1,i), mstart(2,i), mstart(3,i), ...
+                diff(1,i), diff(2,i), diff(3,i), ...
+                AutoScale=false, Color=axcolors(i), Parent=hg);
+        end
     else
-        for i=1:2
-            plot2([mstart(i,1:2); mend(i,1:2)], 'Color', opt.color, ...
-                'LineWidth', opt.thick, ...
-                'Parent', hg);
+        for i=1:3
+            plot3([mstart(i,1) mend(i,1)], ...
+                 [mstart(i,2) mend(i,2)], ...
+                 [mstart(i,3) mend(i,3)], ...
+                 Color=axcolor(i), ...
+                 LineWidth=options.LineWidth, ...
+                 Parent=hg);
         end
     end
-
+    
     % label the axes
-    if isempty(opt.frame)
-        fmt = '%c';
-    else
-        fmt = sprintf('%%c_{%s}', opt.frame);
-    end
-    
-    if opt.text
-        % add the labels to each axis
-        h = text(x1(1), x1(2), sprintf(fmt, opt.labels(1)), 'Parent', hg);
-        if ~isempty(opt.text_opts)
-            set(h, opt.text_opts{:});
+    if options.labelstyle ~= "none"
+        if options.labelstyle == "axis"
+            fmt = '%c';
+        elseif options.labelstyle == "axis_frame"
+            fmt = sprintf('%%c_{%s}', options.frame);
         end
+
+        % add the labels to each axis
+        h = text(x1(1), x1(2), x1(3), sprintf(fmt, options.labels(1)), ...
+            "Parent", hg, "Color", axcolors(1), text_options_cell{:});
+        h = text(y1(1), y1(2), y1(3), sprintf(fmt, options.labels(2)), ...
+            "Parent", hg, "Color", axcolors(2), text_options_cell{:});
+        h = text(z1(1), z1(2), z1(3), sprintf(fmt, options.labels(3)), ...
+            "Parent", hg, "Color", axcolors(3), text_options_cell{:});
     end
 
-    if opt.arrow
-        set(h, 'Parent', hg);
-    end
 
-    h = text(y1(1), y1(2), sprintf(fmt, opt.labels(2)), 'Parent', hg);
-    if ~isempty(opt.text_opts)
-        set(h, opt.text_opts{:});
-    end
-    if opt.arrow
-        set(h, 'Parent', hg);
-    end
-
-    if ~isempty(opt.framelabel)
-        opt.frame = opt.framelabel;
-    end
     % label the frame
-    if ~isempty(opt.frame)
-        h = text(o(1), o(2), ...
-            ['\{' opt.frame '\}'], 'Parent', hg);
-        set(h, 'VerticalAlignment', 'middle', ...
-            'Color', opt.textcolor, ...
-            'HorizontalAlignment', 'center', opt.text_opts{:});
-        e = get(h, 'Extent');
+    if ~isempty(options.frame)
+        h = text(o(1), o(2), o(3), ...
+            "\{" + options.frame + "\}", ...
+            "Parent", hg, ...
+            "VerticalAlignment", "middle", ...
+            "HorizontalAlignment", "center", ...
+            "FontUnits", "normalized", ...
+            text_options_cell{:});
+        e = h.Extent;
         d = e(4); % use height of text box as a scale factor
-        e(1:2) = e(1:2) - opt.framelabeloffset * d;
-        set(h, 'Position', e(1:2));
+        e(1:3) = e(1:3) - options.framelabeloffset * d;
+        h.Position = e(1:3);
     end
     
-    if ~opt.axes
+    if ~options.axes
         set(gca, 'visible', 'off');
     end
-    if ~ih
-        hold off
+    if (ischar(options.view) || isstring(options.view)) && options.view == "auto"
+        cam = x1+y1+z1;
+        view(cam(1:3));
+    elseif ~isempty(options.view)
+        view(options.view);
     end
+
+%     if isempty(options.handle) && ~ih
+%         grid on
+%         hold off
+%     end
     
     % now place the frame in the desired pose
-    set(hg, 'Matrix', se2t3(T));
+    set(hg, 'Matrix', T);
+    
+    
+    if options.anaglyph ~= ""
+        % 3D display.  The original axes are for the left eye, and we add
+        % another set of axes to the figure for the right eye view and
+        % displace its camera to the right of that of that for the left eye.
+        % Then we recursively call tformplot() to create the right eye view.
+        
+        left = gca;
+        right = axes;
+        
+        % compute the offset in world coordinates
+        off = -t2r(view(left))'*[options.disparity 0 0]';
+        off = off(:)';
+        pos = left.CameraPosition;
+        
+        right.CameraPosition = pos+off;
+        right.CameraViewAngle =  left.CameraViewAngle;
+        right.CameraUpVector = left.CameraUpVector;
 
+        target = left.CameraTarget;
+        right.CameraTarget = target+off;
+        
+        % set perspective projections
+        left.Projection = "perspective";
+        right.Projection = "perspective";
+        
+        % turn off axes for right view
+        right.Visible = "Off";
+        
+        % set color for right view
+        hg2 = plottform(X, axhandle=right, color=options.anaglyph.extractBetween(2,2));
+        
+        % the hgtransform for the right view is user data for the left
+        % view hgtransform, we need to change both when we rotate the
+        % frame.
+        hg.UserData = hg2;
+    end
+    
+    % optionally return the handle, for later modification of pose
     if nargout > 0
         hout = hg;
     end
 end
 
-function T3 = se2t3(T2)
-    T3 = [T2(1:2,1:2) zeros(2,1) T2(1:2,3); 0 0 1 0; 0 0 0 1];
+function out = ag_color(c)
+
+    % map color character to an color triple, same as anaglyph.m
+    
+    % map single letter color codes to image planes
+    switch c
+        case 'r'
+            out = [1 0 0];        % red
+        case 'g'
+            out = [0 1 0];        % green
+        case 'b'
+            % blue
+            out = [0 0 1];
+        case 'c'
+            out = [0 1 1];        % cyan
+        case 'm'
+            out = [1 0 1];        % magenta
+        case 'o'
+            out = [1 1 0];        % orange
+    end
 end
