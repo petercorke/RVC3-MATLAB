@@ -13,35 +13,33 @@
 %
 % Options:
 %
-% handle -             Update the specified handle
-% axhandle -           Draw in the MATLAB axes specified by the axis handle
-%
-% color -              The color to draw the axes, MATLAB ColorSpec
-% axes -               Show the MATLAB axes, box and ticks (default true)
-% axis -               Set dimensions of the MATLAB axes to A=[xmin xmax ymin ymax zmin zmax]
-% frame -              The coordinate frame is named {F} and the subscript on the axis labels is F.
-% labelstyle -         Frame axis labels are "none"; "axis" for labels given
-%                      by labels option; or "axis_frame" (default) for labels given by
-%                      labels option and subscript from frame label.
-% framelabeloffset -   Offset O=[DX DY] frame labels in units of text box height
-% text_options -       A struct of MATLAB text properties
-% length -             Length of the coordinate frame arms (default 1)
-% LineWidth -          Thickness of lines (default 0.5)
-% text -               Enable display of X,Y,Z labels on the frame (default true)
-% labels -             Label the X,Y,Z axes with the 1st, 2nd, 3rd character of the string L
-% style -              axis line and color style. "plain" drawn using color
-%                      and LineWidth; "rgb" are colored red (x-axis), green (y-axis) and blue (z-axis).
-%                      and LineWidth; "rviz" drawn in RVIZ style axes with thick axis lines,
-%                      no arrows, and colored red (x-axis), green (y-axis) and blue (z-axis).
-% arrow -              Use arrows rather than line segments for the axes
-%
-% projection -         set the 3D projection to either "orthographic" (default) or "perspective".
-% anaglyph -           create an analglyph where the left and right
-%                      images are drawn using single-letter color codes in the string LR
-%                      chosen from r)ed, g)reen, b)lue, c)yan, m)agenta.
-% disparity -          Disparity for 3d display (default 0.1)
-% view -               set the view parameters azimuth and
-%                      elevation, as returned by the VIEW command.
+% handle           - Update the specified handle
+% axhandle         - Draw in the MATLAB axes specified by the axis handle
+% color            - The color to draw the axes, MATLAB ColorSpec
+% axes             - Show the MATLAB axes, box and ticks (default true)
+% axis             - Set dimensions of the MATLAB axes to A=[xmin xmax ymin ymax zmin zmax]
+% frame            - The coordinate frame is named {F} and the subscript on the axis labels is F.
+% labelstyle       - Frame axis labels are "none"; "axis" for labels given
+%                    by labels option; or "axis_frame" (default) for labels given by
+%                    labels option and subscript from frame label.
+% framelabeloffset - Offset O=[DX DY] frame labels in units of text box height
+% text_options     - A struct of MATLAB text properties
+% length           - Length of the coordinate frame arms (default 1)
+% LineWidth        - Thickness of lines (default 0.5)
+% text             - Enable display of X,Y,Z labels on the frame (default true)
+% labels           - Label the X,Y,Z axes with the 1st, 2nd, 3rd character of the string L
+% style            - Axis line and color style. "plain" drawn using color
+%                    and LineWidth; "rgb" are colored red (x-axis), green (y-axis) and blue (z-axis).
+%                    and LineWidth; "rviz" drawn in RVIZ style axes with thick axis lines,
+%                    no arrows, and colored red (x-axis), green (y-axis) and blue (z-axis).
+% arrow            - Use arrows rather than line segments for the axes
+% projection       - Set the 3D projection to either "orthographic" (default) or "perspective".
+% anaglyph         - Create an analglyph where the left and right
+%                    images are drawn using single-letter color codes in the string LR
+%                    chosen from r)ed, g)reen, b)lue, c)yan, m)agenta.
+% disparity        - Disparity for 3d display (default 0.1)
+% view               set the view parameters azimuth and
+%                    elevation, as returned by the VIEW command.
 %
 % Examples:
 %    PLOTTFORM(T, frame="A")
@@ -57,6 +55,7 @@
 %
 % See also PLOTTFORM2D.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 function hout = plottform(X, options)
     arguments
@@ -126,13 +125,14 @@ function hout = plottform(X, options)
     % sort out the colors of axes and text
     if options.anaglyph == ""
         % no anaglyph
-        if options.style == "plain"
-            axcolors = [options.color options.color options.color];
-        elseif options.style == "rgb"
-            axcolors = ["r" "g" "b"];
-        elseif options.style == "rviz"
-            options.LineWidth = 5;
-            options.arrow = false;
+        switch options.style
+            case "plain"
+                axcolors = [options.color options.color options.color];
+            case "rgb"
+                axcolors = ["r" "g" "b"];
+            case "rviz"
+                options.LineWidth = 5;
+                options.arrow = false;
         end
     else
         % anaglyph, color choice overrides
@@ -146,7 +146,6 @@ function hout = plottform(X, options)
         
         % get the origin of the frame
         c = tform2trvec(T);
-    
         d = 1.2;
         options.axis = [c(1)-d c(1)+d c(2)-d c(2)+d c(3)-d c(3)+d];
         
