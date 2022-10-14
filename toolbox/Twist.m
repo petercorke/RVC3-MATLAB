@@ -1,377 +1,282 @@
-%TWIST SE(3) Twist class
+%TWIST 3D twist class
 %
 % A Twist class holds the parameters of a twist, a representation of a
-% rigid body displacement in SE(3).
+% rigid body displacement in 3D.  A twist comprises the six unique elements
+% of the logarithm of the SE(3) matrix.
 %
-% Methods::
-%  S             twist vector (1x6)
-%  se3           twist as (augmented) skew-symmetric matrix (4x4)
-%  T             convert to homogeneous transformation (4x4)
-%  R             convert rotational part to matrix (23x3)
-%  exp           synonym for T
-%  ad            logarithm of adjoint
-%  pitch         pitch of the screw
-%  pole          a point on the line of the screw
-%  prod          product of a vector of Twists
-%  theta         rotation about the screw
-%  line          Plucker line object representing line of the screw
-%  display       print the Twist parameters in human readable form
-%  char          convert to string
+% TW = Twist(T) is a Twist object constructed from an SE(3) matrix (4x4).
 %
-% Conversion methods::
-%  SE            convert to SE3 object
-%  double        convert to real vector
+% TW = Twist(V) is a Twist object constructed directly from the vector V
+% (1x6) comprising the directional and moment components.
 %
-% Overloaded operators::
-%  *             compose two Twists
-%  *             multiply Twist by a scalar
+% Methods:
+%  pitch         - pitch of the twist
+%  pole          - a point on the line of the screw
+%  theta         - rotation about the screw
+%  Ad            - adjoint matrix (6x6)
+%  ad            - logarithm of adjoint matrix (6x6)
+%  prod          - product of a vector of Twists
+%  line          - Plucker line object representing line of the screw
+%  printline     - print twist in compact single line format
+%  char          - convert to string
+%  display       - print the Twist parameters in human readable form
 %
-% Properties (read only)::
-%  v             moment part of twist (3x1)
-%  w             direction part of twist (3x1)
+% Static methods:
+%  UnitRevolute  - create a unit revolute twist
+%  UnitPrismatic - create a unit prismatic twist
+%  Euler         - create a pure rotational twist
 %
-% References::
-% - "Mechanics, planning and control"
-%   Park & Lynch, Cambridge, 2016.
+% Conversion methods:
+%  compact       - convert to a MATLAB vector (1x6)
+%  skewa         - convert to an augmented skew-symmetric matrix (4x4)
+%  tform         - convert to an SE(3) matrix (4x4)
+%  exp           - convert to an se3 object
 %
-% See also trexp, trexp2, trlog.
+% Overloaded operators:
+%  *             - compose Twist with Twist or SE(3)
+%  *             - transform SpatialVector subclass objects
+%  *             - scale Twist by a scalar
+%
+% Properties (read only):
+%  w             - direction part of twist (1x3)
+%  v             - moment part of twist (1x3)
+%
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Chapter 2
+% - Mechanics, planning and control, F.Park & K.Lynch, Cambridge, 2016.
+%
+% See also UnitRevolute, UnitPrismatic.
 
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 classdef Twist
     properties (SetAccess = protected)
-        v  %axis direction (column vector)
-        w  %moment (column vector)
+        v  % axis direction (column vector)
+        w  % moment (column vector)
     end
     
     methods
-        function tw = Twist(T, varargin)
-            %Twist.Twist Create Twist object
-            %
-            % TW = Twist(T) is a Twist object representing the SE(2) or SE(3)
-            % homogeneous transformation matrix T (3x3 or 4x4).
-            %
-            % TW = Twist(V) is a twist object where the vector is specified directly.
-            %            %
-            % TW = Twist('R', A, Q) is a Twist object representing rotation about the
-            % axis of direction A (3x1) and passing through the point Q (3x1).
-            %
-            % TW = Twist('R', A, Q, P) as above but with a pitch of P (distance/angle).
-            %
-            % TW = Twist('T', A) is a Twist object representing translation in the
-            % direction of A (3x1).
-            %
-            % Notes::
-            %  The argument 'P' for prismatic is synonymous with 'T'.
+        function tw = Twist(T)
+            %Twist Construct object
+            arguments
+                T double = eye(4)
+            end
             
-            if ischar(T) || isstring(T)
-                % 'P', dir
-                % 'R', dir, point 3D
-                % 'R', point   2D
-                switch upper(char(T))
-                    case 'R'
-                        
-                        dir = varargin{1};
-                        if length(dir) < 3
-                            error('SMTB:Twist:badarg', 'For 2d case can only specify position');
-                        end
-                        point = varargin{2};
-                        
-                        w = unit(dir(:))';
-                        
-                        v = -cross(w, point(:)');
-                        if nargin >= 4
-                            pitch = varargin{3};
-                            v = v + pitch * w;
-                        end
-                        
-                        
-                    case {'P', 'T'}
-                        dir = varargin{1};
-                        
-                        w = [0 0 0];
-                        v = unit(dir(:)');
-                end
-                
-                if ~isa(v, 'sym')
-                    v(abs(v)<eps) = 0;
-                end
-                if ~isa(w, 'sym')
-                    w(abs(w)<eps) = 0;
-                end
-                tw.v = v;
-                tw.w = w;
-            elseif size(T,1) == size(T,2)
-                % it's a square matrix
+            if all(size(T) == [4 4])
                 if T(end,end) == 1
                     % its a homogeneous matrix, take the logarithm
-                    S = logm(T);  % use closed form for SE(3)
-
-                    tw.v = S(1:3,4)';
-                    tw.w = skew2vec(S(1:3, 1:3));
+                    S = logm(T);
+                    s = skewa2vec(S);
                 else
                     % it's an augmented skew matrix, unpack it
-                    tw.v = S(1:3,4)'
-                    tw.w = skew2vec(S(1:3, 1:3));
+                    s = skewa2vec(T);
                 end
-            elseif isvector(T)
-                % its a row vector form of twist, unpack it
-                if length(T) == 6
-                    tw.w = T(1:3)';
-                    tw.v = T(4:6)';
-                else
-                    error('SMTB:Twist:badarg', '3 or 6 element vector expected');
+
+            elseif isvec(T, 6)
+                % in vector form
+                if ~isa(T, "sym")
+                    T(abs(T)<eps) = 0;
                 end
+                s = T;
+            else
+                error("RVC3:Twist:badarg", "4x4 or 1x6 matrix expected");
             end
+            tw.v = s(4:6);
+            tw.w = s(1:3);
         end
 
         function printline(obj, varargin)
+            %PRINTLINE Print twist in compact single line format
+            %
+            % TW.PRINTLINE print twist in compact single line format.
+            %
+            % TW.PRINTLINE(OPTIONS) as above but with options passed to
+            % PRINTTFORM.
+            %
+            % See also PRINTTFORM.
             printtform(obj.tform, varargin{:});
         end
         
-        function Su = unit(S)
-            %Twist.unit Return a unit twist
+        function ut = unit(tw, tol)
+            arguments
+                tw (1,1) Twist
+                tol (1,1) double = 10
+            end
+            %UNIT Return a unit twist
             %
-            % TW.unit() is a Twist object representing a unit aligned with the Twist
-            % TW.
-            if abs(S.w) > 10*eps
+            % TW.UNIT is a unit twist object representing a unit aligned with
+            % the twist TW.
+            %
+            % TW.UNIT(TOL) as above but use norm(TW.W) < TOL*eps as the
+            % threshold to determine if twist is revolute.
+            if norm(tw.w) > tol*eps
                 % rotational twist
-                Su = Twist( compact(S) / norm(S.w) );
+                ut = Twist( compact(tw) / norm(tw.w) );
             else
                 % prismatic twist
-                Su = Twist( [unit(S.v); 0; 0; 0] );
+                ut = Twist( [0 0 0 unit(tw.v)] );
             end
         end
         
-        function x = S(tw)
-            %Twist.S Return the twist vector
-            %
-            % TW.S is the twist vector in se(3) as a vector (6x1).
-            %
-            % Notes::
-            % - Sometimes referred to as the twist coordinate vector.
-            x = [tw.w tw.v];
-        end
-        
-%         function x = double(tw)
-%             %Twist.double Return the twist vector
-%             %
-%             % double(TW) is the twist vector in se(3) as a vector (6x1). 
-%             % If TW is a vector (1xN) of Twists the result is a matrix (6xN) with
-%             % one column per twist.
-%             %
-%             % Notes::
-%             % - Sometimes referred to as the twist coordinate vector.
-%             x = [tw.v tw.w];
-%         end
         function x = tform(tw, theta)
-            if nargin < 2
-                theta = 1;
+            arguments
+                tw (1,1) Twist
+                theta (1,1) double = 1
             end
-            x = expm(vec2skewa(tw.S * theta));
+            %TFORM Convert twist to SE(3) matrix
+            %
+            % TW.TFORM is the exponential of the twist which is the
+            % equivalent transformation expressed as an SE(3) matrix (4x4).
+            %
+            % TW.TFORM(THETA) as above but TW is a unit twist and THETA is
+            % the rotation about the twist axis.
+            %
+            % See also EXP.
+
+            x = expm(vec2skewa(tw.compact * theta));
+        end
+
+        function x = exp(tw, theta)
+            arguments
+                tw (1,1) Twist
+                theta (1,:) double = 1
+            end
+            %EXP Convert twist to se3 object
+            %
+            % TW.EXP is the exponential of the twist which is the
+            % equivalent transformation expressed as an se3 object.
+            %
+            % TW.EXP(THETA) as above but TW is a unit twist and THETA is
+            % the rotation about the twist axis. If THETA is a vector the
+            % result will be a vector of TW exponentiated with the elements
+            % of THETA.
+            %
+            % See also TFORM.
+
+            for i=1:length(theta)
+                x(i) = se3(expm(vec2skewa(tw.compact * theta(i))));
+            end
         end
 
         function x = compact(tw)
-            x = tw.S;
-        end
-
-%         function x = se3(tw)
-%             %Twist.se3 Return the twist matrix
-%             %
-%             % TW.se is the twist matrix in se(3) which is an augmented
-%             % skew-symmetric matrix (4x4).
-%             %
-%             % See also Twist.skewa.
-%             x = vec2skewa(tw.S);
-%         end
-
-        function x = skewa(tw)
-            %Twist.skewa Return the twist matrix
+            %COMPACT Convert twist to MATLAB vector
             %
-            % TW.skewa is the twist matrix in se(3) which is an augmented
-            % skew-symmetric matrix (4x4).
-            %
-            % See also Twist.se3.
-            x = vec2skewa(tw.S);
+            % TW.COMPACT is a 6-element MATLAB vector comprising the
+            % directional then moment components of the twist.
+            x = [tw.w tw.v];
         end
         
-        function c = mtimes(a, b)
-            %Twist.mtimes Multiply twist by twist or scalar
+        function x = skewa(tw)
+            %SKEWA Return the twist as se(3) matrix
             %
-            % TW1 * TW2 is a new Twist representing the composition of twists TW1 and
-            % TW2.
+            % TW.SKEWA is the twist as an se(3) matrix, a 4x4 augmented
+            % skew-symmetric matrix.
             %
-            % TW * T is an se3 that is the composition of the twist TW and the
-            % homogeneous transformation object T.
+            % See also se3.
+            x = vec2skewa(tw.compact);
+        end
+        
+        function c = mtimes(left, right)
+            %MTIMES Multiply twist by other object
             %
-            % TW * S with its twist coordinates scaled by scalar S.
+            % Compose or scale twists, or transform a spatial vector
+            % subclass object.
             %
-            % TW * T compounds a twist with an se3 transformation
+            %   left   right                result
+            %   -----+---------------------+----------------------
+            %   Twist  Twist                Twist
+            %   Twist  scalar               Twist
+            %   Twist  4x4                  4x4
+            %   Twist  se3                  se3
+            %   Twist  SpatialVelocity      SpatialVelocity
+            %   Twist  SpatialAcceleration  SpatialAcceleration
+            %   Twist  SpatialForce         SpatialForce
+            %   scalar Twist                Twist
+            %   4x4    Twist                4x4
             %
             
-            if isa(a, 'Twist')
-                if isa(b, 'Twist')
+            if isa(left, "Twist")
+                if isa(right, "Twist")
                     % twist composition
-                    c = Twist( a.tform * b.tform);
-                elseif isreal(b)
-                    c = Twist(a.S * b);
-                elseif length(a.v) == 3 && ishomog(b)
-                    % compose a twist with SE3, result is an SE3
-                    c = se3(a.tform * double(b));
-                elseif isa(b, 'SpatialVelocity')
-                    c = SpatialVelocity(a.Ad * b.vw);
-                elseif isa(b, 'SpatialAcceleration')
-                    c = SpatialAcceleration(a.Ad * b.vw);
-                elseif isa(b, 'SpatialForce')
-                    c = SpatialForce(a.Ad' * b.vw);
+                    c = Twist( left.tform * right.tform);
+                elseif isscalar(right) && isreal(right)
+                    c = Twist(left.compact * right);
+                elseif istform(right)
+                    % compose a twist with SE(3), result is an SE(3)
+                    c = left.tform * double(right);
+                elseif isa(right, "se3")
+                    % compose a twist with se3, result is an se3
+                    c = se3(left.tform * right.tform);
+                elseif isa(right, "SpatialVelocity")
+                    c = SpatialVelocity(left.Ad * right.vw);
+                elseif isa(right, "SpatialAcceleration")
+                    c = SpatialAcceleration(left.Ad * right.vw);
+                elseif isa(right, "SpatialForce")
+                    c = SpatialForce(left.Ad' * right.vw);
                 else
-                    error('SMTB:Twist', 'twist * SEn, operands don''t conform');
+                    error("RVC3:Twist", "twist * SEn, operands don''t conform");
                 end
-            elseif isreal(a) && isa(b, 'Twist')
-                c = Twist(a * b.S);
-            elseif isa(a, 'Twist') && isreal(b)
-                c = Twist(a.S * b);
+            elseif isa(right, "Twist")
+                if isscalar(left) && isreal(left)
+                    c = Twist(left * right.compact);
+                elseif istform(left)
+                    % compose a twist with SE(3), result is an SE(3)
+                    c = double(left) * right.tform;
+                end
             else
-                error('SMTB:Twist: incorrect operand types for * operator')
+                error("RVC3:Twist: incorrect operand types for * operator")
             end
         end
         
         function x = mrdivide(a, b)
-            x = Twist(a.S / b);
+            %MRDIVIDE Scale twist by a scalar
+            %
+            % Scale twists.
+            %
+            %   left   right                result
+            %   -----+---------------------+----------------------
+            %   Twist  scalar               Twist
+            %
+            x = Twist(a.compact / b);
         end
-            
-        function x = se3(tw, varargin)
-            %Twist.SE3 Convert twist to homogeneous transformation
+
+        function x = Ad(tw)
+            %Ad Adjoint matrix
             %
-            % TW.SE3 is the homogeneous transformation equivalent to the twist (SE2 or SE3).
+            % TW.Ad is the adjoint matrix (6x6) of the corresponding
+            % homogeneous transformation.
             %
-            % TW.SE3(THETA) as above but with a rotation of THETA about the twist.
-            %
-            % Notes::
-            % - For the second form the twist must, if rotational, have a unit rotational component.
-            %
-            % See also Twist.T, trexp, trexp2.
-            opt.deg = false;
-            [opt,args] = tb_optparse(opt, varargin);
-            
-            if opt.deg && all(tw.w == 0)
-                warning('Twist: using degree mode for a prismatic twist');
-            end
-            
-            if ~isempty(args)
-                theta = args{1};
-                
-                if opt.deg
-                    theta = theta * pi/180;
-                end
-            else
-                theta = 1;
-            end
-            
-            ntheta = length(theta);
-            assert(length(tw) == ntheta || length(tw) == 1, 'Twist:exp:badarg', 'length of twist vector must be 1 or length of theta vector')
-            
-            x(ntheta) = se3;
-            if length(tw) == ntheta
-                for i=1:ntheta
-                    x(i) = se3(expm( vec2skewa(tw(i).S * theta(i)) ));
-                end
-            else
-                for i=1:ntheta
-                    x(i) = se3(expm( vec2skewa(tw.S * theta(i)) ));
-                end
-            end
+            % See also SE3.AD.
+            x = tform2adjoint(tw.tform);
         end
         
         function x = ad(tw)
-            %Twist.ad Logarithm of adjoint
+            %AD Logarithm of adjoint matrix
             %
-            % TW.ad is the logarithm of the adjoint matrix of the corresponding
-            % homogeneous transformation.
+            % TW.AD is the logarithm of the adjoint matrix (6x6) of the
+            % corresponding homogeneous transformation, if TW is a unit
+            % twist.
             %
             % See also SE3.Ad.
             x = [ vec2skew(tw.w) vec2skew(tw.v); zeros(3,3) vec2skew(tw.w) ];
         end
-        
-        function x = Ad(tw)
-            %Twist.Ad Adjoint
-            %
-            % TW.Ad is the adjoint matrix of the corresponding
-            % homogeneous transformation.
-            %
-            % See also SE3.Ad.
-            x = tw.SE.Ad;
-        end
-        
-        
-        function out = se(tw, varargin)
-            %Twist.se Convert twist to SE3 object
-            %
-            % TW.se is an SE3 object representing the homogeneous transformation equivalent to the twist.
-            %
-            % See also Twist.tform, se2, se3.
-            if length(tw.v) == 2
-                out = se2( tw.tform(varargin{:}) );
-            else
-                out = se3( tw.tform(varargin{:}) );
-            end
-        end
-        
-        function x = exp(tw, theta)
-            %Twist.T Convert twist to SE3
-            %
-            % TW.exp() is the homogeneous transformation equivalent to the twist as an SE3 object.
-            %
-            % TW.exp(THETA) as above but with a rotation of THETA about the twist.
-            %
-            % Notes::
-            % - For the second form the twist must, if rotational, have a unit rotational component.
-            %
-            % See also Twist.exp, trexp, trexp2, trinterp, trinterp2.
-%             x = double( tw.exp(varargin{:}) );
-            if nargin == 1
-                theta = 1;
-            end
-            x = se3(expm(theta * tw.skewa));
-        end
-        
-        
+
         function p = pitch(tw)
-            %Twist.pitch Pitch of the twist
+            %PITCH Pitch of the twist
             %
-            % TW.pitch is the pitch of the Twist as a scalar in units of distance per radian.
+            % TW.PITCH is the pitch of the twist as a scalar in units of
+            % distance per radian.
 
             p = tw.w * tw.v';
         end
         
         function L = line(tw)
-            %Twist.line Line of twist axis in Plucker form
+            %LINE Line of twist axis in Plucker form
             %
-            % TW.line is a Plucker object representing the line of the twist axis.
-            %
-            % Notes::
-            % - For 3D case only.
+            % TW.LINE is a Plucker object representing the line of the
+            % twist axis.
             %
             % See also Plucker.
             
@@ -381,49 +286,47 @@ classdef Twist
             end
         end
         
-        function out = prod(obj)
-            %Twist.prod Compound array of twists
+        function out = prod(tw)
+            %PROD Compound array of twists
             %
-            % TW.prod is a twist representing the product (composition) of the
+            % TW.PROD is a twist representing the product (composition) of the
             % successive elements of TW (1xN), an array of Twists.
             %
-            %
-            % See also RTBPose.prod, Twist.mtimes.
-            out = obj(1);
-            
-            for i=2:length(obj)
-                out = out * obj(i);
+            out = tw(1);
+            for i=2:length(tw)
+                out = out * tw(i);
             end
         end
         
         function p = pole(tw)
-            %Twist.pole Point on the twist axis
+            %POLE Point on the twist axis
             %
-            % TW.pole is a point on the twist axis (3x1).
+            % TW.POLE is a point on the twist axis (1x3).
             %
             % Notes::
-            % - For pure translation this point is at infinity.
-
+            % - For a pure translational twist, this point is at infinity.
             p = cross(tw.w, tw.v) / tw.theta();
         end
         
         function th = theta(tw)
-            %Twist.theta Twist rotation
+            %THETA Twist rotation
             %
-            % TW.theta is the rotation (1x1) about the twist axis in radians.
+            % TW.THETA is the rotation (1x1) about the twist axis in
+            % radians.
             %
+            % See also
             
             th = norm(tw.w);
         end
-        
-        
+       
         function s = char(tw)
-            %Twist.char Convert to string
+            %CHAR Convert to string
             %
-            % s = TW.char() is a string showing Twist parameters in a compact single line format.
-            % If TW is a vector of Twist objects return a string with one line per Twist.
+            % TW.CHAR() is a string showing twist parameters in a compact
+            % single line format. If TW is a vector of Twist objects return
+            % a string with one line per Twist.
             %
-            % See also Twist.display.
+            % See also DISP.
             s = '';
             for i=1:length(tw)
                 
@@ -439,43 +342,76 @@ classdef Twist
                     s = char(s, ps);
                 end
             end
-            
-            
         end
-        
-        function display(tw) %#ok<DISPLAY>
-            %Twist.display Display parameters
+
+        function disp(nav)
+            %DISP Display twist parameters
             %
-            % L.display() displays the twist parameters in compact single line format.  If L is a
-            % vector of Twist objects displays one line per element.
+            %   TW.DISP displays twist parameters in compact human readable
+            %   form.
             %
-            % Notes::
-            % - This method is invoked implicitly at the command line when the result
-            %   of an expression is a Twist object and the command has no trailing
-            %   semicolon.
+            %   This method is invoked implicitly at the command line when
+            %   the result of an expression is a Twist object and the
+            %   command has no trailing semicolon.
             %
-            % See also Twist.char.
-            loose = strcmp( get(0, 'FormatSpacing'), 'loose'); %#ok<GETFSP>
+            %   See also CHAR.
+
+            loose = strcmp( get(0, 'FormatSpacing'), 'loose'); %#ok<GETFSP> 
             if loose
                 disp(' ');
             end
             disp([inputname(1), ' = '])
-            disp( char(tw) );
-        end % display()
-        
-    end
+            disp( char(nav) );
+        end
+    end % methods
 
     methods(Static)
-        function tw = UnitRevolute(varargin)
-            tw = Twist('R', varargin{:});
+        function tw = UnitRevolute(dir, point, pitch)
+            arguments
+                dir (1,3) double
+                point (1,3) double
+                pitch (1,1) double = 0
+            end
+            %UnitRevolute Create a unit revolute twist
+            %
+            % TW = Twist.UnitRevolute(A, Q) creates a unit twist
+            % representing rotation about the axis A (1x3) through the
+            % point Q (1x3).
+            % 
+            % TW = Twist.UnitRevolute(A, Q, P) as above but with a pitch of
+            % P (distance/angle).
+            %
+            % See also Twist, Twist.UnitPrismatic.
+                        
+            w = unit(dir);
+            v = -cross(w, point) + pitch * w;
+            tw = Twist([w v]);
         end
 
-        function tw = UnitPrismatic(varargin)
-            tw = Twist('P', varargin{:});
+        function tw = UnitPrismatic(dir)
+            arguments
+                dir (1,3) double
+            end
+            %UnitPrismatic Create a unit prismatic twist
+            %
+            % TW = Twist.UnitPrismatic(A) creates a unit twist representing
+            % translation along the axis A (1x3).
+            %
+            % See also Twist, Twist.UnitRevolute.
+                        
+            w = [0 0 0];
+            v = unit(dir);
+            tw = Twist([w v]);
         end
 
-        function tw = RPY(varargin)
+        function tw = Euler(varargin)
+            %RPY Create a pure rotational twist from RPY angles
+            %
+            % TW = Twist.Euler(EUL, SEQ) creates a pure rotational twist from
+            % the given Euler angles.
+            %
+            % See also EUL2TFORM.
             tw = Twist(se3(eul2tform(varargin{:})));
         end
-    end
-end
+    end % methods
+end % classdef
