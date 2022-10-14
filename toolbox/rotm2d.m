@@ -1,46 +1,43 @@
-%ROTM2D SO(2) rotation matrix
+%ROTM2D Cretae SO(2) rotation matrix
 %
-%   R = ROTM2D(THETA) is an SO(2) rotation matrix (2x2) representing a 
-%   rotation of THETA radians.
+% R = ROTM2D(THETA) is an SO(2) rotation matrix (2x2) representing a 
+% rotation of THETA radians.
 %
-%   R = ROTM2D(THETA, 'deg') as above but THETA is in degrees.
+% R = ROTM2D(THETA, "deg") as above but THETA is in degrees.
 %
-%   See also TROT2, ISROTM2D, TRPLOT2, ROTMX, ROTMY, ROTMZ, SO2.
+% See also TROT2, ISROTM2D, TRPLOT2, ROTMX, ROTMY, ROTMZ, so2.
 
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
-function R = rotm2d(t, deg)
+function R = rotm2d(theta, unit)
+    arguments
+        theta (1,1) = 0
+        unit (1,1) string {mustBeMember(unit, ["rad", "deg"])} = "rad"
+    end
 
-if nargin > 1 && strcmp(deg, 'deg')
-    t = t *pi/180;
-end
+    assert((isreal(theta) | isa(theta, "sym")), ...
+        "RVC3:rotm2d:badarg", "theta must be a real scalar or symbolic");
+    
+    if unit == "deg"
+        theta = deg2rad(theta);
+    end
+    
+    ct = cos(theta);
+    st = sin(theta);
+    
+    % make almost zero elements exactly zero
+    if ~isa(theta, "sym")
+        if abs(st) < eps
+            st = 0;
+        end
+        if abs(ct) < eps
+            ct = 0;
+        end
+    end
 
-ct = cos(t);
-st = sin(t);
-R = [
-    ct  -st
-    st   ct
-    ];
-
+    % create the rotation matrix
+    R = [
+        ct  -st
+        st   ct
+        ];
 end
