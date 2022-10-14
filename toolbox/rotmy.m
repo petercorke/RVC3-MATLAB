@@ -1,62 +1,50 @@
-%ROTMY SO(3) rotation about Y axis
+%ROTMY Create SO(3) matrix for rotation about Y axis
 %
-%   R = ROTMY(THETA) is an SO(3) rotation matrix (3x3) representing a 
-%   rotation of THETA radians about the y-axis.
+% R = ROTMY(THETA) is an SO(3) rotation matrix (3x3) representing a 
+% rotation of THETA radians about the y-axis.
 %
-%   R = ROTMY(THETA, 'deg') as above but THETA is in degrees.
+% R = ROTMY(THETA, "deg") as above but THETA is in degrees.
 %
-%   See also TROTY, ROTMX, ROTMZ, ANGVEC2R, ROTM2D, SO3.Ry.
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Chapter 2
+%
+% See also TFORMRY, ROTMX, ROTMZ, ROTM2D, so3.
 
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
-function R = rotmy(t, deg)
-
-assert((isreal(t) & isscalar(t)) | isa(t, 'sym'), ...
-    'SMTB:rotmy:badarg', 'theta must be a real scalar');
-
-if nargin > 1 && strcmp(deg, 'deg')
-    t = t *pi/180;
-end
-
-ct = cos(t);
-st = sin(t);
-
-% make almost zero elements exactly zero
-if ~isa(t, 'sym')
-    if abs(st) < eps
-        st = 0;
+function R = rotmy(theta, unit)
+    arguments
+        theta (1,1) = 0
+        unit (1,1) string {mustBeMember(unit, ["rad", "deg"])} = "rad"
     end
-    if abs(ct) < eps
-        ct = 0;
-    end
-end
 
-% create the rotation matrix
-R = [
-    ct  0   st
-    0   1   0
-    -st  0   ct
-    ];
+    assert((isreal(theta) | isa(theta, "sym")), ...
+        "RVC3:rotmy:badarg", "theta must be a real scalar or symbolic");
+    
+    if unit == "deg"
+        theta = deg2rad(theta);
+    end
+    
+    ct = cos(theta);
+    st = sin(theta);
+    
+    % make almost zero elements exactly zero
+    if ~isa(theta, "sym")
+        if abs(st) < eps
+            st = 0;
+        end
+        if abs(ct) < eps
+            ct = 0;
+        end
+    end
+
+    % create the rotation matrix
+    R = [
+         ct  0   st
+         0   1   0
+        -st  0   ct
+        ];
 
 end

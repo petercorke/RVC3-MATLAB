@@ -1,4 +1,4 @@
-%TFORM2D SE(2) transformation matrix
+%TFORM2D Create SE(2) homogeneous transformation matrix
 %
 % T = TFORM2D([X,Y,THETA]) is a homogeneous transformation (3x3) representing a rotation 
 % of THETA radians and a translation of [X,Y].
