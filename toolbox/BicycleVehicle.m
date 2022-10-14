@@ -90,9 +90,9 @@
 %
 %
 %   Reference:
-%      Robotics, Vision & Control, Chap 6
-%      Peter Corke,
-%      Springer 2011
+%   - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%     P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%     Chapter 2
 %
 % See also RandomDriver, EKF.
 
