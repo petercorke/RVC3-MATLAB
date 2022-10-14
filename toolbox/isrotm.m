@@ -1,34 +1,34 @@
-%ISROTM2D Test if value is SO(2) rotation matrix
+%ISROTM Test if value is SO(3) rotation matrix
 %
-% ISROTM2D(R) is true (1) if the argument is of dimension 2x2 or 2x2xN,
-% else false (0).
+% ISROTM(R) is true (1) if the argument is of dimension 3x3 or 3x3xN, else false (0).
 %
-% ISROTM2D(R, check=true) as above, but also checks the validity of the
-% rotation matrix.
+% ISROTM(R, check=true) as above, but also checks the validity of the rotation
+% matrix.
 %
-% Notes:
-% - A valid rotation matrix R has R'*R = I and det(R)=1.
-% - The first form is a fast, but incomplete, test that a matrix belong
-%   to SO(2).
+% Notes::
+% - A valid rotation sub-matrix R has R'*R = I and det(R)=1.
+% - The first form is a fast, but incomplete, test that a transform belong
+%   to SO(3).
 %
-% See also ISROTM, ISTFORM2D, ISVEC.
+% See also ISTFORM, ISROTM2, ISVEC.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
-function h = isrotm2d(R, options)
+function h = isrotm(R, options)
     arguments
         R
         options.check (1,1) logical = false
     end
 
     h = false;
+
     if ~isnumeric(R)
         return
     end
 
     d = size(R);
     if ndims(R) >= 2
-        if ~(all(d(1:2) == [2 2]))
+        if ~(all(d(1:2) == [3 3]))
             return %false
         end
         
@@ -36,7 +36,7 @@ function h = isrotm2d(R, options)
             for i = 1:size(R,3)
                 RR = R(:,:,i);
                 % check transpose is inverse
-                e = RR'*RR - eye(2,2);
+                e = RR'*RR - eye(3,3);
                 if norm(e) > 10*eps
                     return %false
                 end
