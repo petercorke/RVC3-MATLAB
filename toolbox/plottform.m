@@ -44,7 +44,7 @@
 % Examples:
 %    PLOTTFORM(T, frame="A")
 %    PLOTTFORM(T, frame="A", color="b")
-%    PLOTTFORM(T, frame='A', FontSize=10, FontWeight="bold")
+%    PLOTTFORM(T, frame="A", FontSize=10, FontWeight="bold")
 %    PLOTTFORM(T, labels="NOA");
 %    PLOTTFORM(T, anaglyph="rc"); % 3D anaglyph plot
 %
@@ -52,6 +52,11 @@
 % keep the handle:
 %    h = PLOTTFORM(T0);      % create the frame at its initial pose
 %    PLOTTFORM(T, handle=h); % moves the frame to new pose T
+%
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Chapter 2
 %
 % See also PLOTTFORM2D.
 
@@ -82,26 +87,26 @@ function hout = plottform(X, options)
     end
 
     % convert various forms to to hom transform
-    if isrot(X)
+    if isrotm(X)
         T = r2t(X);
-    elseif ishomog(X)
+    elseif istform(X)
         T = X;
-    elseif isa(X, 'se3')
+    elseif isa(X, "se3")
         T = X.tform();
-    elseif isa(X, 'rigid3d')
+    elseif isa(X, "rigid3d")
         T = X.T();
-    elseif isa(X, 'Twist')
+    elseif isa(X, "Twist")
         T = X.tform();
-    elseif isa(X, 'so3')
+    elseif isa(X, "so3")
         T = rotm2tform(X.rotm());
-    elseif isa(X, 'quaternion')
+    elseif isa(X, "quaternion")
         T = rotm2tform(X.rotmat("point"));
     else
-        error('RVC3:plottform:badarg', 'argument must be 3x3 or 4x4 matrix, so3, se3, quaternion or Twist');
+        error("RVC3:plottform:badarg", "argument must be 3x3 or 4x4 matrix, so3, se3, quaternion or Twist");
     end
     
     if size(T,3) > 1
-        error('RVC3:plottform:badarg', 'plottform cannot operate on a sequence');
+        error("RVC3:plottform:badarg", "cannot operate on a sequence, see animtform");
     end
     
     % ensure it's SE(3)
@@ -201,12 +206,6 @@ function hout = plottform(X, options)
     mend = mend(1:3, :);
 
     if options.arrow
-        %         % draw the 3 arrows
-        %         S = [options.color num2str(options.width)];
-        %         ha = arrow3(mstart, mend, S);
-        %         for h=ha'
-        %             set(h, 'Parent', hg);
-        %         end
         daspect([1,1,1])
         diff = mend - mstart;
         for i=1:3
@@ -317,27 +316,5 @@ function hout = plottform(X, options)
     % optionally return the handle, for later modification of pose
     if nargout > 0
         hout = hg;
-    end
-end
-
-function out = ag_color(c)
-
-    % map color character to an color triple, same as anaglyph.m
-    
-    % map single letter color codes to image planes
-    switch c
-        case 'r'
-            out = [1 0 0];        % red
-        case 'g'
-            out = [0 1 0];        % green
-        case 'b'
-            % blue
-            out = [0 0 1];
-        case 'c'
-            out = [0 1 1];        % cyan
-        case 'm'
-            out = [1 0 1];        % magenta
-        case 'o'
-            out = [1 1 0];        % orange
     end
 end
