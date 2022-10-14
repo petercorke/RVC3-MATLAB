@@ -44,7 +44,7 @@
 % Examples:
 %    PLOTTFORM(T, frame="A")
 %    PLOTTFORM(T, frame="A", color="b")
-%    PLOTTFORM(T, frame='A', FontSize=10, FontWeight="bold")
+%    PLOTTFORM(T, frame="A", FontSize=10, FontWeight="bold")
 %    PLOTTFORM(T, labels="NOA");
 %    PLOTTFORM(T, anaglyph="rc"); % 3D anaglyph plot
 %
@@ -52,6 +52,11 @@
 % keep the handle:
 %    h = PLOTTFORM(T0);      % create the frame at its initial pose
 %    PLOTTFORM(T, handle=h); % moves the frame to new pose T
+%
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Chapter 2
 %
 % See also PLOTTFORM2D.
 
@@ -84,22 +89,22 @@ function hout = plottform(X, options)
     % convert various forms to to hom transform
     if isrotm2d(X)
         T = r2t(X);
-    elseif ishomog2d(X)
+    elseif istform2d(X)
         T = X;
-    elseif isa(X, 'se2')
+    elseif isa(X, "se2")
         T = X.tform();
-    elseif isa(X, 'rigid2d')
+    elseif isa(X, "rigid2d")
         T = X.T();
-    elseif isa(X, 'Twist2d')
+    elseif isa(X, "Twist2d")
         T = X.tform();
-    elseif isa(X, 'so2')
+    elseif isa(X, "so2")
         T = rotm2tform2d(X.rotm());
     else
-        error('RVC3:plottform2d:badarg', 'argument must be 2x2 or 3x3 matrix, so2, se2, or Twist2d');
+        error("RVC3:plottform2d:badarg", "argument must be 2x2 or 3x3 matrix, so2, se2, or Twist2d");
     end
     
     if size(T,3) > 1
-        error('RVC3:plottform2d:badarg', 'plottform2d cannot operate on a sequence');
+        error("RVC3:plottform2d:badarg", "cannot operate on a sequence, see animtform2d");
     end
     
     % ensure it's SE(3)
@@ -184,7 +189,7 @@ function hout = plottform(X, options)
     end
     
     hax.Projection = options.projection;
-    hg = hgtransform('Parent', hax);    
+    hg = hgtransform(Parent=hax);    
     
     % create unit vectors
     o =  [0 0 0]';
@@ -198,12 +203,6 @@ function hout = plottform(X, options)
     mend = mend(1:3, :);
 
     if options.arrow
-        %         % draw the 3 arrows
-        %         S = [options.color num2str(options.width)];
-        %         ha = arrow3(mstart, mend, S);
-        %         for h=ha'
-        %             set(h, 'Parent', hg);
-        %         end
         daspect([1,1,1])
         diff = mend - mstart;
         for i=1:3
@@ -225,9 +224,9 @@ function hout = plottform(X, options)
     % label the axes
     if options.labelstyle ~= "none"
         if options.labelstyle == "axis"
-            fmt = '%c';
+            fmt = "%c";
         elseif options.labelstyle == "axis_frame"
-            fmt = sprintf('%%c_{%s}', options.frame);
+            fmt = sprintf("%%c_{%s}", options.frame);
         end
 
         % add the labels to each axis
@@ -256,7 +255,7 @@ function hout = plottform(X, options)
     end
     
     if ~options.axes
-        set(gca, 'visible', 'off');
+        gca.visible = "off";
     end
     if (ischar(options.view) || isstring(options.view)) && options.view == "auto"
         cam = x1+y1+z1;
@@ -271,7 +270,7 @@ function hout = plottform(X, options)
 %     end
     
     % now place the frame in the desired pose
-    set(hg, 'Matrix', T);
+    set(hg, Matrix=T);
     
     
     if options.anaglyph ~= ""
@@ -317,24 +316,3 @@ function hout = plottform(X, options)
     end
 end
 
-function out = ag_color(c)
-
-    % map color character to an color triple, same as anaglyph.m
-    
-    % map single letter color codes to image planes
-    switch c
-        case 'r'
-            out = [1 0 0];        % red
-        case 'g'
-            out = [0 1 0];        % green
-        case 'b'
-            % blue
-            out = [0 0 1];
-        case 'c'
-            out = [0 1 1];        % cyan
-        case 'm'
-            out = [1 0 1];        % magenta
-        case 'o'
-            out = [1 1 0];        % orange
-    end
-end
