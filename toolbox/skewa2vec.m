@@ -28,20 +28,22 @@
 % - Robotics, Vision & Control: Second Edition, Chap 2,
 %   P. Corke, Springer 2016.
 %
-% See also SKEWA, VEX, Twist.
+% See also VEC2SKEWA, SKEW2VEC, Twist.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
-function s = skewa2vec(Omega)
+function s = skewa2vec(Omega, check)
+    arguments
+        Omega double {mustBeReal}
+        check (1,1) double = 0
+    end
 
-if all(size(Omega) == [4 4])
-    s = [skew2vec(Omega(1:3,1:3)) Omega(1:3,4)'];
-elseif all(size(Omega) == [3 3 ])
-    t = Omega(1:end-1,end,:);
-    tr = permute(t,[3 1 2]);
-    s = [skew2vec(Omega(1:2,1:2)) tr];
-else
-    error('SMTB:vexa:badarg', 'argument must be a 3x3 or 4x4 matrix');
-end
+    dims = size(Omega);
+    if dims(1) ~= dims(2) || ~any(dims(1) == [3 4])
+        error("RVC3:skewa2vec:badarg", "argument must be a 3x3 or 4x4 matrix");
+    end
 
-
+    ss = Omega(1:end-1,1:end-1);  % skew symmetric part
+    t = Omega(1:end-1,end);       % translation part
+    s = [skew2vec(ss, check) t'];
 end
