@@ -316,7 +316,7 @@ classdef Twist2d
             %
             % See also Twist2d, Twist2d.UnitPrismatic.
                         
-            v = -cross([0 0 1]', [point; 0]);
+            v = -cross([0 0 1], [point 0]);
             tw = Twist2d([1 v(1:2)]);
         end
 
