@@ -22,8 +22,8 @@
 
 function T = oa2tform(o, a)
     arguments
-        o (3,1) double
-        a (3,1) double
+        o (3,1)
+        a (3,1)
     end
 
 	n = cross(o, a);
