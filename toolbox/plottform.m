@@ -93,7 +93,7 @@ function hout = plottform(X, options)
         T = X;
     elseif isa(X, "se3")
         T = X.tform();
-    elseif isa(X, "rigid3d")
+    elseif isa(X, "rigidtform3d")
         T = X.T();
     elseif isa(X, "Twist")
         T = X.tform();
@@ -110,8 +110,8 @@ function hout = plottform(X, options)
     end
     
     % ensure it's SE(3)
-    if isrot(X)
-        X = r2t(X);
+    if isrotm(X)
+        X = rotm2tform(X);
     end
     
     if isfield(options, "handle")
