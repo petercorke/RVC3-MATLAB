@@ -19,72 +19,44 @@
 %   become `unnormalized'.
 % - There is no Toolbox function for SO(2) or SE(2).
 %
-% See also OA2TR, SO3.tformnorm, SE3.tformnorm.
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Chapter 2
 
-%## 3d homogeneous
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
+function TR = tformnorm(X)
 
-function TR = tformnorm(T)
-
-% must handle rotm tform so3 se3
-
-    if isa(T, 'se3')
-        T = T.tform();
-        is_se3 = true;
+    if isa(X, "se3")
+        T = X.tform();
+    elseif isa(X, "so3")
+        T = X.rotm;
     else
-        is_se3 = false;
+        T = X;
     end
 
-    assert(ishomog(T) || isrot(T), 'SMTB:tformnorm:badarg', 'expecting 3x3xN or 4x4xN hom xform');
+    assert(istform(T) || isrotm(T), 'RVC3:tformnorm:badarg', 'expecting 3x3xN or 4x4xN matrices or se3 or so3');
     
-    if ndims(T) == 3
-        % recurse for transform sequence
-        % TODO: probably very inefficient, need different logic if se3
-        % object
-        n = size(T);
-        TR = zeros(n);
-        for i=1:n(3)
-            TR(:,:,i) = tformnorm(T(:,:,i));
-        end
-        return
-    end
-    
-    o = T(1:3,2); a = T(1:3,3);
-    n = cross(o, a);         % N = O x A
-    o = cross(a, n);         % O = A x N
-    R = [unit(n) unit(o) unit(a)];
-    
-    if ishomog(T)
-        TR = rt2tr( R, T(1:3,4) );
-    elseif isrot(T)
-        TR = R;
+    n = size(T,3);
+    TN = T;
+    for i=1:n
+        o = T(1:3,2,i); a = T(1:3,3,i);
+        n = cross(o, a);         % N = O x A
+        o = cross(a, n);         % O = A x N
+        R = [unit(n) unit(o) unit(a)];
+
+        TN(1:3,1:3,i) = R;
     end
 
-
-    if is_se3
-        TR = se3(TR);
+    if istform(X)
+        TR = TN;
+    elseif isrotm(X)
+        TR = TN;
+    elseif isa(X, "se3")
+        TR = se3(TN);
+    elseif isa(X, "so3")
+        TR = so3(TN);
     end
 
 end

@@ -1,7 +1,7 @@
 %OA2TFORM Convert orientation and approach vectors to homogeneous transformation
 %
 % T = OA2TFORM(O, A) is an SE(3) homogeneous tranformation (4x4) for the
-% specified orientation and approach vectors (3x1) formed from 3 vectors
+% specified orientation and approach vectors (1x3) formed from 3 vectors
 % such that R = [N O A] and N = O x A.
 %
 % Notes::
@@ -11,17 +11,22 @@
 %   frame respectively.
 % - The translational part is zero.
 %
-% References::
-% - Robot manipulators: mathematics, programming and control
-%   Richard Paul, MIT Press, 1981.
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Chapter 2
 %
-% See also eul2tform, SE3.OA.
+% See also OA2ROTM.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
-function r = oa2tform(o, a)
-    assert( nargin >= 2 && isvec(o) && isvec(a), 'SMTB:oa2tform:badarg', 'bad arguments');
-    
+function T = oa2tform(o, a)
+    arguments
+        o (3,1) double
+        a (3,1) double
+    end
+
 	n = cross(o, a);
     o = cross(a, n);
-	r = [unit(n(:)) unit(o(:)) unit(a(:)) zeros(3,1); 0 0 0 1];
+	T = [unit(n) unit(o) unit(a) zeros(3,1); 0 0 0 1];
 end

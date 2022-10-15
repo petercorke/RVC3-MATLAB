@@ -4,25 +4,28 @@
 % orientation and approach vectors (3x1) formed from 3 vectors such that R
 % = [N O A] and N = O x A.
 %
-% Notes::
+% Notes:
 % - The matrix is guaranteed to be orthonormal so long as O and A 
 %   are not parallel.
 % - The vectors O and A are parallel to the Y- and Z-axes of the coordinate
 %   frame respectively.
 %
-% References::
-% - Robot manipulators: mathematics, programming and control
-%   Richard Paul, MIT Press, 1981.
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Chapter 2
 %
-% See also eul2rotm.
+% See also OA2TFORM.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 function R = oa2rotm(o, a)
+    arguments
+        o (3,1) double
+        a (3,1) double
+    end
 
-    assert( nargin >= 2 && isvec(o) && isvec(a), 'SMTB:oa2rotm:badarg', 'bad arguments');
-
-    o = o(:); a = a(:);
 	n = cross(o, a);
     o = cross(a, n);
-	R = [unit(n(:)) unit(o(:)) unit(a(:))];
+	R = [unit(n) unit(o) unit(a)];
 end
