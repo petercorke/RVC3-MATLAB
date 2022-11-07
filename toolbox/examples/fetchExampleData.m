@@ -1,5 +1,16 @@
 function fetchExampleData(exampleName)
+%fetchExampleData Download example data files.
+%   fetchExampleData(exampleName) downloads ZIP files for use with 
+%   RVC Toolbox examples and extracts the data into the toolbox/examples
+%   folder. exampleName is a string corresponding to the example name.
+%   Valid options for exampleName string are: "Mosaicing" and
+%   "VisualOdometry".
 
+% Copyright 2022; Witold Jachimczyk, Peter Corke, Remo Pillat
+
+arguments
+    exampleName (1,1) string {mustBeMember(exampleName,["Mosaicing","VisualOdometry"])}
+end
 
 switch exampleName
 
@@ -13,16 +24,14 @@ switch exampleName
         outputFolder = fullfile("visodom", "right");
         unpackFile(fetchedFile, outputFolder);
 
-    case "Mosaicking"
-        url= "https://petercorke.com/files/images/mosaic.zip";
-
-        fetchedFile = "yo.zip";
-        disp("Fetching mosaic.zip. This can take a while...")
-        websave(fetchedFile, url);
-        disp("Done!")
+    case "Mosaicing"
+        
+        fetchedFile = fetchFromWeb("mosaic.zip");
+        outputFolder = "mosaic";
+        unpackFile(fetchedFile, outputFolder);
 
     otherwise
-        error("Valid choices for exampleName are: VisualOdometry, Mosaicking");
+        error("Valid choices for exampleName are: VisualOdometry, Mosaicing");
 end
 
 end
