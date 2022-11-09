@@ -1,8 +1,8 @@
 %IMESHGRID Domain matrices for image
 %
-% [U,V] = IMESHGRID(IM) are matrices that describe the domain of image IM (HxW)
-% and are each HxW.  These matrices are used for the evaluation of functions 
-% over the image. The element U(R,C) = C and V(R,C) = R.
+% [U,V] = IMESHGRID(IM) are matrices that describe the domain of image IM
+% (HxW) and are each HxW.  These matrices are used for the evaluation of
+% functions over the image. The element U(R,C) = C and V(R,C) = R.
 %
 % [U,V] = IMESHGRID(W, H) as above but the domain is WxH.
 %
@@ -11,23 +11,7 @@
 %
 % See also MESHGRID, INTERP2.
 
-
-% Copyright (C) 1993-2011, by Peter I. Corke
-%
-% This file is part of The Machine Vision Toolbox for Matlab (MVTB).
-% 
-% MVTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% MVTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with MVTB.  If not, see <http://www.gnu.org/licenses/>.
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function [U,V] = imeshgrid(a1, a2)
 

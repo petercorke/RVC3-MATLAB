@@ -1,5 +1,6 @@
 function fetchExampleData(exampleName)
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 switch exampleName
 

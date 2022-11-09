@@ -1,10 +1,11 @@
 function [R, T]=getrotT(wpts,cpts);
-  
-% This routine solves the exterior orientation problem for a point cloud
+%getrotT This routine solves the exterior orientation problem for a point cloud
 %  given in both camera and world coordinates. 
   
 % wpts = 3D points in arbitrary reference frame
 % cpts = 3D points in camera reference frame
+
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
   
 n=size(wpts,1);
 M=zeros(3);

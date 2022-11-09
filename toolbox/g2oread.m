@@ -19,6 +19,8 @@ function [pGraph, lidarScans, lidarTimes, odoEst] = g2oread(fileName)
 %
 %   See also poseGraph, lidarScan.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 tmp = which(fileName);
 if isempty(tmp)
     fileLines = readlines(fileName);

@@ -3,12 +3,12 @@
 % E = H2E(H) is the Euclidean version (NxK-1) of the homogeneous 
 % points H (NxK) where each row represents one point in P^K.
 %
-% Reference::
-% - Robotics, Vision & Control: Second Edition, P. Corke, Springer 2016; p604.
+% Reference:: - Robotics, Vision & Control: Second Edition, P. Corke,
+% Springer 2016; p604.
 %
 % See also E2H.
 
-% Copyright (C) 1993-2019 Peter I. Corke
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 
 function e = h2e(h)

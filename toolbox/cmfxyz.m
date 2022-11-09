@@ -1,14 +1,15 @@
 %CMFXYZ	Color matching function
 %
-% The color matching function is the XYZ tristimulus required to match a 
+% The color matching function is the XYZ tristimulus required to match a
 % particular wavelength excitation.
 %
-% XYZ = CMFXYZ(LAMBDA) is the CIE XYZ color matching function (Nx3) for illumination
-% at wavelength LAMBDA (Nx1) [m].  If LAMBDA is a vector then each row of XYZ
-% is the color matching function of the corresponding element of LAMBDA. 
+% XYZ = CMFXYZ(LAMBDA) is the CIE XYZ color matching function (Nx3) for
+% illumination at wavelength LAMBDA (Nx1) [m].  If LAMBDA is a vector then
+% each row of XYZ is the color matching function of the corresponding
+% element of LAMBDA.
 %
-% XYZ = CMFXYZ(LAMBDA, E) is the CIE XYZ color matching (1x3) function for an 
-% illumination spectrum E (Nx1) defined at corresponding wavelengths
+% XYZ = CMFXYZ(LAMBDA, E) is the CIE XYZ color matching (1x3) function for
+% an illumination spectrum E (Nx1) defined at corresponding wavelengths
 % LAMBDA (Nx1).
 %
 % Note::
@@ -20,25 +21,7 @@
 %
 % See also CMFRGB, CCXYZ.
 
-
-
-% Copyright (C) 1993-2011, by Peter I. Corke
-%
-% This file is part of The Machine Vision Toolbox for Matlab (MVTB).
-% 
-% MVTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% MVTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with MVTB.  If not, see <http://www.gnu.org/licenses/>.
-
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function XYZ = cmfxyz(lambda, spect)
     if true

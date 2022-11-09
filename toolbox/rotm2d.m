@@ -1,4 +1,4 @@
-%ROTM2D Cretae SO(2) rotation matrix
+%ROTM2D Create SO(2) rotation matrix
 %
 % R = ROTM2D(THETA) is an SO(2) rotation matrix (2x2) representing a 
 % rotation of THETA radians.

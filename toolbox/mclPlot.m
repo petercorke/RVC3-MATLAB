@@ -1,5 +1,8 @@
+%MCLPLOT Visualize the localization process.
+
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 classdef mclPlot < handle
-    %MCLPLOT Visualize the localization process.
     
     properties (Access = private)
         %Figure - Graph handle for the visualization figure.

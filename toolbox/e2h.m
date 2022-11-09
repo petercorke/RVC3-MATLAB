@@ -4,12 +4,12 @@
 % points E (NxK) where each row represents one point in R^K.
 %
 % Reference::
-% - Robotics, Vision & Control: Second Edition, P. Corke, Springer 2016; p604.
+% - Robotics, Vision & Control: Second Edition, P. Corke, Springer 2016;
+% p604.
 %
 % See also H2E.
 
-% Copyright (C) 1993-2019 Peter I. Corke
-
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function h = e2h(e)
   % This requires NAV toolbox!

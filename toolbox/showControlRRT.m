@@ -1,3 +1,5 @@
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function showControlRRT(p, solnInfo, map, start, goal)
 
 % TODO: Make function more configurable (similar to Peter's other

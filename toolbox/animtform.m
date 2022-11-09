@@ -16,18 +16,17 @@
 % (3x3xN), or a 1xN array of so3 or quaternion objects.
 %
 % Options:
-%  fps     - Number of frames per second to display (default 10)
-%  nsteps  - The number of steps along the path (default 50)
-%  axis    - Axis bounds [xmin, xmax, ymin, ymax, zmin, zmax]
-%  movie   - Save frames as a movie or sequence of frames
-%  cleanup - Remove the frame at end of animation
-%  retain  - Retain frames, don't animate
+%  fps     - Number of frames per second to display (default 10) nsteps  -
+%  The number of steps along the path (default 50) axis    - Axis bounds
+%  [xmin, xmax, ymin, ymax, zmin, zmax] movie   - Save frames as a movie or
+%  sequence of frames cleanup - Remove the frame at end of animation retain
+%  - Retain frames, don't animate
 %
 % Additional options are passed through to PLOTTFORM.
 %
 % See also PLOTTFORM, Animate.
 
-% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function animtform(varargin)
     %     arguments

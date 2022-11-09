@@ -1,5 +1,7 @@
 function qj = ikineTrajNum(robot, Ts, ee, varargin)
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 % Determine end effector automatically, if not provided by the user
 if nargin < 3 || isempty(ee)
     ee = robot.Bodies{end}.Name;

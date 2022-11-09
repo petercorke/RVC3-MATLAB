@@ -10,6 +10,8 @@ function chamfer_match
     %   - test on an image of a real square
 
     % This example requires Global Optimization Toolbox from MathWorks
+	
+	% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 	
 
     
     %% create the outline of a rotated square

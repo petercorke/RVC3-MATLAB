@@ -1,61 +1,39 @@
 %DistanceTransformPlanner Distance transform navigation class
 %
-% A concrete subclass of the abstract Navigation class that implements the distance 
-% transform navigation algorithm which computes minimum distance paths.
+% A concrete subclass of the abstract Navigation class that implements the
+% distance transform navigation algorithm which computes minimum distance
+% paths.
 %
 % Methods::
-%  DistanceTransformPlanner       Constructor
-%  plan         Compute the cost map given a goal and map
-%  query        Find a path
-%  plot         Display the distance function and obstacle map
-%  plot3d       Display the distance function as a surface
-%  display      Print the parameters in human readable form
-%  char         Convert to string
+%  DistanceTransformPlanner       Constructor plan         Compute the cost
+%  map given a goal and map query        Find a path plot         Display
+%  the distance function and obstacle map plot3d       Display the distance
+%  function as a surface display      Print the parameters in human
+%  readable form char         Convert to string
 %
 % Properties (read only)::
-%  distancemap   Distance from each point to the goal.
-%  metric        The distance metric, can be 'euclidean' (default) or 'manhattan'
+%  distancemap   Distance from each point to the goal. metric        The
+%  distance metric, can be 'euclidean' (default) or 'manhattan'
 %
 % Example::
 %
-%        load map1           % load map
-%        goal = [50,30];     % goal point
-%        start = [20, 10];   % start point
-%        dx = DistanceTransformPlanner(map);   % create navigation object
+%        load map1           % load map goal = [50,30];     % goal point
+%        start = [20, 10];   % start point dx =
+%        DistanceTransformPlanner(map);   % create navigation object
 %        dx.plan(goal)       % create plan for specified goal
 %        dx.query(start)     % animate path from this start location
 %
-% Notes::
-% - Obstacles are represented by NaN in the distancemap.
-% - The value of each element in the distancemap is the shortest distance from the 
+% Notes:: - Obstacles are represented by NaN in the distancemap. - The
+% value of each element in the distancemap is the shortest distance from
+% the
 %   corresponding point in the map to the current goal.
 %
-% References::
-% -  Robotics, Vision & Control, Sec 5.2.1,
+% References:: -  Robotics, Vision & Control, Sec 5.2.1,
 %    Peter Corke, Springer, 2011.
 %
 % See also Navigation, Dstar, PRM, distancexform.
 
-
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-% 
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 classdef DistanceTransformPlanner < Navigation
 

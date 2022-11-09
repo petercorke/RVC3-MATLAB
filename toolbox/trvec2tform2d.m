@@ -13,6 +13,8 @@ function T = trvec2tform2d(t)
 %
 %   See also tform2trvec2d, trvec2tform.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 robotics.internal.validation.validateNumericMatrix(t, 'trvec2tform2d', 't', ...
     'ncols', 2);
 

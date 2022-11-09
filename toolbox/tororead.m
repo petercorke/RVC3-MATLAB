@@ -6,6 +6,8 @@ function pGraph = tororead(fileName)
 %
 %   See also poseGraph.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 tmp = which(fileName);
 if isempty(tmp)
     fileID = fopen(fileName);

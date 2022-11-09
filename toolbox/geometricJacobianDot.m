@@ -1,39 +1,22 @@
-function Jdot = geometricJacobianDot(robot, q, qd)
 %geometricJacobianDot Derivative of Jacobian
 %
-% JDQ = geometricJacobianDot(ROBOT, Q, QD) is the product (6x1) of the derivative of the
-% Jacobian (in the world frame) and the joint rates. The last body in ROBOT
-% is considered to be the end effector.
+% JDQ = geometricJacobianDot(ROBOT, Q, QD) is the product (6x1) of the
+% derivative of the Jacobian (in the world frame) and the joint rates. The
+% last body in ROBOT is considered to be the end effector.
 %
-% Notes::
-% - This term appears in the formulation for operational space control XDD = J(Q)QDD + JDOT(Q)QD
-% - Written as per the reference and not very efficient.
+% Notes:: - This term appears in the formulation for operational space
+% control XDD = J(Q)QDD + JDOT(Q)QD - Written as per the reference and not
+% very efficient.
 %
-% References::
-% - Fundamentals of Robotics Mechanical Systems (2nd ed)
+% References:: - Fundamentals of Robotics Mechanical Systems (2nd ed)
 %   J. Angleles, Springer 2003.
-% - A unified approach for motion and force control of robot manipulators: The operational space formulation
+% - A unified approach for motion and force control of robot manipulators:
+% The operational space formulation
 %  O Khatib, IEEE Journal on Robotics and Automation, 1987.
 
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-% 
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
+function Jdot = geometricJacobianDot(robot, q, qd)
 	%n = robot.n;
     links = robot.Bodies;
 

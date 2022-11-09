@@ -5,56 +5,51 @@
 % the problem of state estimation for a vehicle moving in SE(2).
 %
 % This class can be used for:
-%   - dead reckoning localization
-%   - map-based localization
-%   - map making
-%   - simultaneous localization and mapping (SLAM)
+%   - dead reckoning localization - map-based localization - map making -
+%   simultaneous localization and mapping (SLAM)
 %
 % It is used in conjunction with:
 %   - a kinematic vehicle model that provides odometry output, represented
 %     by a Vehicle sbuclass object.
 %   - The vehicle must be driven within the area of the map and this is
-%     achieved by connecting the Vehicle subclass object to a Driver object.
+%     achieved by connecting the Vehicle subclass object to a Driver
+%     object.
 %   - a map containing the position of a number of landmark points and is
 %     represented by a LandmarkMap object.
 %   - a sensor that returns measurements about landmarks relative to the
 %     vehicle's pose and is represented by a Sensor object subclass.
 %
-% The EKF object updates its state at each time step, and invokes the
-% state update methods of the vehicle object.  The complete history of estimated
+% The EKF object updates its state at each time step, and invokes the state
+% update methods of the vehicle object.  The complete history of estimated
 % state and covariance is stored within the EKF object.
 %
 % Methods::
-%   run            run the filter
-%   plotxy        plot the actual path of the vehicle
-%   plotP         plot the estimated covariance norm along the path
+%   run            run the filter plotxy        plot the actual path of the
+%   vehicle plotP         plot the estimated covariance norm along the path
 %   plotmap       plot estimated landmark points and confidence limits
-%   plotvehicle   plot estimated vehicle covariance ellipses
-%   ploterror     plot estimation error with standard deviation bounds
-%   display        print the filter state in human readable form
-%   char           convert the filter state to human readable string
+%   plotvehicle   plot estimated vehicle covariance ellipses ploterror
+%   plot estimation error with standard deviation bounds display
+%   print the filter state in human readable form char           convert
+%   the filter state to human readable string
 %
 % Properties::
-%  x_est      estimated state
-%  P          estimated covariance
-%  V_est      estimated odometry covariance
-%  W_est      estimated sensor covariance
-%  landmarks   maps sensor landmark id to filter state element
-%  robot      reference to the Vehicle object
-%  sensor     reference to the Sensor subclass object
-%  history    vector of structs that hold the detailed filter state from
+%  x_est      estimated state P          estimated covariance V_est
+%  estimated odometry covariance W_est      estimated sensor covariance
+%  landmarks   maps sensor landmark id to filter state element robot
+%  reference to the Vehicle object sensor     reference to the Sensor
+%  subclass object history    vector of structs that hold the detailed
+%  filter state from
 %             each time step
-%  verbose    show lots of detail (default false)
-%  joseph     use Joseph form to represent covariance (default true)
+%  verbose    show lots of detail (default false) joseph     use Joseph
+%  form to represent covariance (default true)
 %
 % Vehicle position estimation (localization)::
 %
-% Create a vehicle with odometry covariance V, add a driver to it,
-% create a Kalman filter with estimated covariance V_est and initial
-% state covariance P0
-%    veh = Vehicle(V);
-%    veh.add_driver( RandomPath(20, 2) );
-%    ekf = EKF(veh, V_est, P0);
+% Create a vehicle with odometry covariance V, add a driver to it, create a
+% Kalman filter with estimated covariance V_est and initial state
+% covariance P0
+%    veh = Vehicle(V); veh.add_driver( RandomPath(20, 2) ); ekf = EKF(veh,
+%    V_est, P0);
 % We run the simulation for 1000 time steps
 %    ekf.run(1000);
 % then plot true vehicle path
@@ -64,47 +59,40 @@
 % and overlay uncertainty ellipses
 %    ekf.plotellipse('g');
 % We can plot the covariance against time as
-%    clf
-%    ekf.plotP();
+%    clf ekf.plotP();
 %
 % Map-based vehicle localization::
 %
-% Create a vehicle with odometry covariance V, add a driver to it,
-% create a map with 20 point landmarks, create a sensor that uses the map
-% and vehicle state to estimate landmark range and bearing with covariance
-% W, the Kalman filter with estimated covariances V_est and W_est and initial
+% Create a vehicle with odometry covariance V, add a driver to it, create a
+% map with 20 point landmarks, create a sensor that uses the map and
+% vehicle state to estimate landmark range and bearing with covariance W,
+% the Kalman filter with estimated covariances V_est and W_est and initial
 % vehicle state covariance P0
-%    veh = Bicycle(V);
-%    veh.add_driver( RandomPath(20, 2) );
-%    map = LandmarkMap(20);
-%    sensor = RangeBearingSensor(veh, map, W);
-%    ekf = EKF(veh, V_est, P0, sensor, W_est, map);
+%    veh = Bicycle(V); veh.add_driver( RandomPath(20, 2) ); map =
+%    LandmarkMap(20); sensor = RangeBearingSensor(veh, map, W); ekf =
+%    EKF(veh, V_est, P0, sensor, W_est, map);
 % We run the simulation for 1000 time steps
 %    ekf.run(1000);
 % then plot the map and the true vehicle path
-%    map.plot();
-%    veh.plotxy('b');
+%    map.plot(); veh.plotxy('b');
 % and overlay the estimatd path
 %    ekf.plotxy('r');
 % and overlay uncertainty ellipses
 %    ekf.plotellipse('g');
 % We can plot the covariance against time as
-%    clf
-%    ekf.plotP();
+%    clf ekf.plotP();
 %
 % Vehicle-based map making::
 %
-% Create a vehicle with odometry covariance V, add a driver to it,
-% create a sensor that uses the map and vehicle state to estimate landmark range
-% and bearing with covariance W, the Kalman filter with estimated sensor
-% covariance W_est and a "perfect" vehicle (no covariance),
-% then run the filter for N time steps.
+% Create a vehicle with odometry covariance V, add a driver to it, create a
+% sensor that uses the map and vehicle state to estimate landmark range and
+% bearing with covariance W, the Kalman filter with estimated sensor
+% covariance W_est and a "perfect" vehicle (no covariance), then run the
+% filter for N time steps.
 %
-%    veh = Vehicle(V);
-%    veh.add_driver( RandomPath(20, 2) );
-%    map = LandmarkMap(20);
-%    sensor = RangeBearingSensor(veh, map, W);
-%    ekf = EKF(veh, [], [], sensor, W_est, []);
+%    veh = Vehicle(V); veh.add_driver( RandomPath(20, 2) ); map =
+%    LandmarkMap(20); sensor = RangeBearingSensor(veh, map, W); ekf =
+%    EKF(veh, [], [], sensor, W_est, []);
 % We run the simulation for 1000 time steps
 %    ekf.run(1000);
 % Then plot the true map
@@ -114,30 +102,26 @@
 %
 % Simultaneous localization and mapping (SLAM)::
 %
-% Create a vehicle with odometry covariance V, add a driver to it,
-% create a map with 20 point landmarks, create a sensor that uses the map
-% and vehicle state to estimate landmark range and bearing with covariance
-% W, the Kalman filter with estimated covariances V_est and W_est and initial
+% Create a vehicle with odometry covariance V, add a driver to it, create a
+% map with 20 point landmarks, create a sensor that uses the map and
+% vehicle state to estimate landmark range and bearing with covariance W,
+% the Kalman filter with estimated covariances V_est and W_est and initial
 % state covariance P0, then run the filter to estimate the vehicle state at
 % each time step and the map.
 %
-%    veh = Vehicle(V);
-%    veh.add_driver( RandomPath(20, 2) );
-%    map = PointMap(20);
-%    sensor = RangeBearingSensor(veh, map, W);
-%    ekf = EKF(veh, V_est, P0, sensor, W, []);
+%    veh = Vehicle(V); veh.add_driver( RandomPath(20, 2) ); map =
+%    PointMap(20); sensor = RangeBearingSensor(veh, map, W); ekf = EKF(veh,
+%    V_est, P0, sensor, W, []);
 % We run the simulation for 1000 time steps
 %    ekf.run(1000);
 % then plot the map and the true vehicle path
-%    map.plot();
-%    veh.plotxy('b');
+%    map.plot(); veh.plotxy('b');
 % and overlay the estimated path
 %    ekf.plotxy('r');
 % and overlay uncertainty ellipses
 %    ekf.plotellipse('g');
 % We can plot the covariance against time as
-%    clf
-%    ekf.plotP();
+%    clf ekf.plotP();
 % Then plot the true map
 %    map.plot();
 % and overlay the estimated map with 3 sigma ellipses
@@ -145,41 +129,21 @@
 %
 % References::
 %
-%   Robotics, Vision & Control, Chap 6,
-%   Peter Corke,
-%   Springer 2011
+%   Robotics, Vision & Control, Chap 6, Peter Corke, Springer 2011
 %
-%   Stochastic processes and filtering theory,
-%   AH Jazwinski
-%   Academic Press 1970
+%   Stochastic processes and filtering theory, AH Jazwinski Academic Press
+%   1970
 %
 % Acknowledgement::
 %
 % Inspired by code of Paul Newman, Oxford University,
 % http://www.robots.ox.ac.uk/~pnewman
 %
-% See also Vehicle, RandomPath, RangeBearingSensor, PointMap, ParticleFilter.
+% See also Vehicle, RandomPath, RangeBearingSensor, PointMap,
+% ParticleFilter.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-%
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-%
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-%
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
 classdef EKF < handle
 
     %TODO

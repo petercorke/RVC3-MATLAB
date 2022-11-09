@@ -12,6 +12,8 @@ function I_frame = inertiaToBodyFrame(I_com, mass, com, R)
 %
 %   Based on post here: https://www.mathworks.com/matlabcentral/answers/1602190-why-the-robot-bodies-inertia-is-different-from-urdf
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 if nargin < 4
     R = eye(3);
 end

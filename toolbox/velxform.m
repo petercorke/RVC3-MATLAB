@@ -1,3 +1,5 @@
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function J = velxform(T)
     
     if isa(T, 'se3')

@@ -1,7 +1,9 @@
+
+function visodom
 %% Visual odometry example
 %   - stereo camera
 
-function visodom
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 if ~exist("doVisodomFigures", "var")
     doVisodomFigures = false;
