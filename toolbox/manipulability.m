@@ -1,3 +1,5 @@
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function [w,mx] = manipulability(robot, q, ee, varargin)
 
     opt.method = {'yoshikawa', 'asada'};

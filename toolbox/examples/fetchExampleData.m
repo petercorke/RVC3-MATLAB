@@ -6,7 +6,7 @@ function fetchExampleData(exampleName)
 %   Valid options for exampleName string are: "Mosaicing" and
 %   "VisualOdometry".
 
-% Copyright 2022; Witold Jachimczyk, Peter Corke, Remo Pillat
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 arguments
     exampleName (1,1) string {mustBeMember(exampleName,["Mosaicing","VisualOdometry"])}

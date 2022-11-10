@@ -1,9 +1,10 @@
 %ISROTM Test if value is SO(3) rotation matrix
 %
-% ISROTM(R) is true (1) if the argument is of dimension 3x3 or 3x3xN, else false (0).
+% ISROTM(R) is true (1) if the argument is of dimension 3x3 or 3x3xN, else
+% false (0).
 %
-% ISROTM(R, check=true) as above, but also checks the validity of the rotation
-% matrix.
+% ISROTM(R, check=true) as above, but also checks the validity of the
+% rotation matrix.
 %
 % Notes::
 % - A valid rotation sub-matrix R has R'*R = I and det(R)=1.

@@ -1,8 +1,8 @@
 %KDGAUSS Derivative of Gaussian kernel
 %
 % K = KDGAUSS(SIGMA) is a 2-dimensional derivative of Gaussian kernel (WxW)
-% of width (standard deviation) SIGMA and centered within the matrix K whose 
-% half-width H = 3xSIGMA and W=2xH+1.
+% of width (standard deviation) SIGMA and centered within the matrix K
+% whose half-width H = 3xSIGMA and W=2xH+1.
 %
 % K = KDGAUSS(SIGMA, H) as above but the half-width is explictly specified.
 %
@@ -13,22 +13,7 @@
 %
 % See also KGAUSS, KDOG, KLOG, ISOBEL, ICONV.
 
-% Copyright (C) 1993-2011, by Peter I. Corke
-%
-% This file is part of The Machine Vision Toolbox for Matlab (MVTB).
-% 
-% MVTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% MVTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with MVTB.  If not, see <http://www.gnu.org/licenses/>.
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function m = kdgauss(sigma, w)
 

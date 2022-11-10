@@ -13,6 +13,8 @@ function T = rotm2tform2d(R)
 %
 %   See also tform2rotm2d, rotm2tform.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 % Ortho-normality is not tested, since this validation is expensive
 validateattributes(R, {'single','double'}, {'nonempty', ...
     'real','3d','size',[2 2 NaN]}, 'rotm2tform2d', 'R'); 

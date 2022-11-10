@@ -20,6 +20,8 @@ function [hyper3d, conf] = loadHyper3DRobot(dataFormat, N)
 %       calculation of rigid body dynamics, Part 2",
 %       Int. J. Robotics Research, 18(9), pp 876-892. 
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 if nargin == 0
     N = 10;
 end

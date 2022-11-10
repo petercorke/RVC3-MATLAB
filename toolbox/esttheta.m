@@ -11,6 +11,9 @@
 % 'sharpen',M        Sharpening transform
 %
 % See also shadowRemoval, SIMILARITY
+
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function th = esttheta(im, varargin)
 
     opt.mask = [];

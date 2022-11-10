@@ -1,14 +1,14 @@
-%TRANIMATE2 Animate a 2D coordinate frame
+%ANIMTFORM2D Animate a 2D coordinate frame
 %
-% TRANIMATE2(P1, P2, OPTIONS) animates a 3D coordinate frame moving from pose X1
+% ANIMTFORM2D(P1, P2, OPTIONS) animates a 3D coordinate frame moving from pose X1
 % to pose X2.  Poses X1 and X2 can be represented by:
 %   - SE(2) homogeneous transformation matrices (3x3)
 %   - SO(2) orthonormal rotation matrices (2x2)
 %
-% TRANIMATE2(X, OPTIONS) animates a coordinate frame moving from the identity pose
+% ANIMTFORM2D(X, OPTIONS) animates a coordinate frame moving from the identity pose
 % to the pose X represented by any of the types listed above.
 %
-% TRANIMATE2(XSEQ, OPTIONS) animates a trajectory, where XSEQ is any of
+% ANIMTFORM2D(XSEQ, OPTIONS) animates a trajectory, where XSEQ is any of
 %   - SE(2) homogeneous transformation matrix sequence (3x3xN)
 %   - SO(2) orthonormal rotation matrix sequence (2x2xN)
 %
@@ -28,34 +28,11 @@
 %
 % See also tformplot, Animate, SE3.animate.
 
-%## 2d homogeneous rotation graphics
-
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 % TODO
 %  auto detect the axis scaling
-function tranimate2(P2, varargin)
+function animtform2d(P2, varargin)
 
 opt.fps = 10;
 opt.nsteps = 50;

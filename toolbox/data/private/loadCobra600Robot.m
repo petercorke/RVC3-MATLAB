@@ -12,6 +12,8 @@ function [cobra, poses] = loadCobra600Robot(dataFormat)
 %   |   q4   |     0  |     0 |   0.0°  | -180.0° | 180.0° |
 %   +--------+--------+-------+---------+---------+--------+
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 cobra = rigidBodyTree(DataFormat=dataFormat);
 
 % Create first two revolute joints

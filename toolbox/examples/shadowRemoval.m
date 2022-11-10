@@ -43,8 +43,8 @@
 %   P. Corke, R. Paul, W. Churchill, and P. Newman
 %   Proc. Int. Conf. Intelligent Robots and Systems (IROS), pp. 2085–2 2013.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
-% Peter Corke 6/2012
 
 function [out,out2] = invariant(in, varargin)
 

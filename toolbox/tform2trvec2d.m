@@ -14,6 +14,8 @@ function t = tform2trvec2d(T)
 %
 %   See also trvec2tform2d, tform2trvec.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 validateattributes(T, {'single','double','sym'}, {'nonempty','real','3d', ...
     'size',[3 3 NaN]}, 'tform2trvec2d', 'T'); 
 

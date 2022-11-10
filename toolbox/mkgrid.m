@@ -12,7 +12,7 @@
 %            homogeneous transform T, allowing all points in the plane 
 %            to be translated or rotated.
 
-% Copyright (C) 1993-2011, by Peter I. Corke
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function p = mkgrid(N, s, varargin)
     

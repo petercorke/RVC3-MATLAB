@@ -1,18 +1,21 @@
 function C = coriolisMatrix(robot, q, qd)
 %coriolisMatrix Calculate Coriolis matrix
 %
-% C = coriolisMatrix(ROBOT, Q, QD) is the Coriolis/centripetal matrix (NxN) for
-% the rigidBodyTree ROBOT in configuration Q and velocity QD, where N is the number of
-% joints.  The product C*QD is the vector of joint force/torque due to velocity
-% coupling.  The diagonal elements are due to centripetal effects and the
-% off-diagonal elements are due to Coriolis effects.  This matrix is also
-% known as the velocity coupling matrix, since it describes the disturbance forces
-% on any joint due to velocity of all other joints.
+% C = coriolisMatrix(ROBOT, Q, QD) is the Coriolis/centripetal matrix (NxN)
+% for the rigidBodyTree ROBOT in configuration Q and velocity QD, where N
+% is the number of joints.  The product C*QD is the vector of joint
+% force/torque due to velocity coupling.  The diagonal elements are due to
+% centripetal effects and the off-diagonal elements are due to Coriolis
+% effects.  This matrix is also known as the velocity coupling matrix,
+% since it describes the disturbance forces on any joint due to velocity of
+% all other joints.
 %
 % Notes::
 % - Computationally slow, involves N^2/2 invocations of inverseDynamics.
 %
 % See also rigidBodyTree/inverseDynamics.
+
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 N = length(robot.homeConfiguration);
 

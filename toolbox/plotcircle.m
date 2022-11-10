@@ -1,6 +1,6 @@
 %PLOTCIRCLE Draw a circle
 %
-% plotcircle(C, R, OPTIONS) draws a circle on the current plot with 
+% PLOTCIRCLE(C, R, OPTIONS) draws a circle on the current plot with 
 % center C=[X,Y] and radius R.  If C=[X,Y,Z] the circle is drawn in the
 % XY-plane at height Z.
 %
@@ -8,7 +8,7 @@
 % circles have the same radius or else R (1xN) to specify the radius of
 % each circle.
 %
-% H = plotcircle(...) as above but return handles. For multiple
+% H = PLOTCIRCLE(...) as above but return handles. For multiple
 % circles H is a vector of handles, one per circle.
 %
 % Options::
@@ -32,30 +32,10 @@
 % - The 'alter' option can be used to create a smooth animation.
 % - The circle(s) is added to the current plot irrespective of hold status.
 %
-% See also PLOT_ELLIPSE, PLOT_BOX, PLOT_POLY.
+% See also PLOTELLIPSE, PLOT_BOX, PLOT_POLY.
 
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-% 
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function handles = plotcircle(center, rad, varargin)
 
     opt.fillcolor = [];

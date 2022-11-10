@@ -1,4 +1,6 @@
-function movepoint_sfunc(block)
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
+function polar_sfunc(block)
 
   block.NumInputPorts  = 1;
   block.NumOutputPorts = 1;

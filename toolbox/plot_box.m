@@ -1,20 +1,21 @@
 %PLOT_BOX Draw a box
 %
-% PLOT_BOX(B, OPTIONS) draws a box defined by B=[XL XR; YL YR] on the current
-% plot with optional MATLAB linestyle options LS.
+% PLOT_BOX(B, OPTIONS) draws a box defined by B=[XL XR; YL YR] on the
+% current plot with optional MATLAB linestyle options LS.
 %
-% PLOT_BOX(X1,Y1, X2,Y2, OPTIONS) draws a box with corners at (X1,Y1) and (X2,Y2),
-% and optional MATLAB linestyle options LS.
+% PLOT_BOX(X1,Y1, X2,Y2, OPTIONS) draws a box with corners at (X1,Y1) and
+% (X2,Y2), and optional MATLAB linestyle options LS.
 %
-% PLOT_BOX('center', P, 'size', W, OPTIONS) draws a box with center at P=[X,Y] and
-% with dimensions W=[WIDTH HEIGHT].
+% PLOT_BOX('center', P, 'size', W, OPTIONS) draws a box with center at
+% P=[X,Y] and with dimensions W=[WIDTH HEIGHT].
 %
-% PLOT_BOX('topleft', P, 'size', W, OPTIONS) draws a box with top-left at P=[X,Y]
-% and with dimensions W=[WIDTH HEIGHT].
+% PLOT_BOX('topleft', P, 'size', W, OPTIONS) draws a box with top-left at
+% P=[X,Y] and with dimensions W=[WIDTH HEIGHT].
 %
-% PLOT_BOX('matlab', BOX, LS) draws box(es) as defined using the MATLAB convention of
-% specifying a region in terms of top-left coordinate, width and height.  One box is
-% drawn for each row of BOX which is [xleft ytop width height].
+% PLOT_BOX('matlab', BOX, LS) draws box(es) as defined using the MATLAB
+% convention of specifying a region in terms of top-left coordinate, width
+% and height.  One box is drawn for each row of BOX which is [xleft ytop
+% width height].
 %
 %
 % H = PLOT_BOX(...) as above but returns the graphics handle of the box.
@@ -38,28 +39,7 @@
 %
 % See also PLOT_POLY, PLOT_CIRCLE, PLOTELLIPSE.
 
-% Copyright (C) 1993-2019 Peter I. Corke
-%
-% This file is part of The Spatial Math Toolbox for MATLAB (SMTB).
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-% of the Software, and to permit persons to whom the Software is furnished to do
-% so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-% FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-% COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-% IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-%
-% https://github.com/petercorke/spatial-math
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function h = plot_box(varargin)
 opt.center = [];

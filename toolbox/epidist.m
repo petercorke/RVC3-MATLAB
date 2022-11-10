@@ -15,6 +15,8 @@
 %
 % See also EPILINE, FMATRIX.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function d = epidist(F, p1, p2)
 
     l = F*e2h(p1)';

@@ -13,6 +13,8 @@ function R = tform2rotm2d(T)
 %
 %   See also rotm2tform2d, tform2rotm.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 validateattributes(T, {'single','double'}, {'nonempty','real','3d', ...
     'size', [3 3 NaN]}, 'tform2rotm2d', 'T'); 
 

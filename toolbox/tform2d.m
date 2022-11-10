@@ -10,6 +10,8 @@
 %
 % See also rot2, transl2, ishomog2, trplot2, trotx, troty, trotz, SE2.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 %## 2d homogeneous rotation
 
 function T = tform2d(varargin)

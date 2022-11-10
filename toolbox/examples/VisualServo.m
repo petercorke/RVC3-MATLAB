@@ -1,3 +1,4 @@
+classdef VisualServo < handle
 %VisualServo  Abstract class for visual servoing
 %
 % VisualServo(CAMERA, OPTIONS) 
@@ -24,7 +25,8 @@
 %
 % See also PBVS, IBVS, IBVS_l, IBVS_e.
 
-classdef VisualServo < handle
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
     properties
         P
         uv_star
