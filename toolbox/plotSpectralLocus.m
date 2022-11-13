@@ -1,3 +1,5 @@
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 % show locus
 figure;
 [r,g] = lambda2rg( [400:700]*1e-9 );

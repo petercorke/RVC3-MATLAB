@@ -1,11 +1,13 @@
-function [ri,thi] = boundary2polar(b, R)
 %boundary2polar Boundary in polar form
 %
-% [D,TH] = boundary2polar(b, r) is a polar representation of the boundary with
-% respect to the centroid.  D(i) and TH(i) are the distance to the boundary
-% point and the angle respectively.  These vectors have 400 elements
-% irrespective of region size.
+% [D,TH] = boundary2polar(b, r) is a polar representation of the boundary
+% with respect to the centroid.  D(i) and TH(i) are the distance to the
+% boundary point and the angle respectively.  These vectors have 400
+% elements irrespective of region size.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
+function [ri,thi] = boundary2polar(b, R)
 % xxx parse inputs
 
 

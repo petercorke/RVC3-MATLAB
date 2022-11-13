@@ -1,5 +1,7 @@
 function mosaic
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 rng(0)
 
 % Load images.

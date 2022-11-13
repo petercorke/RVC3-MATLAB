@@ -36,6 +36,8 @@
 %
 % See also VisualServo, IBVS, IBVS_l, IBVS_e.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 % IMPLEMENTATION NOTE
 %
 % 1.  The gain, lambda, is always positive

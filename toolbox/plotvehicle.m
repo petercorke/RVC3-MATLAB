@@ -1,9 +1,9 @@
-%plotvehicle Draw mobile robot pose
+%PLOTVEHICLE Draw mobile robot pose
 %
 % PLOTVEHICLE(X,OPTIONS) draws an oriented triangle to represent the pose
-% of a mobile robot moving in a planar world.  The pose X (1x3) = [x,y,theta].
-% If X is a matrix (Nx3) then an animation of the robot motion is shown and
-% animated at the specified frame rate.
+% of a mobile robot moving in a planar world.  The pose X (1x3) =
+% [x,y,theta]. If X is a matrix (Nx3) then an animation of the robot motion
+% is shown and animated at the specified frame rate.
 %
 % Image mode::
 %
@@ -60,25 +60,7 @@
 %
 % See also Vehicle.plot, Animate, plot_poly, demos/car_animation
 
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-%
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-%
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-%
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 % TODO needs to work for 3D point
 

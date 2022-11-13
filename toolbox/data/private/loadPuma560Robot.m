@@ -14,6 +14,8 @@ function [puma, poses] = loadPuma560Robot(dataFormat)
 %   |  6|         q6|          0|          0|          0|          0|
 %   +---+-----------+-----------+-----------+-----------+-----------+
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 puma = rigidBodyTree(DataFormat=dataFormat);
 
 % Note that the baseHeight was not part of the original RVC2 MATLAB model,

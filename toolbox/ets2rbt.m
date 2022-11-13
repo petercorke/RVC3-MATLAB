@@ -1,6 +1,8 @@
 function rbt = ets2rbt(ets)
 % Works for both ETS2 and ETS3 
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 %TODO
 % - Error checking
 % - Combine ETS3 fixed and revolute joints

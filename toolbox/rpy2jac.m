@@ -19,6 +19,8 @@
 %
 % See also eul2jac, rpy2r, SerialLink.jacobe.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function J = rpy2jac(r, varargin)
 
 opt.order = {'zyx', 'xyz', 'yxz'};

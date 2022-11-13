@@ -22,6 +22,8 @@
 %
 % See also IMORPH, IDILATE, IERODE.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 % xxx WJ: see also needs a fix, parsing and use of ireplicate
 
 function out = morphdemo(input, se, varargin)

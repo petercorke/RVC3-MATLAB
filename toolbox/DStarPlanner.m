@@ -1,68 +1,44 @@
 %DStarPlanner D* navigation class
 %
-% A concrete subclass of the abstract Navigation class that implements the D*
-% navigation algorithm.  This provides minimum distance paths and
+% A concrete subclass of the abstract Navigation class that implements the
+% D* navigation algorithm.  This provides minimum distance paths and
 % facilitates incremental replanning.
 %
 % Methods::
-%  DStarPlanner      Constructor
-%  plan              Compute the cost map given a goal and map
-%  query             Find a path
-%  plot              Display the obstacle map
-%  display           Print the parameters in human readable form
-%  char              Convert to string%  costmap_modify    Modify the costmap
+%  DStarPlanner      Constructor plan              Compute the cost map
+%  given a goal and map query             Find a path plot
+%  Display the obstacle map display           Print the parameters in human
+%  readable form char              Convert to string%  costmap_modify
+%  Modify the costmap
 %--
 %  modifyCost       Modify the costmap
 %
 % Properties (read only)::
-%  distancemap       Distance from each point to the goal.
-%  costmap           Cost of traversing cell (in any direction).
-%  niter             Number of iterations.
+%  distancemap       Distance from each point to the goal. costmap
+%  Cost of traversing cell (in any direction). niter             Number of
+%  iterations.
 %
 % Example::
-%        load map1           % load map
-%        goal = [50,30];
-%        start=[20,10];
-%        ds = DStarPlanner(map);    % create navigation object
-%        ds.plan(goal)       % create plan for specified goal
-%        ds.query(start)      % animate path from this start location
+%        load map1           % load map goal = [50,30]; start=[20,10]; ds =
+%        DStarPlanner(map);    % create navigation object ds.plan(goal)
+%        % create plan for specified goal ds.query(start)      % animate
+%        path from this start location
 %
-% Notes::
-% - Obstacles are represented by Inf in the costmap.
-% - The value of each element in the costmap is the shortest distance from the
+% Notes:: - Obstacles are represented by Inf in the costmap. - The value of
+% each element in the costmap is the shortest distance from the
 %   corresponding point in the map to the current goal.
 %
-% References::
-% - The D* algorithm for real-time planning of optimal traverses,
-%   A. Stentz,
-%   Tech. Rep. CMU-RI-TR-94-37, The Robotics Institute, Carnegie-Mellon University, 1994.
+% References:: - The D* algorithm for real-time planning of optimal
+% traverses,
+%   A. Stentz, Tech. Rep. CMU-RI-TR-94-37, The Robotics Institute,
+%   Carnegie-Mellon University, 1994.
 %   https://www.ri.cmu.edu/pub_files/pub3/stentz_anthony__tony__1994_2/stentz_anthony__tony__1994_2.pdf
 % - Robotics, Vision & Control, Sec 5.2.2,
 %   Peter Corke, Springer, 2011.
 %
 % See also Navigation, DXform, PRM.
 
-
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-%
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-%
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-%
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
-
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 
 % Implementation notes:

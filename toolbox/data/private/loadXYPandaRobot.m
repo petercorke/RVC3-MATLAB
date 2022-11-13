@@ -14,6 +14,8 @@ function [xypanda, conf] = loadXYPandaRobot(dataFormat)
 % Notes::
 % - SI units of meters are used.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 xypanda = rigidBodyTree(DataFormat=dataFormat);
 
 link0 = rigidBody("base_offset");
