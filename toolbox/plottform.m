@@ -64,7 +64,7 @@
 
 function hout = plottform(X, options)
     arguments
-        X double = eye(3,3)
+        X = eye(3,3)
         options.color (1,1) string = "b"
         options.textcolor (1,1) string = ""
         options.axes = true;
@@ -87,9 +87,9 @@ function hout = plottform(X, options)
     end
 
     % convert various forms to to hom transform
-    if isrotm(X)
-    elseif istform(X)
+    if istform(X)
         T = X;
+    elseif isrotm(X)
         T = rotm2tform(X);
     elseif isa(X, "se3")
         T = X.tform();
@@ -109,17 +109,14 @@ function hout = plottform(X, options)
         error("RVC3:plottform:badarg", "cannot operate on a sequence, see animtform");
     end
     
-    % ensure it's SE(3)
-    if isrotm(X)
-        X = rotm2tform(X);
-    end
-    
     if isfield(options, "handle")
+        % animate a previously created transform
+
         options.handle.Matrix = T;
-        % for the 3D case retrieve the right hgtransform and set it
+        % for the anaglyph case retrieve the right hgtransform and set it
         hg2 = options.handle.UserData;
         if ~isempty(hg2)
-            hg2.Matrix = X;
+            hg2.Matrix = T;
         end
         if nargout > 0
             hout = options.handle;
@@ -156,29 +153,23 @@ function hout = plottform(X, options)
         
     end
     
-    if ~isempty(options.axhandle)
-        hax = options.axhandle;
-        hold(hax, "on");
-    else
-        ih = ishold;
-        if ~ih
-            % if hold is not on, then clear the axes and set scaling
-            cla
-            if ~isempty(options.axis)
-                axis(options.axis);
-            end
-            daspect([1 1 1]);
-            
-            if options.axes
-                xlabel(options.labels(1));
-                ylabel(options.labels(2));
-                zlabel(options.labels(3));
-                rotate3d on
-            end
-        end
-        hax = gca;
+    % if scaling is given, then clear the axes and set scaling
+    if ~isempty(options.axis)
+        cla
+        axis(options.axis);
         hold on
+
+        daspect([1 1 1]);
+        
+        if options.axes
+            xlabel(options.labels(1));
+            ylabel(options.labels(2));
+            zlabel(options.labels(3));
+            rotate3d on
+        end
     end
+    hax = gca;
+    hold on
     % hax is the handle for the axis we will work with, either new or
     % passed by option 'handle'
     
@@ -233,11 +224,11 @@ function hout = plottform(X, options)
         end
 
         % add the labels to each axis
-        h = text(x1(1), x1(2), x1(3), sprintf(fmt, options.labels(1)), ...
+        text(x1(1), x1(2), x1(3), sprintf(fmt, options.labels(1)), ...
             "Parent", hg, "Color", axcolors(1), text_options_cell{:});
-        h = text(y1(1), y1(2), y1(3), sprintf(fmt, options.labels(2)), ...
+        text(y1(1), y1(2), y1(3), sprintf(fmt, options.labels(2)), ...
             "Parent", hg, "Color", axcolors(2), text_options_cell{:});
-        h = text(z1(1), z1(2), z1(3), sprintf(fmt, options.labels(3)), ...
+        text(z1(1), z1(2), z1(3), sprintf(fmt, options.labels(3)), ...
             "Parent", hg, "Color", axcolors(3), text_options_cell{:});
     end
 
@@ -282,8 +273,9 @@ function hout = plottform(X, options)
         % displace its camera to the right of that of that for the left eye.
         % Then we recursively call tformplot() to create the right eye view.
         
-        left = gca;
-        right = axes;
+        left = hax;
+        right = axes();
+        axis(right, axis(left));
         
         % compute the offset in world coordinates
         off = -tform2rotm(view(left))'*[options.disparity 0 0]';
