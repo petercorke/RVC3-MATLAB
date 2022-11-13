@@ -34,7 +34,7 @@
 %  v             - moment part of twist (1x2)
 %
 %
-% See also trexp, trexp2, trlog.
+% See also expm, logm.
 % References:
 % - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
 %   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.

@@ -83,10 +83,10 @@ end
 if isrotm2d(P2)
     % tranimate2(R1, options)
     % tranimate2(R1, R2, options)
-    T2 = r2t(P2);
+    T2 = rotm2tform(P2);
     if ~isempty(args) && isrot(args{1})
         T1 = T2;
-        T2 = r2t(args{1});
+        T2 = rotm2tform(args{1});
         args = args(2:end);
     else
         T1 = eye(3,3);

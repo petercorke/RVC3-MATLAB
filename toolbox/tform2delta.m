@@ -112,7 +112,7 @@ TD = inv(T0) * T1; %#ok<MINV>
 
 % build the delta vector
 translVec = tform2trvec(TD);
-rotVec = skew2vec(t2r(TD) - eye(3,3));
+rotVec = skew2vec(tform2rotm(TD) - eye(3,3));
 if fliptr
     % Put rotation first
     delta = [rotVec translVec];
@@ -122,7 +122,7 @@ else
 end
 
 
-%    R0 = t2r(T0); R1 = t2r(T1);
+%    R0 = tform2rotm(T0); R1 = tform2rotm(T1);
 %    % in world frame
 %    %[th,vec] = tr2angvec(R1*R0');
 %    dR = vex(R1*R0');

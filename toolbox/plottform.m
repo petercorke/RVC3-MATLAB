@@ -88,9 +88,9 @@ function hout = plottform(X, options)
 
     % convert various forms to to hom transform
     if isrotm(X)
-        T = r2t(X);
     elseif istform(X)
         T = X;
+        T = rotm2tform(X);
     elseif isa(X, "se3")
         T = X.tform();
     elseif isa(X, "rigidtform3d")
@@ -286,7 +286,7 @@ function hout = plottform(X, options)
         right = axes;
         
         % compute the offset in world coordinates
-        off = -t2r(view(left))'*[options.disparity 0 0]';
+        off = -tform2rotm(view(left))'*[options.disparity 0 0]';
         off = off(:)';
         pos = left.CameraPosition;
         
