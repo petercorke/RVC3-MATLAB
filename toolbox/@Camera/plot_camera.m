@@ -1,3 +1,4 @@
+function h = plot_camera(c, varargin)
 %Camera.plot_camera Display camera icon in world view
 %
 % C.plot_camera(OPTIONS) draw a camera as a simple 3D model in the current
@@ -17,7 +18,7 @@
 % - A line between the red faces is parallel to the x-axis, between the
 %   green faces is parallel to the y-axis.
 
-function h = plot_camera(c, varargin)
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
     
     opt.pose = c.T;
     opt.scale = [];

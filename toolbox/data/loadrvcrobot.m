@@ -30,6 +30,8 @@ function [robot,configs] = loadrvcrobot(robotName, varargin)
 %
 %   See also LOADROBOT.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 narginchk(1,4);
 
 % Parse inputs

@@ -1,7 +1,7 @@
 %LandmarkMap Map of planar point landmarks
 %
-% A LandmarkMap object represents a square 2D environment with a number of landmark
-% landmark points.
+% A LandmarkMap object represents a square 2D environment with a number of
+% landmark landmark points.
 %
 % Methods::
 %   plot      Plot the landmark map
@@ -16,8 +16,8 @@
 %
 % Examples::
 %
-% To create a map for an area where X and Y are in the range -10 to +10 metres
-% and with 50 random landmark points
+% To create a map for an area where X and Y are in the range -10 to +10
+% metres and with 50 random landmark points
 %        map = LandmarkMap(50, 10);
 % which can be displayed by
 %        map.plot();
@@ -30,26 +30,7 @@
 %
 % See also RangeBearingSensor, EKF.
 
-
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-%
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-%
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-%
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 classdef LandmarkMap < handle
     % TODO:

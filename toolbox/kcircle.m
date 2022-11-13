@@ -1,7 +1,7 @@
 %KCIRCLE Circular structuring element
 %
-% K = KCIRCLE(R) is a square matrix (WxW) where W=2R+1 of zeros with a maximal 
-% centered circular region of radius R pixels set to one.
+% K = KCIRCLE(R) is a square matrix (WxW) where W=2R+1 of zeros with a
+% maximal centered circular region of radius R pixels set to one.
 %
 % K = KCIRCLE(R,W) as above but the dimension of the kernel is explicitly 
 % specified.
@@ -12,24 +12,7 @@
 %
 % See also ONES, KTRIANGLE, IMORPH.
 
-
-
-% Copyright (C) 1993-2011, by Peter I. Corke
-%
-% This file is part of The Machine Vision Toolbox for Matlab (MVTB).
-% 
-% MVTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% MVTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with MVTB.  If not, see <http://www.gnu.org/licenses/>.
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function s = kcircle(r, w)
 

@@ -20,9 +20,7 @@
 %
 % See also CYLINDER, SPHERE.
 
-
-% Copyright (C) 1993-2011, by Peter I. Corke
-
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function [o1,o2,o3] = mkcube(s, varargin)
     
@@ -32,7 +30,7 @@ function [o1,o2,o3] = mkcube(s, varargin)
     opt.facepoint = false;
 
     [opt,args] = tb_optparse(opt, varargin);
-    if length(args) > 0 && ishomog(args{1})
+    if ~isempty(args) && ishomog(args{1})
         % compatible with legacy call
         opt.pose = args{1};
     end

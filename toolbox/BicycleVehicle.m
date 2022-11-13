@@ -1,13 +1,14 @@
 %BicycleVehicle Car-like vehicle class
 %
-%   This concrete class models the kinematics of a car-like vehicle (bicycle
-%   or Ackermann model) on a plane.  For given steering and velocity inputs it
-%   updates the true vehicle state and returns noise-corrupted odometry
-%   readings.
+%   This concrete class models the kinematics of a car-like vehicle
+%   (bicycle or Ackermann model) on a plane.  For given steering and
+%   velocity inputs it updates the true vehicle state and returns
+%   noise-corrupted odometry readings.
 %
-%   VEH = BicycleVehicle creates a BicycleVehicle object with the kinematics of a
-%   bicycle (or Ackermann) vehicle. The properties for wheel base, maximum
-%   steering angle, and maximum acceleration will be set to default values.
+%   VEH = BicycleVehicle creates a BicycleVehicle object with the
+%   kinematics of a bicycle (or Ackermann) vehicle. The properties for
+%   wheel base, maximum steering angle, and maximum acceleration will be
+%   set to default values.
 %   
 %   VEH = BicycleVehicle(Name=Value) specifies additional
 %   options using one or more name-value pair arguments.

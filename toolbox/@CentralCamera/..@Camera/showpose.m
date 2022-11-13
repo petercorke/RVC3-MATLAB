@@ -9,6 +9,7 @@
 % The sides are colored red, green, blue corresponding to the X, Y, Z axes
 % respectively.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 function h = showpose(c, T, sz)
 

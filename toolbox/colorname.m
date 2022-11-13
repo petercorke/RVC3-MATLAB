@@ -5,48 +5,28 @@
 % names then RGB is a matrix (Nx3) with each row being the corresponding
 % tristimulus.
 %
-% XYZ = COLORNAME(NAME, 'xyz') as above but the XYZ-tristimulus value 
+% XYZ = COLORNAME(NAME, 'xyz') as above but the XYZ-tristimulus value
 % corresponding to the color specified by the string NAME.
 %
-% XY = COLORNAME(NAME, 'xy') as above but the xy-chromaticity coordinates 
+% XY = COLORNAME(NAME, 'xy') as above but the xy-chromaticity coordinates
 % corresponding to the color specified by the string NAME.
 %
-% NAME = COLORNAME(RGB) is a string giving the name of the color that is 
+% NAME = COLORNAME(RGB) is a string giving the name of the color that is
 % closest (Euclidean) to the given RGB-tristimulus value (1x3).  If RGB is
 % a matrix (Nx3) then return a cell-array (1xN) of color names.
 %
-% NAME = COLORNAME(XYZ, 'xyz') as above but the color is the closest (Euclidean)
-% to the given XYZ-tristimulus value.
+% NAME = COLORNAME(XYZ, 'xyz') as above but the color is the closest
+% (Euclidean) to the given XYZ-tristimulus value.
 %
-% NAME = COLORNAME(XYZ, 'xy') as above but the color is the closest (Euclidean)
-% to the given xy-chromaticity value with assumed Y=1.
+% NAME = COLORNAME(XYZ, 'xy') as above but the color is the closest
+% (Euclidean) to the given xy-chromaticity value with assumed Y=1.
 %
 % Notes::
 % - Color name may contain a wildcard, eg. "?burnt"
 % - Based on the standard X11 color database rgb.txt.
 % - Tristimulus values are in the range 0 to 1
 
-
-
-
-% Copyright (C) 1993-2017, by Peter I. Corke
-%
-% This file is part of The Robotics Toolbox for MATLAB (RTB).
-% 
-% RTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% RTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with RTB.  If not, see <http://www.gnu.org/licenses/>.
-%
-% http://www.petercorke.com
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function out = colorname(a, varargin)
 

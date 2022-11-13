@@ -1,3 +1,5 @@
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 function rvccheck()
 
 % this function is a help to users, and those providing help in forums to understand

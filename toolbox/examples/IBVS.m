@@ -39,6 +39,8 @@
 %
 % See also VisualServo, PBVS, IBVS_l, IBVS_e.
 
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
 % IMPLEMENTATION NOTE
 %
 % 1.  As per task function notation (Chaumette papers) the error is

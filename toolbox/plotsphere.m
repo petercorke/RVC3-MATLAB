@@ -25,7 +25,7 @@
 %
 % See also: plotpoint, plot_box, plot_circle, plotellipse, plot_poly.
 
-% Copyright (C) 1993-2019 Peter I. Corke
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 
 % TODO

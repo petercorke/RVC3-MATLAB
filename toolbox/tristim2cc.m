@@ -1,4 +1,4 @@
-%TRISTIM Tristimulus to chromaticity coordinates
+%TRISTIM2CC Tristimulus to chromaticity coordinates
 %
 % CC = TRISTIM2CC(TRI) is the chromaticity coordinate (1x2) corresponding to the
 % tristimulus TRI (1x3).  If TRI is RGB then CC is rg, if TRI is XYZ then 
@@ -16,23 +16,7 @@
 % [O1,O2] = TRISTIM2CC(IM) as above but the chromaticity is returned as
 % separate images (HxW).
 
-
-% Copyright (C) 1993-2011, by Peter I. Corke
-%
-% This file is part of The Machine Vision Toolbox for Matlab (MVTB).
-% 
-% MVTB is free software: you can redistribute it and/or modify
-% it under the terms of the GNU Lesser General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% MVTB is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU Lesser General Public License for more details.
-% 
-% You should have received a copy of the GNU Leser General Public License
-% along with MVTB.  If not, see <http://www.gnu.org/licenses/>.
+% Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 function [a,b] = tristim2cc(tri)
 
