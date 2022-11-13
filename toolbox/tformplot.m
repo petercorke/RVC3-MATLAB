@@ -177,7 +177,7 @@ function hout = tformplot(T, varargin)
     
     % ensure it's SE(3)
     if isrot(T)
-        T = r2t(T);
+        T = rotm2tform(T);
     end
     
     if ~isempty(opt.handle)
@@ -266,7 +266,7 @@ function hout = tformplot(T, varargin)
 
     % tformplot( Q.R, fmt, color);
     if isrot(T)
-        T = r2t(T);
+        T = rotm2tform(T);
     end
 
     % create unit vectors
@@ -374,7 +374,7 @@ function hout = tformplot(T, varargin)
         right = axes;
         
         % compute the offset in world coordinates
-        off = -t2r(view(left))'*[opt.dispar 0 0]';
+        off = -tform2rotm(view(left))'*[opt.dispar 0 0]';
         pos = get(left, 'CameraPosition');
         
         set(right, 'CameraPosition', pos+off');

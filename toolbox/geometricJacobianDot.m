@@ -57,7 +57,7 @@ function Jdot = geometricJacobianDot(robot, q, qd)
         end
         n = n + 1;
         T = se3(robot.getTransform(q, links{i}.Name, links{i}.Parent.Name));        
-        Q{n} = t2r(T);
+        Q{n} = tform2rotm(T);
         a{n} = transl(T)';
     end
 

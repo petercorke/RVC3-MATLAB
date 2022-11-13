@@ -76,7 +76,7 @@ function hout = plottform2d(X, options)
 
     % convert various forms to to hom transform
     if isrotm2d(X)
-        T = r2t(X);
+        T = rotm2tform(X);
     elseif istform2d(X)
         T = X;
     elseif isa(X, "se2")
@@ -86,7 +86,7 @@ function hout = plottform2d(X, options)
     elseif isa(X, "Twist2d")
         T = X.tform();
     elseif isa(X, "so2")
-        T = rotm2tform2d(X.rotm());
+        T = rotm2tform(X.rotm());
     else
         error("RVC3:plottform2d:badarg", "argument must be 2x2 or 3x3 matrix, so2, se2, or Twist2d");
     end
@@ -121,7 +121,7 @@ function hout = plottform2d(X, options)
         % determine some default axis dimensions
         
         % get the origin of the frame
-        c = tform2trvec2d(T);
+        c = tform2trvec(T);
     
         d = 1.2;
         options.axis = [c(1)-d c(1)+d c(2)-d c(2)+d];
