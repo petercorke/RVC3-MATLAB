@@ -20,3 +20,56 @@ function rvccheck()
 
 % check for shadowing, or which toolboxes are first in the path
 % it looks like some older toolboxes are shadowing this toolbox, do you want to automatically fix your MATLAB path...
+
+    %% check MATLAB version
+
+    if verLessThan("matlab", "9.14")
+        fprintf("You have MATLAB release %s, at least (R2023a) is required\n", ...
+            ver("matlab").Release);
+    end
+
+    %% check that required toolboxes are present
+
+    required_toolboxes = [
+        "Robotics System Toolbox", "robotics", "Chapters 2-9"
+        "Navigation Toolbox", "navigation", "Chapter 5"
+        "Image Processing Toolbox", "images", "Chapters 10-15"
+        "Computer Vision Toolbox", "vision", "Chapters 11-15"
+        ];
+
+    for rt = required_toolboxes'
+        full = rt(1); short = rt(2); comment = rt(3);
+        v = ver(short);
+        if isempty(v)
+            fprintf("  %s is required for %s\n", full, comment);
+        end
+    end
+
+    %% check for other toolboxes
+
+    p = which('rotx')
+
+    if ~isempty(p)
+        fprintf(" You have Peter Corke's Robotics and/or Spatial Math Toolbox in your path\n")
+    end
+
+    
+    
+
+end
+
+function out = checkshadow(shadows, funcname)
+    % add to the list if function lives below MATLAB root
+    funcpath = which(funcname); % find first instance in path
+    out = shadows;
+    if startsWith(funcpath, matlabroot) || startsWith(funcpath, 'built-in')
+        out = [out; {funcname, which(funcname)}];
+    end
+end
+
+function p = getpath(funcname)
+    funcpath = which(funcname);
+    k = strfind( funcpath, [filesep funcname]);
+    p = funcpath(1:k-1);
+end
+
