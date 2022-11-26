@@ -1,4 +1,4 @@
-%RVCPRINT Print figure for RVC book
+%RVCPRINT3 Print figure for CV section of RVC3 book
 %
 % rvcprint(name, options)  from console write to file
 % rvcprint(name, options)  from script write relative to calling script
@@ -10,7 +10,7 @@ function rvcprint3(varargin)
     
     global rvcprintopts
     
-    outputFolder = '../figures/';
+    outputFolder = './figures/';
     
     if ~exist(outputFolder, 'dir')
         mkdir(outputFolder);
