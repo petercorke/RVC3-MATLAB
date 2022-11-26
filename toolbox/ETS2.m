@@ -706,7 +706,8 @@ classdef ETS2
                 if opt.jvec
                     if e.isjoint
                         daspect([1 1 1]);
-                        ha = arrow3([0 0 -12*s], [0 0 15*s], 'c');
+                        %ha = arrow3([0 0 -12*s], [0 0 15*s], 'c');
+                        ha = quiver3([0 0 -12*s], 0, 0, 27*s, 'c')
                         set(ha, 'Parent', h.element(i));
                         
                         % create the joint axis label
@@ -726,12 +727,15 @@ classdef ETS2
                     else
                         d = norm( d(4:6)-d(1:3) ) / 72;
                     end
-                    extra = {'arrow', 'width', 1.5*s/d};
+                    extra = {'arrow', 'LineWidth', 1.5*s/d};
                 else
                     extra = {};
                 end
-                h.wrist = trplot2(eye(3,3), 'labels', upper(opt.wristlabel), ...
-                    'color', 'k', 'length', opt.wristlen*s, extra{:});
+%                 h.wrist = trplot2(eye(3,3), 'labels', upper(opt.wristlabel), ...
+%                     'color', 'k', 'length', opt.wristlen*s, extra{:});
+%                 h.wrist = plottform2d(eye(3,3), labels=upper(opt.wristlabel), ...
+%                     color="k", length=opt.wristlen*s), extra{:});
+                    h.wrist = plottform2d(eye(3,3), color="k", length=opt.wristlen*s)
             else
                 h.wrist = [];
             end
