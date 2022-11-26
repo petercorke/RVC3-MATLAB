@@ -26,7 +26,7 @@ switch exampleName
 
     case "Mosaicing"
         
-        fetchedFile = fetchFromWeb("mosaic.zip");
+        fetchedFile = fetchFromWeb("mosaicml.zip");
         outputFolder = "mosaic";
         unpackFile(fetchedFile, outputFolder);
 
