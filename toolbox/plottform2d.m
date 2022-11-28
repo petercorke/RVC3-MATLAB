@@ -1,12 +1,14 @@
-%PLOTTFORM2D Add a 3D coordinate frame to plot
+%PLOTTFORM2D Plot a 2D coordinate frame
 %
-% PLOTTFORM2D(T) draws a 2D coordinate frame represented by the
-% SE(2) homogeneous transform T (3x3).
+% PLOTTFORM2D(T) plots a 2D coordinate frame represented by T which can be:
+%  * a 3x3 SE(2) matrix representing 2D pose
+%  * an se2 object representing 2D pose
+%  * a rigidtform2d object representing 2D pose
+%  * a Twist2 object representing 2D pose
+%  * a 2x2 SO(2) matrix representing 2D orientation
+%  * an so2 object representing 2D orientation
 %
-% PLOTTFORM2D(R) as above but the coordinate frame is rotated
-% about the origin according to the SO(2) rotation matrix R (2x2).
-%
-% PLOTTFORM2D() creates a default frame EYE(2) at the origin.
+% Multiple frames can be added to a plot by using HOLD ON.
 %
 % H = PLOTTFORM(...) as above but returns a handle that allows the frame
 % to be animated.
@@ -26,25 +28,24 @@
 % text_options      - A struct of MATLAB text properties
 % length            - Length of the coordinate frame arms (default 1)
 % LineWidth         - Thickness of lines (default 0.5)
-% text              - Enable display of X,Y,Z labels on the frame (default true)
-% labels            - Label the X,Y,Z axes with the 1st, 2nd, 3rd character of the string L
-% style             - Axis line and color style. "plain" drawn using color
-%                     and LineWidth; "rgb" are colored red (x-axis), green (y-axis) and blue (z-axis).
+% text              - Enable display of X,Y labels on the frame (default true)
+% labels            - Label the X,Y axes with the 1st and 2nd character of the string L
+% style             - Axis line and color style. "plain" [default] drawn using color
+%                     and LineWidth; "rg" are colored red (x-axis) and green (y-axis).
 %                     and LineWidth; "rviz" drawn in RVIZ style axes with thick axis lines,
-%                     no arrows, and colored red (x-axis), green (y-axis) and blue (z-axis).
+%                     no arrows, and colored red (x-axis) and green (y-axis).
 % arrow             - Use arrows rather than line segments for the axes
 %
 % Examples:
 %    PLOTTFORM2D(T, frame="A")
 %    PLOTTFORM2D(T, frame="A", color="b")
 %    PLOTTFORM2D(T, frame="A", FontSize=10, FontWeight="bold")
-%    PLOTTFORM2D(T, labels="NOA");
-%    PLOTTFORM2D(T, anaglyph="rc"); % 3D anaglyph plot
+%    PLOTTFORM2D(T, labels="EN");
 %
 % To animate a coordinate frame, firstly, create a plot, as per above, but
 % keep the handle:
 %    h = PLOTTFORM2D(T0);      % create the frame at its initial pose
-%    PLOTTFORM(T, handle=h); % moves the frame to new pose T
+%    PLOTTFORM2D(T, handle=h); % moves the frame to new pose T
 %
 % References:
 % - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
@@ -64,6 +65,7 @@ function hout = plottform2d(X, options)
         options.axis = [];
         options.axhandle = [];
         options.frame (1,1) string = ""
+        options.style (1,1) string {mustBeMember(options.style, ["plain", "rg", "rviz"])} = "plain";
         options.labelstyle (1,1) string {mustBeMember(options.labelstyle, ["none", "axis", "axis_frame"])} = "axis_frame";
         options.arrow (1,1) logical = true
         options.length = 1;
@@ -95,14 +97,14 @@ function hout = plottform2d(X, options)
         error("RVC3:plottform2d:badarg", "cannot operate on a sequence, see animtform2d");
     end
     
-    % ensure it's SE(3)
+    % ensure it's SE(2)
     if isrotm(X)
         X = rotm2tform(X);
     end
     
     if isfield(options, "handle")
         options.handle.Matrix = SE2tSE3(T);
-        % for the 3D case retrieve the right hgtransform and set it
+        % retrieve the right hgtransform and set it
         hg2 = options.handle.UserData;
         if ~isempty(hg2)
             hg2.Matrix = X;
@@ -129,31 +131,25 @@ function hout = plottform2d(X, options)
     
     if ~isempty(options.axhandle)
         hax = options.axhandle;
-        hold(hax, "on");
     else
-        ih = ishold;
-        if ~ih
-            % if hold is not on, then clear the axes and set scaling
-            cla
-            if ~isempty(options.axis)
-                axis(options.axis);
-            end
-            % daspect([1 1]);
-            
-            if options.axes
-                xlabel(options.labels(1));
-                ylabel(options.labels(2));
-            end
-        end
-        % no idea why this fails: hax = gca;
-        for c=gcf().Children'
-            if isa(c, "matlab.graphics.axis.Axes")
-                hax = c;
-                break;
-            end
-        end
-        hold on
+        hax = newplot();
     end
+    if strcmp(hax.NextPlot, 'replace')
+%         daspect([1 1]);
+
+        if options.axes
+            xlabel(options.labels(1));
+            ylabel(options.labels(2));
+        end
+    end
+%         % no idea why this fails: hax = gca;
+%         for c=gcf().Children'
+%             if isa(c, "matlab.graphics.axis.Axes")
+%                 hax = c;
+%                 break;
+%             end
+%         end
+%         hold on
     % hax is the handle for the axis we will work with, either new or
     % passed by option 'handle'
     
@@ -184,7 +180,7 @@ function hout = plottform2d(X, options)
         for i=1:2
             quiver(mstart(1,i), mstart(2,i), ...
                 diff(1,i), diff(2,i), ...
-                AutoScale=false, Color=axcolors(i), Parent=hg);
+                AutoScale=false, Color=axcolors(i), LineWidth=options.LineWidth, Parent=hg);
         end
     else
         for i=1:2

@@ -1,12 +1,15 @@
-%PLOTTFORM Add a 3D coordinate frame to plot
+%PLOTTFORM Plot a 3D coordinate frame
 %
-% PLOTTFORM(T) draws a 3D coordinate frame represented by the
-% SE(3) homogeneous transform T (4x4).
+% PLOTTFORM(T) plots a 3D coordinate frame represented by T which can be:
+%  * a 4x4 SE(3) matrix representing 3D pose
+%  * an se3 object representing 3D pose
+%  * a rigidtform3d object representing 3D pose
+%  * a Twist3 object representing 3D pose
+%  * a 3x3 SO(3) matrix representing 3D orientation
+%  * an so3 object representing 3D orientation
+%  * a quaternion object representing 3D orientation
 %
-% PLOTTFORM(R) as above but the coordinate frame is rotated
-% about the origin according to the SO(3) rotation matrix R (3x3).
-%
-% PLOTTFORM() creates a default frame EYE(3,3) at the origin.
+% Multiple frames can be added to a plot by using HOLD ON.
 %
 % H = PLOTTFORM(...) as above but returns a handle that allows the frame
 % to be animated.
@@ -153,11 +156,9 @@ function hout = plottform(X, options)
         
     end
     
-    % if scaling is given, then clear the axes and set scaling
-    if ~isempty(options.axis)
-        cla
+    hax = newplot()
+    if strcmp(hax.NextPlot, 'replace') 
         axis(options.axis);
-        hold on
 
         daspect([1 1 1]);
         
@@ -168,8 +169,6 @@ function hout = plottform(X, options)
             rotate3d on
         end
     end
-    hax = gca;
-    hold on
     % hax is the handle for the axis we will work with, either new or
     % passed by option 'handle'
     
@@ -257,11 +256,6 @@ function hout = plottform(X, options)
     elseif ~isempty(options.view)
         view(options.view);
     end
-
-%     if isempty(options.handle) && ~ih
-%         grid on
-%         hold off
-%     end
     
     % now place the frame in the desired pose
     set(hg, 'Matrix', T);
