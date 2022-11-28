@@ -153,13 +153,11 @@ function hout = plottform(X, options)
         c = tform2trvec(T);
         d = 1.2;
         options.axis = [c(1)-d c(1)+d c(2)-d c(2)+d c(3)-d c(3)+d];
-        
     end
     
     hax = newplot()
     if strcmp(hax.NextPlot, 'replace') 
         axis(options.axis);
-
         daspect([1 1 1]);
         
         if options.axes
@@ -169,6 +167,8 @@ function hout = plottform(X, options)
             rotate3d on
         end
     end
+    hax = gca;
+    hold on
     % hax is the handle for the axis we will work with, either new or
     % passed by option 'handle'
     
