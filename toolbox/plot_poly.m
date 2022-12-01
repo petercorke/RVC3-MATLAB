@@ -75,7 +75,7 @@ opt.fillcolor = [];
 opt.fill = '@fillcolor';
 opt.alpha = 1;
 opt.animate = false;
-opt.edgecolor = 'None';
+opt.edgecolor = [];
 opt.tag = [];
 opt.axis = [];
 
