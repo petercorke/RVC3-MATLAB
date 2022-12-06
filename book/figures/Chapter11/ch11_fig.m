@@ -1,31 +1,3 @@
-%% Section 11.1 Images from Files
-
-%% Fig 11.1
-
-% Fig 11.1a
-imshow("street.png")
-imtool("street.png")
-%rvcprint3('fig11_1a');
-
-% Fig 11.1b
-flowers = imread('flowers8.png');
-imshow(flowers)
-imtool("flowers8.png")
-%rvcprint3('fig11_1b'); % xxx I ended up using screen capture of IMTOOL for these FIGS
-
-%%
-
-pix = flowers(276,318,:)
-size(pix)
-squeeze(pix)'
-
-md = imfinfo("roof.jpg")
-
-md.DigitalCamera
-
-%% Section 11.1.3 Images from a Video File
-
-% no figures
 
 %% Section 11.1.4 Images from the Web
 grey = imread('http://uk.jokkmokk.jp/photo/nr4/latest.jpg');
