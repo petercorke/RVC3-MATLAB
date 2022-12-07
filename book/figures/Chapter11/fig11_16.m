@@ -1,17 +1,42 @@
-% cube via fisheye camera
+castle = im2double(imread('castle.png'));
 
-cam = CentralCamera('focal', 0.015, 'pixel', 10e-6, ...
-    'resolution', [1280 1024], 'centre', [640 512]);
-P = mkcube(0.2);
-T_unknown = transl(0,0,2)*trotx(0.1)*troty(0.2)
-p = cam.project(P, 'objpose', T_unknown);
-T_est = cam.estpose(P, p)
-randinit
-cam = FishEyeCamera('name', 'fisheye', ...
-         'projection', 'equiangular', ...
-         'pixel', 10e-6, ...
-         'resolution', [1280 1024])
-[X,Y,Z] = mkcube(0.2, 'centre', [0.2, 0, 0.3], 'edge');
-cam.mesh(X, Y, Z)
+fontSize = 22; % everything in 11.16* except quiver which is fontSize-6
+% Fig 11.16a
+Dv = fspecial('sobel')
+Iv = imfilter(castle, Dv, 'conv');
+imshow(Iv,[]);
+xlabel('u (pixels)', FontSize=fontSize);
+ylabel('v (pixles)', FontSize=fontSize);
+colorbar(fontsize=fontSize);
+rvcprint3('fig11_16a');
 
-rvcprint('hidden', cam.h_image.Parent)
+% Fig 11.16b
+Iu = imfilter(castle, Dv', 'conv');
+imshow(Iu,[]);
+xlabel('u (pixels)', FontSize=fontSize);
+ylabel('v (pixles)', FontSize=fontSize);
+colorbar(fontsize=fontSize);
+rvcprint3('fig11_16b');
+
+derOfGKernel = imfilter(Dv, fspecial('gaussian', 5, 2), 'conv', 'full');
+Iv = imfilter(castle, derOfGKernel, "conv");
+Iu = imfilter(castle, derOfGKernel', "conv");
+
+m = sqrt(Iu.^2 + Iv.^2);
+
+% Fig 11.16c
+imshow(m, []);
+xlabel('u (pixels)', FontSize=fontSize);
+ylabel('v (pixles)', FontSize=fontSize);
+rvcprint3('fig11_16c');
+
+% Fig 11.16d
+th = atan2(Iv, Iu);
+quiver(1:20:size(th,2), 1:20:size(th,1), ...
+       Iu(1:20:end,1:20:end), Iv(1:20:end,1:20:end))
+xaxis(1280)
+yaxis(960)
+smallerSize=10;
+xlabel('u (pixels)', FontSize=fontSize-smallerSize); ylabel('v (pixels)', ...
+    FontSize=fontSize-smallerSize)
+rvcprint3('fig11_16d');
