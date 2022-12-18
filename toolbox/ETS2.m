@@ -580,7 +580,7 @@ classdef ETS2
                 % update the wrist frame
                 T = se2(ets.fkine(q, 'setopt', opt));
                 if ~isempty(h.wrist)
-                    trplot2(T.tform, 'handle', h.wrist);
+                    plottform2d(T.tform, 'handle', h.wrist);
                 end
                 
                 % render and pause
