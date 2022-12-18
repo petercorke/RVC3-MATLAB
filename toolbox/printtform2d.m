@@ -40,13 +40,13 @@ function out = printtform2d(X, options)
     elseif isrotm2d(X)
         T = X;
     elseif isa(X,'se2')
-        X = X.tform;
+        T = X.tform;
     elseif isa(X,'so2')
-        X = X.rotm;        
+        T = X.rotm;        
     elseif isa(X, 'Twist2')
-        X = X.tform;
+        T = X.tform;
     elseif isa(X, "rigidtform2d")
-        X = X.T();
+        T = X.T();
     else
         error("RVC3:printtform2d:badarg", "unknown type of pose")
     end
