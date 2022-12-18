@@ -24,15 +24,22 @@ grid
 view(72, 18)
 %zlim([0.02, 0.05]);
 
+l = legend("Stance Phase", "Reset Phase");
+%l.FontSize = 7;
+l.Position = [0.2 0.7 0.1 0.1];
+
 
 rvcprint("painters", subfig="_a", thicken=2.5, figy=100)
 
 %% Subfigure (b)
 x = p(:,1);
+
+lineStyles = ["-", "--", ":", "-."];
+
 figure;
 hold on
 for i=1:4
-    plot((1:400)*0.01, x( mod((1:400)+(i-1)*100, 400)+1) );
+    plot((1:400)*0.01, x( mod((1:400)+(i-1)*100, 400)+1), LineStyle=lineStyles(i));
 end
 grid
 xlabel("Time (s)")
