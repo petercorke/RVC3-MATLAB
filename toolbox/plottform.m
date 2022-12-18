@@ -201,7 +201,7 @@ function hout = plottform(X, options)
         for i=1:3
             quiver3(mstart(1,i), mstart(2,i), mstart(3,i), ...
                 diff(1,i), diff(2,i), diff(3,i), ...
-                AutoScale=false, Color=axcolors(i), Parent=hg);
+                AutoScale=false, MaxHeadSize=options.LineWidth, LineWidth=options.LineWidth, Color=axcolors(i), Parent=hg);
         end
     else
         for i=1:3

@@ -180,7 +180,7 @@ function hout = plottform2d(X, options)
         for i=1:2
             quiver(mstart(1,i), mstart(2,i), ...
                 diff(1,i), diff(2,i), ...
-                AutoScale=false, Color=axcolors(i), LineWidth=options.LineWidth, Parent=hg);
+                AutoScale=false, MaxHeadSize=options.LineWidth, Color=axcolors(i), LineWidth=options.LineWidth, Parent=hg);
         end
     else
         for i=1:2
