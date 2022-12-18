@@ -388,7 +388,7 @@ classdef ETS2
             else
                 q = varargin{1};
             end
-            robot.plot(q, args{2:end})
+            robot.plot(q, args{2:end});
             
             RTBPlot.install_teach_panel('ETS2', robot, q, opt);
         end
@@ -707,7 +707,7 @@ classdef ETS2
                     if e.isjoint
                         daspect([1 1 1]);
                         %ha = arrow3([0 0 -12*s], [0 0 15*s], 'c');
-                        ha = quiver3([0 0 -12*s], 0, 0, 27*s, 'c')
+                        ha = quiver3([0 0 -12*s], 0, 0, 27*s, 'c');
                         set(ha, 'Parent', h.element(i));
                         
                         % create the joint axis label
@@ -735,7 +735,7 @@ classdef ETS2
 %                     'color', 'k', 'length', opt.wristlen*s, extra{:});
 %                 h.wrist = plottform2d(eye(3,3), labels=upper(opt.wristlabel), ...
 %                     color="k", length=opt.wristlen*s), extra{:});
-                    h.wrist = plottform2d(eye(3,3), color="k", length=opt.wristlen*s)
+                    h.wrist = plottform2d(eye(3,3), color="k", length=opt.wristlen*s);
             else
                 h.wrist = [];
             end

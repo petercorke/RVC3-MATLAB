@@ -158,8 +158,8 @@ function hout = plottform2d(X, options)
     values = struct2cell(options.text_options);
     text_options_cell = {};
     for i=1:length(names)
-        text_options_cell{end+1} = names{i};
-        text_options_cell{end+1} = values{i};
+        text_options_cell{end+1} = names{i}; %#ok<AGROW> 
+        text_options_cell{end+1} = values{i}; %#ok<AGROW> 
     end
     
     hg = hgtransform(Parent=hax);    
@@ -223,7 +223,8 @@ function hout = plottform2d(X, options)
     end
     
     if ~options.axes
-        gca.visible = "off";
+        ax = gca;
+        ax.Visible = "off";
     end
 
 %     if isempty(options.handle) && ~ih
