@@ -151,7 +151,9 @@ function rvcprint(varargin)
         
     % make it so
     fig = gcf;
-    fig.PaperPositionMode = 'auto';
+    if ~opt.simulink
+        fig.PaperPositionMode = 'auto';
+    end
 
     if opt.figy ~= 0
         % Change figure y size. To avoid axes scaling, set units to pixels.
