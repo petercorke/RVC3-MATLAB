@@ -182,7 +182,7 @@ classdef Twist2d
         
         function x = exp(tw, theta)
             arguments
-                tw (1,1) Twist
+                tw (1,1) Twist2d
                 theta (1,:) double = 1
             end
             %EXP Convert twist to se2 object
