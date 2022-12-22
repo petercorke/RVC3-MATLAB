@@ -1,21 +1,33 @@
-ploop_test
+bdclose all; close all; clear;
 
-set_param('ploop_test/ploop/Kff', 'Gain', '0');
-r = sim('ploop_test');
+sl_ploop_test
 
+set_param("sl_ploop_test/Joint ploop/Kff", "Gain", "0");
+r = sim("sl_ploop_test");
+
+%% Subfigure (a) - P control only
 figure
-tout = r.find('t'); yout = r.find('y');oplot(tout, yout(:,[1:2])); ylabel('q (rad)'); 
-l = legend('actual', 'demand', 'Location', 'SouthEast');
-set(l, 'FontSize', 12)
+tout = r.find("t"); yout = r.find("y");
+plot(tout, yout(:,1:2)); 
+xlabel("Time (s)");
+ylabel("q (rad)"); 
+ylim([-0.2 1]);
+l = legend("actual", "demand", Location="SouthEast");
+l.FontSize = 10;
 
-rvcprint('subfig', 'a', 'thicken', 1.5)
+rvcprint("painters", subfig="_a", thicken=1.5)
 
-set_param('ploop_test/ploop/Kff', 'Gain', '107.815');
-r = sim('ploop_test');
-tout = r.find('t'); yout = r.find('y');
+set_param("sl_ploop_test/Joint ploop/Kff", "Gain", "1*G");
+r = sim("sl_ploop_test");
+tout = r.find("t"); yout = r.find("y");
+
+%% Subfigure (b) - P control with feedforward
 figure
-oplot(tout, yout(:,[1:2])); ylabel('q (rad)'); 
-l = legend('actual', 'demand', 'Location', 'SouthEast');
-set(l, 'FontSize', 12)
+plot(tout, yout(:,1:2)); 
+xlabel("Time (s)");
+ylabel("q (rad)"); 
+ylim([-0.2 1]);
+l = legend("actual", "demand", Location="SouthEast");
+l.FontSize = 10;
 
-rvcprint('subfig', 'b', 'thicken', 1.5)
+rvcprint("painters", subfig="_b", thicken=1.5)

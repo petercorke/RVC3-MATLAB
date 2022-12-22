@@ -1,7 +1,10 @@
-open_system('ploop_test')
-%open_system('ploop_test/ploop', 'force')
-rvcprint('simulink', 'ploop_test', 'subfig', 'a');
+bdclose all; close all; clear;
 
-%ploop_test
+open_system("sl_ploop_test")
+sim("sl_ploop_test")
 
-rvcprint('simulink', 'ploop', 'subfig', 'b')
+%% Subfigure (b) - Full test harness
+rvcprint("simulink", "sl_ploop_test", subfig="_b");
+
+%% Subfigure (a) - Actual position control loop
+rvcprint("simulink", "Joint ploop", subfig="_a")
