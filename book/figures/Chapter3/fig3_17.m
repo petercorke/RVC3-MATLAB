@@ -34,7 +34,7 @@ subplot(211)
 plot(IMU.t, dist(orientation, TrueMotion.orientation), 'r', 'LineWidth', 2 );
 hold on
 plot(IMU.t, dist(orientation_ECF, TrueMotion.orientation), 'b', 'LineWidth', 2 );
-legend('standard', 'extended comp. filter', 'Location', 'NorthWest')
+legend('standard', 'explicit comp. filter', 'Location', 'NorthWest')
 grid on
 xlabel('Time (s)')
 ylabel('Orientation error (rad)')
