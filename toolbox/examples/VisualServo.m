@@ -460,10 +460,10 @@ classdef VisualServo < handle
             s = strvcat(s, [repmat('      ', 4,1) num2str(vs.Tf)]);
             else
                 if ~isempty(vs.T0)
-                    s = strvcat(s, ['  C_T0:   ' printtform(vs.T0, 'fmt', ' %g', 'angvec')]);
+                    s = strvcat(s, "  C_T0:   "+printtform(vs.T0, fmt=" %g", mode="axang"));
                 end
                 if ~isempty(vs.Tf)
-                    s = strvcat(s, ['  C*_T_G: ' printtform(vs.Tf, 'fmt', ' %g', 'angvec')]);
+                    s = strvcat(s, "  C*_T_G: "+printtform(vs.Tf, fmt=" %g", mode="axang"));
                 end
             end
         end
