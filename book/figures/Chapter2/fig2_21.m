@@ -7,13 +7,18 @@ X = trvec2tform([3, 4, -4]);
 
 hold on
 for theta=[0:0.3:15]
-  plottform(S.exp(theta).tform * X, style="rgb", text=0, width=2)
+  plottform(S.exp(theta).tform * X, style="rgb",labelstyle="none",LineWidth=2) % text=0, 
 end
 
 xlabel('x')
 ylabel('y')
 zlabel('z')
 
+L = S.line;
+L.plot('k:', 'Linewidth', 2)
+
+axis([-1 5 0 6 -4 6])
+daspect([1 1 2])
 rvcprint(thicken=2)
 % clf
 % plotvol([0 5 0 5 -5 5])
