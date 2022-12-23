@@ -10,7 +10,8 @@ function rvcprint(varargin)
     
     global rvcprintopts
     
-    outputFolder = '../matfigs';
+    % outputFolder = '../matfigs';
+    outputFolder = '.';
     
     if ~exist(outputFolder, 'dir')
         mkdir(outputFolder);
