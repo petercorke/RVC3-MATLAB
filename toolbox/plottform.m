@@ -155,7 +155,7 @@ function hout = plottform(X, options)
         options.axis = [c(1)-d c(1)+d c(2)-d c(2)+d c(3)-d c(3)+d];
     end
     
-    hax = newplot()
+    hax = newplot();
     if strcmp(hax.NextPlot, 'replace') 
         axis(options.axis);
         daspect([1 1 1]);
@@ -177,8 +177,8 @@ function hout = plottform(X, options)
     values = struct2cell(options.text_options);
     text_options_cell = {};
     for i=1:length(names)
-        text_options_cell{end+1} = names{i};
-        text_options_cell{end+1} = values{i};
+        text_options_cell{end+1} = names{i}; %#ok<AGROW> 
+        text_options_cell{end+1} = values{i}; %#ok<AGROW> 
     end
     
     hax.Projection = options.projection;
@@ -201,7 +201,7 @@ function hout = plottform(X, options)
         for i=1:3
             quiver3(mstart(1,i), mstart(2,i), mstart(3,i), ...
                 diff(1,i), diff(2,i), diff(3,i), ...
-                AutoScale=false, Color=axcolors(i), Parent=hg);
+                AutoScale=false, MaxHeadSize=options.LineWidth, LineWidth=options.LineWidth, Color=axcolors(i), Parent=hg);
         end
     else
         for i=1:3

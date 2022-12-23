@@ -52,8 +52,8 @@ rvcprint("painters", subfig="_c", thicken=2, figy=150)
 
 %% Subfigure (d) - Manipulability
 
-mc = maniplty(abb, qj, "tool0");
-mj = maniplty(abb, qjp', "tool0");
+mc = manipulability(abb, qj, "tool0");
+mj = manipulability(abb, qjp', "tool0");
 
 figure
 plot(t, [mc mj]);

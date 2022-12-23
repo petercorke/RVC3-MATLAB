@@ -723,11 +723,11 @@ classdef ETS3
                     else
                         d = norm( d(4:6)-d(1:3) ) / 72;
                     end
-                    extra = {'arrow', 'width', 1.5*s/d};
+                    extra = {'arrow', true, 'LineWidth', 1.5*s/d};
                 else
                     extra = {};
                 end
-                h.wrist = tformplot(eye(3,3), 'labels', upper(opt.wristlabel), ...
+                h.wrist = plottform(eye(3,3), 'labels', upper(opt.wristlabel), ...
                     'color', 'k', 'length', opt.wristlen*s, extra{:});
             else
                 h.wrist = [];
