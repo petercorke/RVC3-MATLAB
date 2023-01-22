@@ -42,6 +42,7 @@ pathLineHandles(1).LineStyle = "--";
 
 % Make start and goal more prominent
 plotStartGoal(qs, qg, 14, 18);
+legend(["Forward path", "Reverse path", "", "", "Transition point", "Heading", "", "", "", "", "", "", "", "", "", "Start pose", "Goal pose"])
 
 grid on;
 axis equal;

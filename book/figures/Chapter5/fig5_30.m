@@ -23,5 +23,5 @@ lp.plot(goalmarker={"MarkerSize", 28})
 xlim([-5 5]);
 ylim([-5 5]);
 
-% Cannot use "painters" option here, since it doesn't display the full path
-rvcprint("painters")
+% Have to use output format PDF here, because path doesn't show up completely otherwise
+rvcprint("painters", "format", "pdf")

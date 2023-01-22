@@ -367,14 +367,15 @@ classdef LatticePlanner < Navigation
         function drawarc(lp, v, lineOpts)
             g = lp.graph;
 
+            narc = 20;
             % use lower resolution if lots of arcs
-            if lp.iterations < 4
-                narc = 20;
-            elseif lp.iterations < 10
-                narc = 10;
-            else
-                narc = 5;
-            end
+            % if lp.iterations < 4
+            %     narc = 20;
+            % elseif lp.iterations < 10
+            %     narc = 10;
+            % else
+            %     narc = 5;
+            % end
 
             v1 = v(1); v2 = v(2);
             p1 = g.coord(v1);

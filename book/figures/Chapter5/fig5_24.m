@@ -27,7 +27,7 @@ figure;
 p.show(HeadingLength=0.25, Headings={"start", "goal"}, Positions={});
 hold on;
 plotStartGoal(qs, qg, 14, 18);
-legend off
+
 grid on
 xlabel("x")
 ylabel("y")
@@ -48,6 +48,6 @@ for i = 1:size(samples,1)
         x, y, theta, 0.3);
     plot(vertices(1,:),vertices(2,:),'Color','black','LineWidth', 2);
 end
-
+legend(["Path", "", "", "Interpolated pose", "Heading", "", "", "", "Start pose", "Goal pose"])
 
 rvcprint("painters", subfig="_b");

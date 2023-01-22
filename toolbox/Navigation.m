@@ -327,8 +327,15 @@ classdef Navigation < handle
                 %   free space, color index = 1, white,
                 %   obstacle, color index = 2, red
                 cmap = [1 1 1; 1 0 0];  % non obstacles are white
-                image(occGrid+1, 'CDataMapping', 'direct', ...
-                    'AlphaData', occGrid);
+                if isa(nav.w2g,'se2') && nav.w2g ~= se2
+                    transl = nav.w2g.inv.trvec;
+                    image(occGrid+1, 'CDataMapping', 'direct', ...
+                        'XData', transl(1) + 0.5, 'YData', transl(2) + 0.5, ...
+                        'AlphaData', occGrid);
+                else
+                    image(occGrid+1, 'CDataMapping', 'direct', ...
+                        'AlphaData', occGrid);                    
+                end
                 colormap(cmap)
                 
             else
@@ -359,8 +366,15 @@ classdef Navigation < handle
                 d(occGrid > 0) = 1;
                 
                 % display it with colorbar
-                image((d - mindist) * (255 - mindist) / (maxdist - mindist) + mindist, ...
-                    'CDataMapping', 'direct');
+                if isa(nav.w2g,'se2') && nav.w2g ~= se2
+                    transl = nav.w2g.inv.trvec;
+                    image((d - mindist) * (255 - mindist) / (maxdist - mindist) + mindist, ...
+                        'XData', transl(1) + 0.5, 'YData', transl(2) + 0.5, ...
+                        'CDataMapping', 'direct');
+                else
+                    image((d - mindist) * (255 - mindist) / (maxdist - mindist) + mindist, ...
+                        'CDataMapping', 'direct');                    
+                end
                 set(gcf, 'Renderer', 'Zbuffer')
 
                 colormap(cmap)

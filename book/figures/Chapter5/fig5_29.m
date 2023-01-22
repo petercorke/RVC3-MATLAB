@@ -27,7 +27,7 @@ lp.plot
 xlim([-2,3]);
 ylim([-3,3]);
 
-legend(["Goal point", "", "Lattice point", "Start point", ...
+legend(["Goal pose", "", "Lattice node", "Start pose", ...
     repmat("",1,1700), "Path"], Location="eastoutside")
 
 rvcprint("painters", subfig="_b")
