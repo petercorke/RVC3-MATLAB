@@ -3,7 +3,8 @@ xg = [5 5]; % goal position
 clf
 axis equal
 axis([1 9 1 9]);
-xyzlabel
+xlabel("x");
+ylabel("y");
 grid on
 xc = 5; yc = 5;
 N = 8;

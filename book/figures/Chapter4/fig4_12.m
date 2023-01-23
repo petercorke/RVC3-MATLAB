@@ -15,7 +15,7 @@ axis equal;
 rvcprint("subfig", "_a")
 
 % Create second figure for speed over time
-clf
+figure;
 t = r.get("t");
 v = yout(:,6);
 plot(t, v); xlabel("Time"); ylabel("Speed"); grid on

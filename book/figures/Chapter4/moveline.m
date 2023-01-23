@@ -22,7 +22,8 @@
 L = [1 -2 4];
 clf
 hold on
-xyzlabel
+xlabel("x");
+ylabel("y");
 x = [0 10];
 y = -(L(1)*x+L(3))/L(2);
 plot(x, y, 'k--');

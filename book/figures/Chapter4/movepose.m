@@ -2,7 +2,8 @@ xg = [5 5 pi/2];
 clf
 axis([0 10 0 10]);
 hold on
-xyzlabel
+xlabel("x");
+ylabel("y");
 grid on
 xc = 5; yc = 5;
 N = 8;
