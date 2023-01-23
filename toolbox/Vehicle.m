@@ -77,7 +77,7 @@ classdef Vehicle < handle
         % state
 
         %q - True vehicle state (x,y,theta)
-        %   Returned as 3-by-1 vector.
+        %   Returned as 1-by-3 vector.
         q
 
         %qhist - History of true vehicle states
@@ -119,8 +119,8 @@ classdef Vehicle < handle
         driver
 
         %q0 - Initial state (x,y,theta)
-        %   Stored as 3-by-1 vector
-        %   Default: [0 0 0]'
+        %   Stored as 1-by-3 vector
+        %   Default: [0 0 0]
         q0
 
         options
@@ -145,7 +145,7 @@ classdef Vehicle < handle
             opt.Covariance = [];
             opt.rdim = 0.2;
             opt.dt = 0.1;
-            opt.q0 = zeros(3,1);
+            opt.q0 = zeros(1,3);
             opt.MaxSpeed = 1;
             opt.vhandle = [];
 
@@ -154,7 +154,7 @@ classdef Vehicle < handle
             veh.V = opt.Covariance;
             veh.rdim = opt.rdim;
             veh.dt = opt.dt;
-            veh.q0 = opt.q0(:);
+            veh.q0 = opt.q0(:)';
             assert(isvec(veh.q0, 3), 'Initial configuration must be a 3-vector');
             veh.MaxSpeed = opt.MaxSpeed;
             veh.options = args;  % unused options go back to the subclass
@@ -173,7 +173,7 @@ classdef Vehicle < handle
             % TODO: should this be called from run?
 
             if nargin > 1
-                veh.q = q0(:);
+                veh.q = q0(:)';
             else
                 veh.q = veh.q0;
             end
@@ -189,7 +189,7 @@ classdef Vehicle < handle
         function yy = path(veh, t, u, y0)
             %PATH Compute path for constant inputs
             %
-            %   QF = VEH.PATH(TF,U) is the final state of the vehicle (3-by-1) 
+            %   QF = VEH.PATH(TF,U) is the final state of the vehicle (1-by-3) 
             %   from the initial state (0,0,0) with the control inputs U 
             %   (vehicle specific). TF is a scalar to specify the total 
             %   integration time (in seconds).
@@ -266,7 +266,7 @@ classdef Vehicle < handle
             odo = [vecnorm(veh.q(1:2)-xp(1:2)) veh.q(3)-xp(3)];
             veh.odometry = odo;
 
-            veh.qhist = [veh.qhist; veh.q'];   % maintain history
+            veh.qhist = [veh.qhist; veh.q];   % maintain history
         end
 
         function odo = step(veh, varargin)

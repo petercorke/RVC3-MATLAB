@@ -128,7 +128,7 @@ classdef BicycleVehicle < Vehicle
 
             veh = veh@Vehicle(varargin{:});
 
-            veh.q = zeros(3,1);
+            veh.q = zeros(1,3);
 
             opt.WheelBase = 1;
             opt.MaxSteeringAngle = 0.5;
@@ -180,7 +180,7 @@ classdef BicycleVehicle < Vehicle
             %DERIVATIVE Time derivative of state
             %
             %   DQ = VEH.DERIVATIVE(T,Q,U) is the time derivative of state 
-            %   (3-by-1) at the state Q (3-by-1) with input U (2-by-1).
+            %   (1-by-3) at the state Q (1-by-3) with input U (1-by-3).
             %
             %   The parameter T is ignored but called from a continuous time 
             %   integrator such as ode45 or Simulink.
@@ -196,7 +196,7 @@ classdef BicycleVehicle < Vehicle
             end
 
             % Use the standard kinematics model to calculate the kinematics
-            dq = veh.Kinematics.derivative(q, u);
+            dq = veh.Kinematics.derivative(q, u)';
 
 %             % Reflect speed and steer angle limits in control input
 %             u(1) = min(veh.MaxSpeed, max(u(1), -veh.MaxSpeed));
@@ -222,7 +222,7 @@ classdef BicycleVehicle < Vehicle
             odo = [ norm(dx(1:2)) dx(3) ];
             veh.odometry = odo;
 
-            veh.qhist = [veh.qhist; veh.q'];   % maintain history
+            veh.qhist = [veh.qhist; veh.q];   % maintain history
         end
 
 
