@@ -1,4 +1,12 @@
-# List of untracked files to ignore
+# MATLAB autosave file
 *.asv
 
-slprj/
+# Simulink autosave files
+*.slxc
+*.r2019b
+*.r2021a
+*.r2022a
+
+# Simulink temporary files
+**/slprj/
+*.autosave
