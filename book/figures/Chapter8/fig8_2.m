@@ -1,3 +1,10 @@
+% This figure depends on the arrow3 package.
+% You can load it directly from this repository:
+% >> websave arrow3.m https://raw.githubusercontent.com/petercorke/spatialmath-matlab/master/arrow3.m
+%
+% See https://www.mathworks.com/matlabcentral/fileexchange/14056-arrow3/
+% for more information.
+
 close all; clear;
 
 [puma, conf] = loadrvcrobot("puma");
