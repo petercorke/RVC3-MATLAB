@@ -59,7 +59,7 @@ fliptr = true;
 if nargin > 0
     if isa(A, 'se3')
         T1 = A.tform;
-    elseif ishomog(A)
+    elseif all(size(A) == 4)
         T1 = A;
     else
         error('SMTB:tform2delta:badarg', 'T1 should be a homogeneous transformation');
@@ -75,7 +75,7 @@ if nargin == 2
         T0 = T1;
         if isa(B, 'se3')
             T1 = B.tform;
-        elseif ishomog(B)
+        elseif all(size(B) == 4)
             T1 = B;
         else
             error('SMTB:tform2delta:badarg', 'T0 should be a homogeneous transformation');
@@ -95,7 +95,7 @@ if nargin == 3
     T0 = T1;
     if isa(B, 'se3')
         T1 = B.tform;
-    elseif ishomog(B)
+    elseif all(size(B) == 4)
         T1 = B;
     else
         error('SMTB:tform2delta:badarg', 'T0 should be a homogeneous transformation');
