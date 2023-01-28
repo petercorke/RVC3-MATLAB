@@ -8,9 +8,9 @@ axis(1*[-1 1 -1 1 -1 1])
 
 J = puma.geometricJacobian(conf.qn, "link6");
 Jt = J(4:6,:);
-E = Jt*Jt';
+E = inv(Jt*Jt');
 
-plotellipsoid(E, 'fillcolor', 'r', 'shadow')
+plotellipsoid(E, fillcolor="r", shadow=true)
 xyzlabel
 grid on
 view(150, 30)
@@ -22,11 +22,11 @@ qns(5) = deg2rad(5);
 
 J = puma.geometricJacobian(qns, "link6");
 Jr = J(1:3,:);
-E = Jr*Jr';
+E = inv(Jr*Jr');
 
 figure;
 axis(2*[-1 1 -1 1 -1 1])
-plotellipsoid(E, 'fillcolor', 'r', 'shadow')
+plotellipsoid(E, fillcolor="r", shadow=true)
 xyzlabel
 grid on
 view(150, 30)

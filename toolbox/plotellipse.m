@@ -37,6 +37,17 @@ function handles = plotellipse(E, varargin)
 %   alpha      - Transparency of the fillcolored ellipse: 0=transparent, 1=solid
 %                Default: 1
 %
+%
+% The ellipse is defined by x' * E * x = s^2 where x is in R^2
+% and s is the scale factor.
+% For some common cases we require inv(E), for example
+%     - for robot manipulability
+%       \nu inv(J*J') \nu
+%     - a covariance matrix
+%       (x - \mu)' inv(P) (x - \mu)
+%  so to avoid inverting E twice to compute the ellipse, we flag that
+%  the inverse is provided using "inverted".
+%
 %   For an unfilled ellipse:
 %   - any standard MATLAB LineStyle such as 'r' or 'b---'.
 %   - any MATLAB LineProperty options can be given such as 'LineWidth', 2.
@@ -67,7 +78,7 @@ function handles = plotellipse(E, varargin)
     opt.alter = [];
     opt.npoints = 40;
     opt.confidence = [];
-    opt.inverted = false;
+    opt.inverted = 0;
 
     [opt,arglist,ls] = tb_optparse(opt, varargin);
 

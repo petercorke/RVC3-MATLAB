@@ -1,19 +1,42 @@
 %PLOTELLIPSOID Draw an ellipse or ellipsoid
 %
-% PLOTELLIPSOID(E, OPTIONS) draws an ellipsoid defined by X'EX =
-% 0 on the current plot, centered at the origin.
+%   PLOTELLIPSOID(E) draws an ellipsoid defined by X'EX =
+%   0 on the current plot, centered at the origin. E is a 3-by-3 matrix.
 %
-% PLOTELLIPSOID(E, C, OPTIONS) as above but centered at C=[X,Y,Z].
+%   PLOTELLIPSOID(E, C) as above but centered at C = [X,Y,Z].
 %
-% H = PLOTELLIPSOID(...) as above but return graphic handle.
+%   H = PLOTELLIPSOID(...) returns a graphic handle, H, to the plotted
+%   ellipsoid. 
+%   
+%   PLOTELLIPSOID(..., Name=Value) specifies additional
+%   options using one or more name-value pair arguments.
+%   Specify the options after all other input arguments.
+% 
+%   inverted   - If true, E is inverted (e.g. covariance matrix)
+%                Default: false   
+%   alter      - Alter existing ellipsoids with handle H. This can be used to
+%                create a smooth animation.
+%   npoints    - Use N points to define the ellipsoid
+%                Default: 40
+%   edgecolor  - Color of the ellipsoid boundary edge, MATLAB color spec
+%                Default: "black"
+%   fillcolor  - Color of the ellipsoid's interior, MATLAB color spec
+%                Default: "none"
+%   alpha      - Transparency of the fillcolored ellipsoid: 0=transparent, 1=solid
+%                Default: 1
+%   shadow     - If true, shows shadows on the 3 walls of the plot box
+%                Default: false
 %
-% Options::
-% 'alter',H        alter existing ellipses with handle H
-% 'npoints',N      use N points to define the ellipse (default 40)
-% 'edgecolor'      color of the ellipse boundary edge, MATLAB color spec
-% 'fillcolor'      the color of the ellipses's interior, MATLAB color spec
-% 'alpha'          transparency of the fillcolored ellipse: 0=transparent, 1=solid
-% 'shadow'         show shadows on the 3 walls of the plot box
+%
+% The ellipsoid is defined by x' * E * x = s^2 where x is in R^2
+% and s is the scale factor.
+% For some common cases we require inv(E), for example
+%     - for robot manipulability
+%       \nu inv(J*J') \nu
+%     - a covariance matrix
+%       (x - \mu)' inv(P) (x - \mu)
+%  so to avoid inverting E twice to compute the ellipsoid, we flag that
+%  the inverse is provided using "inverted".
 %
 % - For an unfilled ellipse:
 %   - any standard MATLAB LineStyle such as 'r' or 'b---'.
@@ -24,7 +47,7 @@
 % - The 'alter' option can be used to create a smooth animation.
 % - The ellipse is added to the current plot irrespective of hold status.
 %
-% See also PLOTELLIPSE, PLOT_CIRCLE, PLOT_BOX, PLOT_POLY, CHI2INV.
+% See also PLOTELLIPSE, PLOTCIRCLE, PLOT_BOX, PLOT_POLY, CHI2INV.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
@@ -38,7 +61,8 @@ opt.alpha = 1;
 opt.edgecolor = 'k';
 opt.alter = [];
 opt.npoints = 40;
-opt.shadow = false;
+opt.shadow = 0;
+opt.inverted = 0;
 
 [opt,arglist,ls] = tb_optparse(opt, varargin);
 
@@ -61,6 +85,10 @@ end
 % check the ellipse to be altered
 if ~isempty(opt.alter) && ~ishandle(opt.alter)
     error('SMTB:plotellipse:badarg', 'argument to alter must be a valid graphic object handle');
+end
+
+if ~opt.inverted
+    E = inv(E);
 end
 
 holdon = ishold();
