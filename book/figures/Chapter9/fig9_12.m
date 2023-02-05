@@ -3,8 +3,12 @@ bdclose all; close all; clear;
 % gravity load + integral action
 sl_vloop_test
 
-set_param("sl_vloop_test/tau_d", "Value", "40/107.815");
-set_param("sl_vloop_test/Joint vloop", "Ki", "2");
+% Add torque disturbance of 20 Nm
+set_param("sl_vloop_test/tau_d", "Value", "20/107.815");
+
+% Set Kv = 1 (P gain) and Ki = 10 (I gain)
+set_param("sl_vloop_test/Joint vloop", "Kv", "1");
+set_param("sl_vloop_test/Joint vloop", "Ki", "10");
 
 r = sim("sl_vloop_test");
 tout = r.find("t"); yout = r.find("y");
