@@ -53,7 +53,7 @@ if ishandle(p)
     % PLOT_POLY(H, T)
     %  - animate existing polygon
     tr = varargin{1};
-    if isvec(tr)
+    if isvec(tr,3)
         m = se2(rotm2d(tr(3)), [tr(1) tr(2)]); m = se2To3(m).tform;
     elseif ishomog2(tr)
         m = se2(tr); m = se2To3(m).tform;
@@ -131,12 +131,18 @@ hold on
 
 switch size(p,1)
     case 2
+        if isempty(opt.edgecolor)
+            edgecolor = opt.fillcolor;
+        else
+            edgecolor = opt.edgecolor;
+        end
+
         % plot 2D data
         if isempty(opt.fillcolor)
             h = plot(x, y, ls{:}, args{:});
         else
             h = patch(x', y', opt.fillcolor, ...
-                'EdgeColor', opt.edgecolor, ...
+                'EdgeColor', edgecolor, ...
                 'FaceAlpha', opt.alpha, args{:});
         end
         
