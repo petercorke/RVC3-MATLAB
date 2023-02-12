@@ -3,7 +3,7 @@ close all; clear;
 % EKF dead reckoning
 V = diag([0.02, 0.5*pi/180].^2);
 veh = BicycleVehicle(Covariance=V);
-veh.addDriver( RandomDriver(10) );
+veh.addDriver( RandomDriver(10,show=false) );
 
 P0 = diag([0.05, 0.05, deg2rad(0.5)].^2);
 ekf = EKF(veh, V, P0);

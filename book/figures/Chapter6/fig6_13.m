@@ -21,7 +21,7 @@ xyzlabel
 % Transform true path into SLAM frame (from q0 to x0)
 xDiff = x0 - q0;
 xDiff(3) = wrapToPi(xDiff(3));
-T = se2(tform2d(0,0,xDiff(3))) * se2(trvec2tform2d([xDiff(1),xDiff(2)]));
+T = se2(tform2d(0,0,xDiff(3))) * se2(trvec2tform([xDiff(1),xDiff(2)]));
 transformedTruePath = T.transform(robot.qhist(:,1:2)', IsCol=true);
 transformedTrueLandmarks = T.transform(map.map, IsCol=true); 
 plot(transformedTrueLandmarks(1,:)', transformedTrueLandmarks(2,:)', "kh");
