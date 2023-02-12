@@ -338,7 +338,7 @@ classdef EKF < handle
             % - All previously estimated states and estimation history are initially
             %   cleared.
 
-            opt.plot = true;
+            opt.plot = false;
             opt.x_est0 = [];
             opt.movie = [];
             opt = tb_optparse(opt, varargin);
@@ -577,7 +577,7 @@ classdef EKF < handle
                 P = ekf.P_est(n:n+1,n:n+1);
                 % TODO reinstate the interval landmark
                 %plotellipse(xf, P, interval, 0, [], varargin{:});
-                plotellipse( P, "inverted", "confidence", opt.confidence, xf, args{:});
+                plotellipse( P, "inverted", true, "confidence", opt.confidence, xf, args{:});
                 grid on; hold on;
                 plot(xf(1), xf(2), 'k.', 'MarkerSize', 10)                
             end
@@ -664,7 +664,7 @@ classdef EKF < handle
             for i=1:opt.interval:length(ekf.history)
                 h = ekf.history(i);
                 %plotellipse(h.x_est(1:2), h.P(1:2,1:2), 1, 0, [], varargin{:});
-                plotellipse(h.P(1:2,1:2), h.x_est(1:2), "inverted", "confidence", opt.confidence, args{:});
+                plotellipse(h.P(1:2,1:2), h.x_est(1:2), "inverted", true, "confidence", opt.confidence, args{:});
             end
             if ~holdon
                 hold off
@@ -780,7 +780,7 @@ classdef EKF < handle
                 Pvv_pred = Fx*Pvv_est*Fx' + Fv*ekf.V_est*Fv';
             else
                 % otherwise we just take the true robot state
-                xv_pred = ekf.robot.q;
+                xv_pred = ekf.robot.q(:);
             end
 
             if ekf.estMap
