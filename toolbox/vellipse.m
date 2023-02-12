@@ -85,9 +85,9 @@ function vellipse(robot, q, varargin)
         % already inverted.
         case '2d'
             if isempty(e)
-                plotellipse(N, t(1:2), 'inverted', 'edgecolor', 'r', 'Tag', name, args{:});
+                plotellipse(N, t(1:2), 'inverted', true, 'edgecolor', 'r', 'Tag', name, args{:});
             else
-                plotellipse(N, t(1:2), 'inverted', 'alter', e);
+                plotellipse(N, t(1:2), 'inverted', true, 'alter', e);
             end
         otherwise
             if isempty(e)
