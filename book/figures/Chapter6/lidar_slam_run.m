@@ -1,4 +1,4 @@
-load("offlineSlamData.mat");
+load("indoorSLAMData.mat");
 maxLidarRange = 9;
 mapResolution = 20;
 slam = lidarSLAM(mapResolution, maxLidarRange);
