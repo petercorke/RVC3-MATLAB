@@ -192,7 +192,7 @@ classdef LandmarkSensor < Sensor
                 % any landmarks that match criteria
 
                 % get range/bearing to all landmarks, one per row
-                z = s.h(s.robot.q');
+                z = s.h(s.robot.q);
                 jf = 1:size(s.map.map,2);
 
                 if ~isempty(s.r_range)
@@ -224,7 +224,7 @@ classdef LandmarkSensor < Sensor
                 jf = s.selectFeature();
 
                 % compute the range and bearing from robot to feature
-                z = s.h(s.robot.q', jf);
+                z = s.h(s.robot.q, jf);
             end
 
             if s.verbose
