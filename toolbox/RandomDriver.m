@@ -104,7 +104,7 @@ classdef RandomDriver < handle
 
             opt.Speed = 1;
             opt.DistTresh = 0.05 * diff(driver.XLim) / 2;
-            opt.show = true;
+            opt.show = 0;
 
             driver = tb_optparse(opt, varargin, driver);
 
@@ -185,7 +185,7 @@ classdef RandomDriver < handle
             steer = d_heading;
 
             % if nearly at Goal point, choose the next one
-            d = norm(driver.Vehicle.q(1:2) - driver.Goal);
+            d = norm(driver.Vehicle.q(1:2)' - driver.Goal);
             if d < driver.DistTresh
                 driver.setgoal();
             elseif d > 2*driver.d_prev
