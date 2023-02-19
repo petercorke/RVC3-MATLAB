@@ -8,7 +8,7 @@ luminos(450e-9) / luminos(550e-9)
 clf
 plot(lambda*1e9,  human)
 
-ylabel('lm/W');
+ylabel('Luminosity (lm/W)');
 xlabel('Wavelength (nm)');
 grid on
 rvcprint3('fig10_7a', 'thicken', 1.5)
