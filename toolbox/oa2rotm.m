@@ -27,5 +27,5 @@ function R = oa2rotm(o, a)
 
 	n = cross(o, a);
     o = cross(a, n);
-	R = [unit(n) unit(o) unit(a)];
+	R = [unitvector(n) unitvector(o) unitvector(a)];
 end

@@ -28,5 +28,5 @@ function T = oa2tform(o, a)
 
 	n = cross(o, a);
     o = cross(a, n);
-	T = [unit(n) unit(o) unit(a) zeros(3,1); 0 0 0 1];
+	T = [unitvector(n) unitvector(o) unitvector(a) zeros(3,1); 0 0 0 1];
 end
