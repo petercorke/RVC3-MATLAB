@@ -36,6 +36,10 @@ function p = mkgrid(N, s, varargin)
         nx = N(1); ny = N(2);
     end
 
+    if any(N<=1)
+        error('RVCtoolbox: number of points must be > 1');
+    end
+
     if N == 2
         % special case, we want the points in specific order
         p = [-sx -sy 0
