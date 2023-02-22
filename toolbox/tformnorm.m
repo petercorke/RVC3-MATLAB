@@ -44,7 +44,7 @@ function TR = tformnorm(X)
         o = T(1:3,2,i); a = T(1:3,3,i);
         n = cross(o, a);         % N = O x A
         o = cross(a, n);         % O = A x N
-        R = [unit(n) unit(o) unit(a)];
+        R = [unitvector(n) unitvector(o) unitvector(a)];
 
         TN(1:3,1:3,i) = R;
     end
