@@ -32,7 +32,7 @@ function out = printtform2d(X, options)
         options.fmt (1,1) string = ""
         options.unit (1,1) string {mustBeMember(options.unit, ["rad", "deg"])} = "rad"
         options.fid (1,1) {mustBeInteger} = 1
-        options.label (1,1)
+        options.label (1,1) string = ""
     end
 
     if istform2d(X)
