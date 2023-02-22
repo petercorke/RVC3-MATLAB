@@ -1,4 +1,4 @@
-%TFORM2ADJOINT Adjoint of SE(n) matrix
+%TFORM2ADJOINT Adjoint of SE(3) matrix
 % 
 % A = TFORM2ADJOINT(T) is the adjoint matrix for the SE(n) matrix T.
 %
@@ -11,18 +11,22 @@ function a = tform2adjoint(T)
 
     R = tform2rotm(T);
     t = tform2trvec(T);
-    
-    if all(size(T) == [3 3])
-        a = [
-            R    [t(2); -t(1)]
-            0 0  1             ;]
-    elseif all(size(T) == [4 4])
-        a = [
-            R         vec2skew(t)*R
-            zeros(3)  R              ];
-    else
-        error("RVC3:tform2adjoint", "T must be SE(2) or SE(3)")
-    end
+    % 
+    % if all(size(T) == [3 3])
+    %     a = [
+    %         R    [t(2); -t(1)]
+    %         0 0  1            ];
+    % elseif all(size(T) == [4 4])
+    %     a = [
+    %         R              zeros(3)
+    %         vec2skew(t)*R  R          ];
+    % else
+    %     error("RVC3:tform2adjoint", "T must be SE(2) or SE(3)")
+    % end
+
+     a = [
+                R              zeros(3)
+                vec2skew(t)*R  R          ];
 end
 
 
