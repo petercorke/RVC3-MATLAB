@@ -27,24 +27,22 @@ function h = isrotm2d(R, options)
     end
 
     d = size(R);
-    if ndims(R) >= 2
-        if ~(all(d(1:2) == [2 2]))
-            return %false
-        end
+    if ~(all(d(1:2) == [2 2]))
+        return %false
+    end
         
-        if nargin > 1
-            for i = 1:size(R,3)
-                RR = R(:,:,i);
-                % check transpose is inverse
-                e = RR'*RR - eye(2,2);
-                if norm(e) > 10*eps
-                    return %false
-                end
-                % check determinant is +1
-                e = abs(det(RR) - 1);
-                if norm(e) > 10*eps
-                    return %false
-                end
+    if options.check
+        for i = 1:size(R,3)
+            RR = R(:,:,i);
+            % check transpose is inverse
+            e = RR'*RR - eye(2,2);
+            if norm(e) > 10*eps
+                return %false
+            end
+            % check determinant is +1
+            e = abs(det(RR) - 1);
+            if norm(e) > 10*eps
+                return %false
             end
         end
     end

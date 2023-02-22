@@ -27,31 +27,29 @@ function h = istform2d(T, options)
     end
 
     dims = size(T);
-    if ndims(T) >= 2
-        % first two dimensions must be 3x3
-        if ~(all(dims(1:2) == [3 3]))
-            return %false
-        end
+    % first two dimensions must be 3x3
+    if ~(all(dims(1:2) == [3 3]))
+        return %false
+    end
        
-        if options.check
-            % each plane must contain a valid rotation matrix
-            for i = 1:size(T,3)
-                % check rotational part
-                R = T(1:2,1:2,i);
-                % check transpose is inverse
-                e = R'*R - eye(2,2);
-                if norm(e) > 10*eps
-                    return %false
-                end
-                % check determinant is +1
-                e = abs(det(R) - 1);
-                if norm(e) > 10*eps
-                    return %false
-                end
-                % check bottom row
-                if ~all(T(3,:,i) == [0 0 1])
-                    return %false
-                end
+    if options.check
+        % each plane must contain a valid rotation matrix
+        for i = 1:size(T,3)
+            % check rotational part
+            R = T(1:2,1:2,i);
+            % check transpose is inverse
+            e = R'*R - eye(2,2);
+            if norm(e) > 10*eps
+                return %false
+            end
+            % check determinant is +1
+            e = abs(det(R) - 1);
+            if norm(e) > 10*eps
+                return %false
+            end
+            % check bottom row
+            if ~all(T(3,:,i) == [0 0 1])
+                return %false
             end
         end
     end
