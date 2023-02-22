@@ -116,7 +116,7 @@ classdef Twist
                 ut = Twist( compact(tw) / norm(tw.w) );
             else
                 % prismatic twist
-                ut = Twist( [0 0 0 unit(tw.v)] );
+                ut = Twist( [0 0 0 unitvector(tw.v)] );
             end
         end
         
@@ -383,7 +383,7 @@ classdef Twist
             %
             % See also Twist, Twist.UnitPrismatic.
                         
-            w = unit(dir);
+            w = unitvector(dir);
             v = -cross(w, point) + pitch * w;
             tw = Twist([w v]);
         end
@@ -400,7 +400,7 @@ classdef Twist
             % See also Twist, Twist.UnitRevolute.
                         
             w = [0 0 0];
-            v = unit(dir);
+            v = unitvector(dir);
             tw = Twist([w v]);
         end
 

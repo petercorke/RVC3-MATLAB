@@ -99,7 +99,7 @@ classdef Twist2d
                 ut = Twist2d( compact(tw) / norm(tw.w) );
             else
                 % prismatic twist
-                ut = Twist2d( [0 unit(tw.v)] );
+                ut = Twist2d( [0 unitvector(tw.v)] );
             end
         end
         
@@ -331,7 +331,7 @@ classdef Twist2d
             %
             % See also Twist2d, Twist2d.UnitRevolute.
                         
-            tw = Twist2d([0 unit(dir)]);
+            tw = Twist2d([0 unitvector(dir)]);
         end
     end
 end

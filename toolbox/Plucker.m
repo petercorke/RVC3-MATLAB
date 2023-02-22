@@ -160,7 +160,7 @@ classdef Plucker < handle
             %UW Line direction as a unit vector
             %
             % PL.UW is a unit-vector (1x3) parallel to the line
-            z = unit(pl.w)';
+            z = unitvector(pl.w)';
         end
         
         function z = skew(pl)
@@ -243,7 +243,7 @@ classdef Plucker < handle
             % parameterization, lines can be equivalent even if they have
             % different parameters.
             
-            t = abs( 1 - dot(unit(double(pl1)), unit(double(pl2))) ) < 10*eps;
+            t = abs( 1 - dot(unitvector(double(pl1)), unitvector(double(pl2))) ) < 10*eps;
         end
         
         function t = ne(pl1, pl2)
@@ -254,7 +254,7 @@ classdef Plucker < handle
             % parameterization, lines can be equivalent even if they have
             % different parameters.
             
-            t = abs( 1 - dot(unit(double(pl1)), unit(double(pl2))) ) >= 10*eps;
+            t = abs( 1 - dot(unitvector(double(pl1)), unitvector(double(pl2))) ) >= 10*eps;
         end
         
         function v = isparallel(p1, p2)
@@ -313,7 +313,7 @@ classdef Plucker < handle
             % See also Plucker.COMMONPERP, Plucker.EQ, Plucker.MPOWER.
             
             if p1^p2 %#ok<BDLOG>
-                p = -( dot(p1.v,p2.w)*eye(3,3) + p1.w*p2.v' - p2.w*p1.v' ) * unit(cross(p1.w, p2.w));
+                p = -( dot(p1.v,p2.w)*eye(3,3) + p1.w*p2.v' - p2.w*p1.v' ) * unitvector(cross(p1.w, p2.w));
             else
                 p = [];
             end
@@ -389,7 +389,7 @@ classdef Plucker < handle
                 w = cross(p1.w, p2.w); %#ok<*PROPLC>
                 
                 v = cross(p1.v, p2.w) - cross(p2.v, p1.w) + ...
-                    (p1*p2) * dot(p1.w, p2.w) * unit(cross(p1.w, p2.w));
+                    (p1*p2) * dot(p1.w, p2.w) * unitvector(cross(p1.w, p2.w));
                 
                 p = Plucker([v; w]);
             end
@@ -550,7 +550,7 @@ classdef Plucker < handle
             end
             
             %U = pl.Q - pl.P;
-            %line.p = pl.P; line.v = unit(U);
+            %line.p = pl.P; line.v = unitvector(U);
             
             ish = ishold();
             hold on
