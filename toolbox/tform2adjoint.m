@@ -9,8 +9,13 @@
 
 function a = tform2adjoint(T)
 
-    R = tform2rotm(T);
-    t = tform2trvec(T);
+    if isa(T, 'se3')
+        R = T.rotm();
+        t = T.trvec();
+    else
+        R = tform2rotm(T);
+        t = tform2trvec(T);
+    end
     % 
     % if all(size(T) == [3 3])
     %     a = [

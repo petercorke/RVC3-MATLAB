@@ -81,10 +81,13 @@ classdef Plucker < handle
             %Plucker Construct object
 
             switch nargin
+                case 0
+                    w = [nan nan nan];
+                    v = w;
                 case 1
                     if isvec(p1, 6)
-                        v = p1(1:3);
-                        w = p1(4:6);
+                        w = p1(1:3);
+                        v = p1(4:6);
                     elseif isa(p1, "Plucker")
                         v = p1.v;
                         w = p1.w;
@@ -98,8 +101,8 @@ classdef Plucker < handle
                     w = p1 - p2;
                     v = cross(p1-p2, p1);
             end
-            pl.w = w;
-            pl.v = v;
+            pl.w = w(:)';
+            pl.v = v(:)';
         end
         
         function z = mtimes(left, right)
@@ -109,16 +112,9 @@ classdef Plucker < handle
             %
             % PL * M is the product of the Plucker skew matrix and M (4xN).
             %
-            % M * PL is the product of M (Nx4) and the Plucker skew matrix (4x4).
-            %
-            % T * PL is the product of Ad(T) (6x6) and the Plucker
-            % coordinate vector (1x6).
-            %
             % Notes:
             %  - The * operator is overloaded for convenience.
             %  - Multiplication or composition of Plucker lines is not defined.
-            %  - Premultiplying by an se3 will transform the line with respect to the world
-            %    coordinate frame.
             %
             % See also Plucker.skew, SE3.mtimes.
             
@@ -128,12 +124,22 @@ classdef Plucker < handle
             elseif isa(left, "Plucker") && isnumeric(right)
                 assert(size(right,1) == 4, "RVC3:Plucker:badarg", "must postmultiply by 4xN matrix");
                 z = left.skew * right;  % postmultiply by 4xN
-            elseif isnumeric(left) && isa(right, "Plucker")
-                assert(size(left,2) == 4, "RVC3:Plucker:badarg", "must premultiply by 4xN matrix");
-                z = left * right.skew;  % premultiply by Nx4
-            elseif isa(left, "se3") && isa(right, "Plucker")
-                z = Plucker(tform2adjoint(left.tform) * right.compact')
             end
+        end
+
+        function pl2 = transform(pl, T)
+            %TRANSFORM Plucker multiplication
+            %
+            % T * PL is the product of Ad(T) (6x6) and the Plucker
+            % coordinate vector (1x6).
+            %
+            % Notes:
+            %  - Premultiplying by an se3 will transform the line with respect to the world
+            %    coordinate frame.
+            %
+            % See also Plucker.skew, SE3.mtimes.
+
+            pl2 = Plucker(tform2adjoint(inv(T)) * pl.compact')
         end
         
         function x = pp(pl)
@@ -147,6 +153,7 @@ classdef Plucker < handle
             % See also Plucker.PPD, Plucker.POINT.
             
             x = cross(pl.v, pl.w) / dot(pl.w, pl.w);
+            x = x(:)';  % row vector
         end
         
         function x = compact(pl)
@@ -160,7 +167,7 @@ classdef Plucker < handle
             %UW Line direction as a unit vector
             %
             % PL.UW is a unit-vector (1x3) parallel to the line
-            z = unitvector(pl.w)';
+            z = unitvector(pl.w);
         end
         
         function z = skew(pl)
@@ -207,7 +214,7 @@ classdef Plucker < handle
             %
             % See also Plucker.PP, Plucker.CLOSEST.
             
-            P = L.pp + lambda(:)*L.uw';
+            P = L.pp + lambda(:)*L.uw;
         end
         
         
@@ -243,7 +250,7 @@ classdef Plucker < handle
             % parameterization, lines can be equivalent even if they have
             % different parameters.
             
-            t = abs( 1 - dot(unitvector(double(pl1)), unitvector(double(pl2))) ) < 10*eps;
+            t = abs( 1 - dot(unitvector(compact(pl1)), unitvector(compact(pl2))) ) < 10*eps;
         end
         
         function t = ne(pl1, pl2)
@@ -254,7 +261,7 @@ classdef Plucker < handle
             % parameterization, lines can be equivalent even if they have
             % different parameters.
             
-            t = abs( 1 - dot(unitvector(double(pl1)), unitvector(double(pl2))) ) >= 10*eps;
+            t = abs( 1 - dot(unitvector(compact(pl1)), unitvector(compact(pl2))) ) >= 10*eps;
         end
         
         function v = isparallel(p1, p2)
@@ -313,7 +320,7 @@ classdef Plucker < handle
             % See also Plucker.COMMONPERP, Plucker.EQ, Plucker.MPOWER.
             
             if p1^p2 %#ok<BDLOG>
-                p = -( dot(p1.v,p2.w)*eye(3,3) + p1.w*p2.v' - p2.w*p1.v' ) * unitvector(cross(p1.w, p2.w));
+                p = -( dot(p1.v,p2.w)*eye(3,3) + p1.w'*p2.v - p2.w'*p1.v ) * unitvector(cross(p1.w, p2.w)');
             else
                 p = [];
             end
@@ -361,7 +368,7 @@ classdef Plucker < handle
             
             x = x(:)';
             
-            lam = dot(x - pl.pp, pl.uw');
+            lam = dot(x - pl.pp, pl.uw);
             p = pl.point(lam);  % is the closest point on the line
             
             if nargout > 1
@@ -391,7 +398,7 @@ classdef Plucker < handle
                 v = cross(p1.v, p2.w) - cross(p2.v, p1.w) + ...
                     (p1*p2) * dot(p1.w, p2.w) * unitvector(cross(p1.w, p2.w));
                 
-                p = Plucker([v; w]);
+                p = Plucker([w v]);
             end
         end
         
@@ -666,8 +673,8 @@ classdef Plucker < handle
             pi1 = pi1(:); pi2 = pi2(:);
             
             pl = Plucker();
-            pl.w = cross(pi1(1:3), pi2(1:3));
-            pl.v = pi2(4)*pi1(1:3) - pi1(4)*pi2(1:3);
+            pl.w = cross(pi1(1:3), pi2(1:3))';
+            pl.v = (pi2(4)*pi1(1:3) - pi1(4)*pi2(1:3))';
         end
         
         function pl = PointDir(point, dir)
@@ -685,8 +692,8 @@ classdef Plucker < handle
             
             point = point(:); dir = dir(:);
             pl = Plucker();
-            pl.w = dir;
-            pl.v = cross(dir, point);
+            pl.w = dir';
+            pl.v = cross(dir, point)';
             
         end
     end % static methods

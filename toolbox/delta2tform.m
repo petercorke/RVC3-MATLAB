@@ -9,7 +9,7 @@
 % translational and rotational components in D. When fliptr is set to true,
 % the input vector D is expected as D=(dRx, dRy, dRz, dx, dy, dz)
 %
-% See also tform2delta, SE3.delta.
+% See also tform2delta.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 

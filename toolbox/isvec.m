@@ -15,15 +15,17 @@
 
 function h = isvec(vec, len)
     arguments
-        vec double
+        vec
         len {mustBeInteger}
     end
 
     if isa(vec, 'symfun')
         h = logical( length(formula(vec)) == len);
-    else
+    elseif isnumeric(vec)
         dims = size(vec);
         h = logical(length(dims) == 2 && min(dims) == 1 && numel(vec) == len);
+    else
+        h = false;
     end
 end
 
