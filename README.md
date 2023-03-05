@@ -61,10 +61,8 @@ named `chapterN.mlx`.  You can open the file by:
 ## Required toolboxes
 
 To run the examples in this book you need to have a MATLAB® licence, as well as a number
-of licenced MathWorks software products. Those shown in bold are sufficient to run a large subset
-of the code examples.
+of licenced MathWorks software products.
 
-- **MATLAB**®
 
 For Parts I, II, III:
 - **Robotics System Toolbox**™
@@ -87,6 +85,8 @@ For Chap. 16 only:
 - Model Predictive Control Toolbox™
 - Automated Driving Toolbox™
 
+Those shown in bold are sufficient to run a large subset
+of the code examples.
 ## Apps
 
 This package provides additional interactive tools including:
