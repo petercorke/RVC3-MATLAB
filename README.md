@@ -104,17 +104,19 @@ in Simulink by:
 # Additional book resources
 
 This GitHub repo provides additional resources for readers including:
-- The code to produce every Python/Matplotlib (2D) figure in the book, see the [`figures`](figures) folder
-- 3D points clouds from chapter 14, and the code to create them, see
-  the [`pointclouds`](../pointclouds) folder.
-- 3D figures from chapters 2-3, 7-9, and the code to create them, see the [`3dfigures`](../3dfigures) folder.
-- All example scripts, see the [`examples`](examples) folder.
-- To run the visual odometry example in Sect. 14.8.3 you need to download two image sequence, each over 100MB, [see the instructions here](https://github.com/petercorke/machinevision-toolbox-python/blob/master/mvtb-data/README.md#install-big-image-files). 
+- The code to produce every MATLAB figure in the book, see the [`book/figures`](book/figures) folder
+- All example scripts, see the [`toolbox/examples`](toolbox/examples) folder.
+- To run the visual odometry example in Sect. 14.8.3 you need to download two image sequence, each over 100MB:
+```
+>>> fetchExampleData
+``` 
 
 # MATLAB versions
 
-This book requires that you must have at least MATLAB R2023a in order to access all the
+This book requires that you have at least MATLAB R2023a in order to access all the
 required MATLAB language and toolbox features. The code examples rely on recent MATLAB
-language extensions: strings which are delimited by double quotation marks (introduced
-in 2016b); and `name=value` syntax for passing arguments to functions (introduced in
+language extensions:
+* strings which are delimited by double quotation marks (introduced
+in 2016b)
+* `name=value` syntax for passing arguments to functions (introduced in
 2021a), for example, `plot(x,y,LineWidth=2)` instead of the old-style `plot(x,y,"LineWidth",2)`.
