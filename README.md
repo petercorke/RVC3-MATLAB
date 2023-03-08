@@ -1,4 +1,4 @@
-# Robotics, Vision & Control: 3rd edition in Python (2023)
+# Robotics, Vision & Control: 3rd edition in MATLAB (2023)
 
 [![Build Status](https://travis-ci.com/petercorke/RVC3-MATLAB.svg?branch=master)](https://travis-ci.com/petercorke/RVC3-MATLAB)
 ![Coverage](https://codecov.io/gh/petercorke/RVC3-MATLAB/branch/master/graph/badge.svg)
