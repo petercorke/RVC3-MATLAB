@@ -24,8 +24,9 @@ grid
 
 lims = axis();
 plot(mean(y)*[1 1], lims(3:4), 'b--')
+std(y)
 xlabel('x');
 ylabel('PDF')
-legend('$x=\mathcal{N}(\mu=2, \sigma=2)$', '$y =(x+2)^2/4$', '$\bar{y}$', Interpreter='latex')
+legend('$x=N(\mu=2, \sigma=2)$', '$y =(x+2)^2/4$', '$\bar{y}$', Interpreter='latex')
 xlim([-5, 40])
 rvcprint('here', 'thicken', 1.5)
