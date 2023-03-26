@@ -14,7 +14,8 @@ function f = chi2inv_rvc(confidence, n)
 %
 %   See also chi2inv.
 
-assert(n == 2, 'RTB:chi2inv_rtb:badarg', 'only valid for 2DOF');
+narginchk(1,2);
+assert(n == 2, "chi2inv_rvc:badarg", "This function is only valid for N=2.");
 
 c = linspace(0,1,101);
 
