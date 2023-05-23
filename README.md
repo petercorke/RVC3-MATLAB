@@ -6,7 +6,26 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/petercorke/RVC3-MATLAB/graphs/commit-activity)
 [![GitHub stars](https://img.shields.io/github/stars/petercorke/RVC3-MATLAB.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/petercorke/RVC3-MATLAB/stargazers/)
 
+<table style="border:0px">
+<tr style="border:0px">
+<td style="border:0px">
 <img src="https://github.com/petercorke/RVC3-MATLAB/raw/main/doc/978-3-031-07261-1_5208.png" alt="Front cover 978-3-031-07261-5_5208" width="300">
+</td>
+<td style="border:0px">
+Welcome to the online hub for the book:
+<ul type="none">
+<li><b>Robotics, Vision & Control</b>: fundamental algorithms in MATLAB (3rd edition) 
+<li>Peter Corke, Witold Jahimczyk and Remo Pillat, published by Springer-Nature 2023.</li>
+<li><b>ISBN</b> 978-3-031-07261-1 (hardcopy), 978-3-031-07262-8 (eBook)</li>
+<li><b>DOI</b> <a href="https://doi.org/10.1007/978-3-031-07262-8">10.1007/978-3-031-07262-8</a></li>
+</ul>
+<br><br>
+<p>Report an issue with the book or its supporting code <a href="https://github.com/petercorke/RVC3-python/issues/new/choose">here</a>.</p>
+
+<p>Known errata for the book can be viewed <a href="https://github.com/petercorke/RVC3-python/wiki/Errata">here</a>.</p>
+</td>
+</tr>
+</table>
 
 This repo contains MATLAB code resources that support the book:
 
