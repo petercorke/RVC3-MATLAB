@@ -20,9 +20,9 @@ Welcome to the online hub for the book:
 <li><b>DOI</b> <a href="https://doi.org/10.1007/978-3-031-07262-8">10.1007/978-3-031-07262-8</a></li>
 </ul>
 <br><br>
-<p>Report an issue with the book or its supporting code <a href="https://github.com/petercorke/RVC3-python/issues/new/choose">here</a>.</p>
+<p>Report an issue with the book or its supporting code <a href="https://github.com/petercorke/RVC3-MATLAB/issues/new/choose">here</a>.</p>
 
-<p>Known errata for the book can be viewed <a href="https://github.com/petercorke/RVC3-python/wiki/Errata">here</a>.</p>
+<p>Known errata for the book can be viewed <a href="https://github.com/petercorke/RVC3-MATLAB/wiki/Errata">here</a>.</p>
 </td>
 </tr>
 </table>
