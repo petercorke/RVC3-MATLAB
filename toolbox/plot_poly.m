@@ -55,9 +55,9 @@ if ishandle(p)
     tr = varargin{1};
     if isvec(tr,3)
         m = se2(rotm2d(tr(3)), [tr(1) tr(2)]); m = se2To3(m).tform;
-    elseif ishomog2(tr)
+    elseif istform2d(tr)
         m = se2(tr); m = se2To3(m).tform;
-    elseif ishomog(tr)
+    elseif istform(tr)
         m = tr;
     else
         error('unknown transform type');

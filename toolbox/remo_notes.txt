@@ -1,0 +1,19 @@
+Remo questions
+
+trvec2tform for 2d case?
+tform2trvec for 2d case?
+rotm2tform
+tform2rotm
+
+operator overloading  se3*other, calls se3.mtimes
+
+lots of old tr*.m functions remaining on GH
+transl*
+unit.m
+vex*
+skew.m
+r2t.m
+
+e2h/h2e
+
+*jac* functions

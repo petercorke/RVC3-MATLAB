@@ -20,7 +20,7 @@ function p = mkgrid(N, s, varargin)
 
     [opt,args] = tb_optparse(opt, varargin);
     
-    if ~isempty(args) && ishomog(args{1})
+    if ~isempty(args) && istform(args{1})
         % compatible with legacy call
         opt.pose = args{1};
     end

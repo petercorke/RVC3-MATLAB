@@ -374,7 +374,7 @@ classdef CentralCamera < Camera
             % T is the pose for view 1 
             % c.T is the pose for view 2
 
-            if ishomog(X)
+            if istform(X)
                 E = c.E(X);
                 K = c.K();
                 fmatrix = inv(K)' * E * inv(K);

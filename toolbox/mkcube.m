@@ -30,7 +30,7 @@ function [o1,o2,o3] = mkcube(s, varargin)
     opt.facepoint = false;
 
     [opt,args] = tb_optparse(opt, varargin);
-    if ~isempty(args) && ishomog(args{1})
+    if ~isempty(args) && istform(args{1})
         % compatible with legacy call
         opt.pose = args{1};
     end

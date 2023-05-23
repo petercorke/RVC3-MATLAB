@@ -8,7 +8,7 @@
 %
 % T = TFORM2D(...,"deg") as above but THETA is in degrees.
 %
-% See also rot2, transl2, ishomog2, trplot2, trotx, troty, trotz, SE2.
+% See also rotm2d, trvec2tform, istform2d, plottform2d, se2.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
