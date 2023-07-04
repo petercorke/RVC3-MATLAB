@@ -4208,6 +4208,13 @@
                 <DIR_SIGNIFIER Location="1">
                     <Info/>
                 </DIR_SIGNIFIER>
+                <File Location="tChapter3.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
             </File>
             <Info/>
             <DIR_SIGNIFIER Location="1">
