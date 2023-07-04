@@ -22,8 +22,6 @@ jobs:
     steps:
       - name: Check out RVC3-MATLAB repository (for unit tests)
         uses: actions/checkout@v3
-        with:
-          path: ${{ github.repository }}
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."          
       - name: Set up MATLAB
         # This uses the latest release of MATLAB. Can specify "release" if needed.
@@ -32,7 +30,7 @@ jobs:
       #  uses: matlab-actions/run-command@v1.0.1
       #  with:
       #    # Package mltbx file. Ensure that mltbx file exists before returning.
-      #    command: matlab.addons.toolbox.packageToolbox('newtoolbox/RVC3.prj'), assert(exist('newtoolbox/RVC3.mltbx', 'file'));
+      #    command: matlab.addons.toolbox.packageToolbox('rvc3setup.prj'), assert(exist('RVC3.mltbx', 'file'));
       - name: Run MATLAB Tests
         # Change folder to book tests
         uses: matlab-actions/run-tests@v1
