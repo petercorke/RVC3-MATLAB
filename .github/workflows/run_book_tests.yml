@@ -1,0 +1,43 @@
+name: Run all book tests
+
+on:
+  # Automatically run this action when a new v* tag is created
+#  push:
+#    tags:
+#      - 'v*'
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+#    inputs:
+      # Allows you to specify release name when running action manually
+ #     releaseName:
+ #       description: 'Release name'
+ #       required: true
+ #       default: v1.0.1
+
+jobs:
+  my-job:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out RVC3-MATLAB repository (for unit tests)
+        uses: actions/checkout@v3
+        with:
+          path: ${{ github.repository }}
+      - run: echo "The ${{ github.repository }} repository has been cloned to the runner."          
+      - name: Set up MATLAB
+        # This uses the latest release of MATLAB. Can specify "release" if needed.
+        uses: matlab-actions/setup-matlab@v1
+      #- name: Package mltbx
+      #  uses: matlab-actions/run-command@v1.0.1
+      #  with:
+      #    # Package mltbx file. Ensure that mltbx file exists before returning.
+      #    command: matlab.addons.toolbox.packageToolbox('newtoolbox/RVC3.prj'), assert(exist('newtoolbox/RVC3.mltbx', 'file'));
+      - name: Run MATLAB Tests
+          # You may pin to the exact commit or the version.
+          # uses: matlab-actions/run-tests@6cfe7930996fecaa230173e429a830b29f5fec8f
+        uses: matlab-actions/run-tests@v1
+        with:
+          # Location of the folder containing source code
+          source-folder: ${{ github.repository }}/toolbox
+          select-by-folder: RVC3-MATLAB/test/book
