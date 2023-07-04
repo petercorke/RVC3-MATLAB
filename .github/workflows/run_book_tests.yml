@@ -35,5 +35,6 @@ jobs:
       #    command: matlab.addons.toolbox.packageToolbox('newtoolbox/RVC3.prj'), assert(exist('newtoolbox/RVC3.mltbx', 'file'));
       - name: Run MATLAB Tests
         # Change folder to book tests
-        working-directory: test/book
         uses: matlab-actions/run-tests@v1
+        with:
+          select-by-folder: test-book
