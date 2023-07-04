@@ -34,8 +34,6 @@ jobs:
       #    # Package mltbx file. Ensure that mltbx file exists before returning.
       #    command: matlab.addons.toolbox.packageToolbox('newtoolbox/RVC3.prj'), assert(exist('newtoolbox/RVC3.mltbx', 'file'));
       - name: Run MATLAB Tests
-          # You may pin to the exact commit or the version.
-          # uses: matlab-actions/run-tests@6cfe7930996fecaa230173e429a830b29f5fec8f
+        # Change folder to book tests
+        working-directory: test/book
         uses: matlab-actions/run-tests@v1
-        with:
-          select-by-folder: test/book
