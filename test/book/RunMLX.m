@@ -16,7 +16,7 @@ classdef RunMLX < RVCTest
         MLXFile
         %MLXFile - Abstract property to be defined by derived class
     end
-    
+
     methods(Test)        
         function runMLXFile(testCase)
             %runMLXFile - Ensure MLX file runs with no errors
@@ -25,6 +25,10 @@ classdef RunMLX < RVCTest
             import matlab.unittest.fixtures.WorkingFolderFixture
 
             testCase.log(1,"Executing book chapter " + testCase.MLXFile);
+
+            % Make sure that all figures and apps are closed while
+            % everythign is still on the path.
+            testCase.addTeardown(@() close("force","all"))
 
             % Go into a temporary folder, just in case the chapter file
             % download / creates any files.
