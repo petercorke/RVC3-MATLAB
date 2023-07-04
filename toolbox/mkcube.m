@@ -37,7 +37,7 @@ function [o1,o2,o3] = mkcube(s, varargin)
  
     % offset it
     if ~isempty(opt.center)
-        assert(isvec(opt.center), 'Center must be a 3-vector');
+        assert(isvec(opt.center,3), 'Center must be a 3-vector');
         assert(isempty(opt.pose), 'Cannot specify center and pose options');
         opt.pose = se3(trvec2tform(opt.center(:)'));
     end
@@ -58,7 +58,7 @@ function [o1,o2,o3] = mkcube(s, varargin)
     end
 
     % vertices of cube about the origin
-    if isvec(s)
+    if isvec(s,3)
         s = diag(s);
     end
     cube = s * cube / 2;
