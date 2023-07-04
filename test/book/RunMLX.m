@@ -27,8 +27,12 @@ classdef RunMLX < RVCTest
             testCase.log(1,"Executing book chapter " + testCase.MLXFile);
 
             % Make sure that all figures and apps are closed while
-            % everythign is still on the path.
+            % everything is still on the path.
             testCase.addTeardown(@() close("force","all"))
+
+            % Make sure that all Simulink models are closed while
+            % everything is still on the path.
+            testCase.addTeardown(@() bdclose("all"))
 
             % Go into a temporary folder, just in case the chapter file
             % download / creates any files.
