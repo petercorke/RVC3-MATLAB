@@ -1,19 +1,11 @@
 name: Run all book tests
 
-on:
-  # Automatically run this action when a new v* tag is created
-#  push:
-#    tags:
-#      - 'v*'
+on: 
+  # Automatically run this action when a new push is made
+  push:
       
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-#    inputs:
-      # Allows you to specify release name when running action manually
- #     releaseName:
- #       description: 'Release name'
- #       required: true
- #       default: v1.0.1
 
 jobs:
   my-job:
