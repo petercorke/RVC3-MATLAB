@@ -37,4 +37,4 @@ jobs:
         # Change folder to book tests
         uses: matlab-actions/run-tests@v1
         with:
-          select-by-folder: test-book
+          select-by-folder: test/book
