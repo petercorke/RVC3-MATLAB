@@ -29,6 +29,7 @@ classdef RVCTest < matlab.unittest.TestCase
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir)) );
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir, "data")) );
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir, "examples")) );
+            testCase.applyFixture( PathFixture(fullfile(rvc3Dir, "images")) );
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir, "internal")) );
         end
 
