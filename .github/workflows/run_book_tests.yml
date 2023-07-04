@@ -38,6 +38,4 @@ jobs:
           # uses: matlab-actions/run-tests@6cfe7930996fecaa230173e429a830b29f5fec8f
         uses: matlab-actions/run-tests@v1
         with:
-          # Location of the folder containing source code
-          source-folder: ${{ github.repository }}/toolbox
-          select-by-folder: RVC3-MATLAB/test/book
+          select-by-folder: test/book
