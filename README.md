@@ -15,7 +15,7 @@
 Welcome to the online hub for the book:
 <ul type="none">
 <li><b>Robotics, Vision & Control</b>: fundamental algorithms in MATLAB (3rd edition) 
-<li>Peter Corke, Witold Jahimczyk and Remo Pillat, published by Springer-Nature 2023.</li>
+<li>Peter Corke, Witold Jachimczyk and Remo Pillat, published by Springer-Nature 2023.</li>
 <li><b>ISBN</b> 978-3-031-07261-1 (hardcopy), 978-3-031-07262-8 (eBook)</li>
 <li><b>DOI</b> <a href="https://doi.org/10.1007/978-3-031-07262-8">10.1007/978-3-031-07262-8</a></li>
 </ul>
@@ -127,7 +127,7 @@ This GitHub repo provides additional resources for readers including:
 - All example scripts, see the [`toolbox/examples`](toolbox/examples) folder.
 - To run the visual odometry example in Sect. 14.8.3 you need to download two image sequence, each over 100MB:
 ```
->>> fetchExampleData
+>> fetchExampleData
 ``` 
 
 # MATLAB versions
