@@ -59,7 +59,7 @@
 function hout = plottform2d(X, options)
     arguments
         X double = eye(3,3)
-        options.color (1,1) string = "b"
+        options.color = "b"
         options.textcolor (1,1) string = ""
         options.axes = true;
         options.axis = [];
@@ -128,20 +128,34 @@ function hout = plottform2d(X, options)
         d = 1.2;
         options.axis = [c(1)-d c(1)+d c(2)-d c(2)+d];
     end
-    
-    if ~isempty(options.axhandle)
-        hax = options.axhandle;
-    else
-        hax = newplot();
-    end
-    if strcmp(hax.NextPlot, 'replace')
-%         daspect([1 1]);
 
+    hax = newplot();
+    if strcmp(hax.NextPlot, 'replace') 
+        axis(options.axis);
+        
         if options.axes
             xlabel(options.labels(1));
             ylabel(options.labels(2));
         end
     end
+    hax = gca;
+    hold on
+
+
+    
+%     if ~isempty(options.axhandle)
+%         hax = options.axhandle;
+%     else
+%         hax = newplot();
+%     end
+%     if strcmp(hax.NextPlot, 'replace')
+% %         daspect([1 1]);
+% 
+%         if options.axes
+%             xlabel(options.labels(1));
+%             ylabel(options.labels(2));
+%         end
+%     end
 %         % no idea why this fails: hax = gca;
 %         for c=gcf().Children'
 %             if isa(c, "matlab.graphics.axis.Axes")

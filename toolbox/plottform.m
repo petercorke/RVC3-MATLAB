@@ -68,7 +68,7 @@
 function hout = plottform(X, options)
     arguments
         X = eye(3,3)
-        options.color (1,1) string = "b"
+        options.color = "b"
         options.textcolor (1,1) string = ""
         options.axes = true;
         options.axis = [];
