@@ -6,6 +6,8 @@
 %
 % TW = Twist2d(T) is a Twist2d object constructed from an SE(2) matrix (4x4).
 %
+% TW = Twist2d(T) is a Twist object constructed from an se2 object.
+%
 % TW = Twist2d(V) is a Twist2d object constructed directly from the vector V
 % (1x6) comprising the directional and moment components.
 %
@@ -55,10 +57,10 @@ classdef Twist2d
         function tw = Twist2d(T)
              %Twist Construct object
             arguments
-                T double = eye(3)
+                T = eye(3)
             end
             
-            if all(size(T) == [3 3])
+            if isnumeric(T) && all(size(T) == [3 3])
                 if T(end,end) == 1
                     % its a homogeneous matrix, take the logarithm
                     S = logm(T);
@@ -68,14 +70,19 @@ classdef Twist2d
                     s = skewa2vec(T);
                 end
 
-            elseif isvec(T, 3)
+            elseif isnumeric(T) && isvec(T, 3)
                 % in vector form
                 if ~isa(T, "sym")
                     T(abs(T)<eps) = 0;
                 end
                 s = T;
+            elseif isa(T, "se2")
+                % its a homogeneous matrix, take the logarithm
+                T = T.tform
+                S = logm(T);
+                s = skewa2vec(S);               
             else
-                error("RVC3:Twist2d:badarg", "3x3 or 1x3 matrix expected");
+                error("RVC3:Twist2d:badarg", "3x3 or 1x3 matrix or se2 object expected");
             end
             
             tw.v = s(2:3);
@@ -156,7 +163,7 @@ classdef Twist2d
             if isa(left, "Twist2d")
                 if isa(right, "Twist2d")
                     % twist composition
-                    c = Twist2d( left.exp * right.exp);
+                    c = Twist2d( left.tform * right.tform);
                 elseif isscalar(right) && isreal(right)
                     c = Twist2d(left.compact * right);
                 elseif istform2d(right)

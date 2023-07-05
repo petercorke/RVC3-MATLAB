@@ -6,6 +6,8 @@
 %
 % TW = Twist(T) is a Twist object constructed from an SE(3) matrix (4x4).
 %
+% TW = Twist(T) is a Twist object constructed from an se3 object.
+%
 % TW = Twist(V) is a Twist object constructed directly from the vector V
 % (1x6) comprising the directional and moment components.
 %
@@ -61,10 +63,10 @@ classdef Twist
         function tw = Twist(T)
             %Twist Construct object
             arguments
-                T double = eye(4)
+                T = eye(4)
             end
             
-            if all(size(T) == [4 4])
+            if isnumeric(T) && all(size(T) == [4 4])
                 if T(end,end) == 1
                     % its a homogeneous matrix, take the logarithm
                     S = logm(T);
@@ -74,14 +76,21 @@ classdef Twist
                     s = skewa2vec(T);
                 end
 
-            elseif isvec(T, 6)
+            elseif isnumeric(T) &&  isvec(T, 6)
                 % in vector form
                 if ~isa(T, "sym")
                     T(abs(T)<eps) = 0;
                 end
                 s = T;
+
+            elseif isa(T, "se3")
+                % its a homogeneous matrix, take the logarithm
+                T = T.tform
+                S = logm(T);
+                s = skewa2vec(S);  
+
             else
-                error("RVC3:Twist:badarg", "4x4 or 1x6 matrix expected");
+                error("RVC3:Twist:badarg", "4x4 or 1x6 matrix or se3 object expected");
             end
             tw.v = s(4:6);
             tw.w = s(1:3);
@@ -282,7 +291,7 @@ classdef Twist
             
             % V = -tw.v - tw.pitch * tw.w;
             for i=1:length(tw)
-                L(i) = Plucker([ -tw(i).v - tw(i).pitch * tw(i).w tw(i).w] ); %#ok<AGROW>
+                L(i) = Plucker([tw(i).w -tw(i).v-tw(i).pitch*tw(i).w]); %#ok<AGROW>
             end
         end
         
