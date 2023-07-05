@@ -248,7 +248,7 @@ classdef Camera < handle
             if ~isempty(c.noise)
                 s = strvcat(s, sprintf('  noise:          %.4g,%.4g pix', c.noise));
             end
-            s = strvcat(s,     sprintf('  pose:           %s', printtform(c.T, 'camera')));
+            s = strvcat(s,     sprintf('  pose:           %s', printtform(c.T)));
             % = strvcat(s, [repmat('      ', 4,1) num2str(c.T)]);
         end
         

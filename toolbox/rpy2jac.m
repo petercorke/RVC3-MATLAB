@@ -79,7 +79,7 @@ end
     dRdt = subs(dRdt, {rt(t),pt(t),yt(t)}, {r,p,y});
     dRdt = formula(dRdt)   % convert symfun to an array
 
-    w = vex(dRdt * R');
+    w = skew2vec(dRdt * R');
     w = simplify(w)
 
     clear A

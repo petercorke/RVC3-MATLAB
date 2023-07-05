@@ -494,8 +494,8 @@ classdef CentralCamera < Camera
                 end
                 R1 = U*rotz(pi/2)'*V';
                 R2 = U*rotz(-pi/2)'*V';
-                t1 = vex(U*rotz(pi/2)*S*U');
-                t2 = vex(U*rotz(-pi/2)*S*U');
+                t1 = skew2vec(U*rotz(pi/2)*S*U');
+                t2 = skew2vec(U*rotz(-pi/2)*S*U');
                 % invert (R,t) so its from camera 1 to 2
 %                 s(1) = SE3( inv( [R1 t1; 0 0 0 1] ) );
 %                 s(2) = SE3( inv( [R2 t2; 0 0 0 1] ) );
@@ -647,7 +647,7 @@ classdef CentralCamera < Camera
                 % get camera matrix for this camera pose
                 C = c.C(opt.pose);
                 for i=1:length(P)
-                    l = vex( C * P(i).skew * C');
+                    l = skew2vec( C * P(i).skew * C');
                     uv(i,:) = (l / max(abs(l)))'; % normalize by largest element
                 end
             else

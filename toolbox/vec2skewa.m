@@ -16,7 +16,7 @@
 %               |  0    0    0   0 |
 %
 % Notes:
-% - This is the inverse of the function VEXA().
+% - This is the inverse of the function SCEW2VECA().
 % - These are the generator matrices for the Lie algebras se(2) and se(3).
 % - Map twist vectors in 2D and 3D space to se(2) and se(3).
 %

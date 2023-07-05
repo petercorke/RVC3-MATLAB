@@ -126,7 +126,7 @@ function delta = tform2delta(T0, T1, options)
 %    R0 = tform2rotm(T0); R1 = tform2rotm(T1);
 %    % in world frame
 %    %[th,vec] = tr2angvec(R1*R0');
-%    dR = vex(R1*R0');
+%    dR = skew2vec(R1*R0');
 %    %delta = [ (T1(1:3,4)-T0(1:3,4)); th*vec' ];
 %    delta = [ (T1(1:3,4)-T0(1:3,4)); dR];
 

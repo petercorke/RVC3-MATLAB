@@ -15,14 +15,14 @@
 %
 %
 % Notes::
-% - This is the inverse of the function VEX().
+% - This is the inverse of the function skew2vec().
 % - These are the generator matrices for the Lie algebras so(2) and so(3).
 %
 % References::
 % - Robotics, Vision & Control: Second Edition, Chap 2,
 %   P. Corke, Springer 2016.
 %
-% See also SKEWA, VEX.
+% See also SKEWA, SKEW2VEC.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
