@@ -22,7 +22,7 @@ function rvccheck()
 % it looks like some older toolboxes are shadowing this toolbox, do you want to automatically fix your MATLAB path...
 
     %% check MATLAB version
-
+    fprintf("rvccheck for RVC3 Toolbox\n")
     if verLessThan("matlab", "9.14")
         fprintf("You have MATLAB release %s, at least (R2023a) is required\n", ...
             ver("matlab").Release);
@@ -37,23 +37,31 @@ function rvccheck()
         "Computer Vision Toolbox", "vision", "Chapters 11-15"
         ];
 
-    for rt = required_toolboxes'
-        full = rt(1); short = rt(2); comment = rt(3);
-        v = ver(short);
-        if isempty(v)
-            fprintf("  %s is required for %s\n", full, comment);
+    if ~isempty(required_toolboxes)
+        fprintf("Some required Toolboxes are not installed:\n")
+        for rt = required_toolboxes'
+            full = rt(1); short = rt(2); comment = rt(3);
+            v = ver(short);
+            if isempty(v)
+                fprintf("  %s is required for %s\n", full, comment);
+            end
         end
     end
 
     %% check for other toolboxes
 
-    p = which('rotx')
+    p = which('trotx');
 
     if ~isempty(p)
         fprintf(" You have Peter Corke's Robotics and/or Spatial Math Toolbox in your path\n")
     end
 
-    
+    shadows = [];
+    shadows = checkshadow(shadows, "Camera");
+    if ~isempty(shadows)
+        fprintf(" You have Peter Corke's Machine Vision Toolbox shadowing the RVC3 Toolbox, please remove the former from your path\n");
+    end
+
     
 
 end
@@ -62,7 +70,10 @@ function out = checkshadow(shadows, funcname)
     % add to the list if function lives below MATLAB root
     funcpath = which(funcname); % find first instance in path
     out = shadows;
-    if startsWith(funcpath, matlabroot) || startsWith(funcpath, 'built-in')
+    % if startsWith(funcpath, matlabroot) || startsWith(funcpath, 'built-in')
+    %     out = [out; {funcname, which(funcname)}];
+    % end
+    if ~startsWith(funcpath, rvctoolboxroot)
         out = [out; {funcname, which(funcname)}];
     end
 end
