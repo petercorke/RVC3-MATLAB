@@ -1,7 +1,7 @@
 %ANIMTFORM Animate a 3D coordinate frame
 %
-% ANIMTFORM(X) animates a coordinate frame moving from the identity pose to
-% the 3D orientation or pose X.  A pose is described by an SE(3) matrix
+% ANIMTFORM(X) animates a 3D coordinate frame moving from the identity pose to
+% the orientation or pose X.  A pose is described by an SE(3) matrix
 % (4x4), or an se3, rigidtform3d or Twist object. An orientation is
 % described by an SO(3) rotation matrix (3x3), or an so3 or quaternion
 % object.
@@ -30,25 +30,14 @@
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
 
 function animtform(varargin)
-    %     arguments
-    %         X1
-    %         X2 = []
-    %         options.fps (1,1) double = 10
-    %         options.nframes (1,1) double {mustBeInteger} = 50
-    %         options.axis double = []
-    %         options.movie (1,1) string = ""
-    %         options.retain (1,1) logical = false
-    %     end
-    %     arguments (Repeating)
-    %         varargin
-    %     end
+
     % cant catch the unmatched options, use inputParser instead
     ip = inputParser();
     ip.KeepUnmatched = true;
     ip.addRequired("X1");
     ip.addOptional("X2", []);
     ip.addParameter("fps", 10);
-    ip.addParameter("nsteps", 50, @(x) isinteger(x) && isscalar(x));
+    ip.addParameter("nsteps", 50, @(x) isscalar(x));
     ip.addParameter("clock", true, @(x) islogical(x));
     ip.addParameter("axis", []);
     ip.addParameter("movie", "", @(x) isstring(x));
@@ -128,7 +117,7 @@ function animtform(varargin)
     for i=1:args.nsteps
         T = Ttraj(:,:,i);
         if args.retain
-            plottform(T, plot_args{:});
+            plottform(T, plot_args_cell{:});
         else
             plottform(T, handle=hplot);
         end
@@ -149,12 +138,15 @@ function animtform(varargin)
         anim.close();
     end
     if args.cleanup
-        delete(hplot);
+        try
+            delete(hplot);
+        catch
+        end
     end
 end % animtform
     
 function T = X2SE3(X)
-    % convert various forms to to hom transform
+    % convert various forms to to SE(3) hom transform
 
     if isrotm(X)
         T = rotm2tform(X);
