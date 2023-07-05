@@ -1,190 +1,172 @@
-%TRANIMATE2 Animate a 2D coordinate frame
+%ANIMTFORM2D Animate a 2D coordinate frame
 %
-% TRANIMATE2(P1, P2, OPTIONS) animates a 3D coordinate frame moving from pose X1
-% to pose X2.  Poses X1 and X2 can be represented by:
-%   - SE(2) homogeneous transformation matrices (3x3)
-%   - SO(2) orthonormal rotation matrices (2x2)
+% ANIMTFORM2D(X) animates a 2D coordinate frame moving from the identity pose to
+% the orientation or pose X.  A pose is described by an SE(2) matrix
+% (3x3), or an se2, rigidtform2d or Twist2d object. An orientation is
+% described by an SO(2) rotation matrix (2x2), or an so2 object.
 %
-% TRANIMATE2(X, OPTIONS) animates a coordinate frame moving from the identity pose
-% to the pose X represented by any of the types listed above.
+% ANIMTFORM2D(X1, X2) as above but animates a coordinate frame moving from X1
+% to X2.  X1 and X2 can be different types of objects.
 %
-% TRANIMATE2(XSEQ, OPTIONS) animates a trajectory, where XSEQ is any of
-%   - SE(2) homogeneous transformation matrix sequence (3x3xN)
-%   - SO(2) orthonormal rotation matrix sequence (2x2xN)
+% Options:
+%  fps     - Number of frames per second to display (default 10)
+%  nsteps  - The number of steps along the path (default 50)
+%  axis    - Axis bounds [xmin, xmax, ymin, ymax]
+%  movie   - Save frames as a movie or sequence of frames
+%  cleanup - Remove the frame at end of animation
+%  retain  - Retain frames, don't animate
 %
-% Options::
-%  'fps', fps    Number of frames per second to display (default 10)
-%  'nsteps', n   The number of steps along the path (default 50)
-%  'axis',A      Axis bounds [xmin, xmax, ymin, ymax, zmin, zmax]
-%  'movie',M     Save frames as a movie or sequence of frames
-%  'cleanup'     Remove the frame at end of animation
-%  'noxyz'       Don't label the axes
-%  'rgb'         Color the axes in the order x=red, y=green, z=blue
-%  'retain'      Retain frames, don't animate
-%  Additional options are passed through to TRPLOT2.
+% Additional options are passed through to PLOTTFORM2D.
 %
-% Notes::
-% - Uses the Animate helper class to record the frames.
-%
-% See also tformplot, Animate, SE3.animate.
+% See also PLOTTFORM2D, Animate.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
 % TODO
 %  auto detect the axis scaling
-function tranimate2(P2, varargin)
+function animtform2d(varargin)
 
-opt.fps = 10;
-opt.nsteps = 50;
-opt.axis = [];
-opt.movie = [];
-opt.cleanup = false;
-opt.retain = false;
-opt.time = [];
+    % cant catch the unmatched options, use inputParser instead
+    ip = inputParser();
+    ip.KeepUnmatched = true;
+    ip.addRequired("X1");
+    ip.addOptional("X2", []);
+    ip.addParameter("fps", 10);
+    ip.addParameter("nsteps", 50, @(x) isscalar(x));
+    ip.addParameter("clock", true, @(x) islogical(x));
+    ip.addParameter("axis", []);
+    ip.addParameter("movie", "", @(x) isstring(x));
+    ip.addParameter("retain", false, @(x) islogical(x));
+    ip.addParameter("cleanup", true, @(x) islogical(x));
+    ip.parse(varargin{:});
+    args = ip.Results;
+    
+    X1 = args.X1;
+    X2 = args.X2;
+    plot_args = ip.Unmatched;
+    
+    tlimits = [0 args.nsteps/args.fps];
+    t = linspace(tlimits(1), tlimits(2), args.nsteps);
 
-[opt, args] = tb_optparse(opt, varargin);
-
-ud.opt = opt;
-ud.args = args;
-
-if ~isempty(opt.movie)
-    ud.anim = Animate(opt.movie);
-end
-P1 = [];
-if ~isempty(opt.time) && isempty(opt.fps)
-    opt.fps = 1 /(opt.time(2) - opt.time(1));
-end
-
-
-% convert rotation matrix to hom transform
-if isrotm2d(P2)
-    % tranimate2(R1, options)
-    % tranimate2(R1, R2, options)
-    T2 = rotm2tform(P2);
-    if ~isempty(args) && isrot(args{1})
-        T1 = T2;
-        T2 = rotm2tform(args{1});
-        args = args(2:end);
+    if isempty(X2)
+        % animtform(X, ...)
+        T2 = X2SE2(X1);
+        if size(T2,3) == 1
+            % single pose given
+            T1 = eye(3);
+            Ttraj = traj(T1, T2, tlimits, t);
+        else
+            % sequence given
+            Ttraj = T2;
+        end
     else
-        T1 = eye(3,3);
+        % animtform(X2, X2, ...)
+        T1 = X2SE2(X1);
+        T2 = X2SE2(X2);
+        assert(size(T1,3) == 1 && size(T2,3) == 1, "RVC3:animtform:badarg", "transforms cannot be sequences")
+        Ttraj = traj(T1, T2, tlimits, t);
     end
-elseif istform2d(P2)
-    % tranimate(T1, options)
-    % tranimate(T1, T2, options)
-    T2 = P2;
-    if ~isempty(args) && istform2d(args{1})
-        T1 = T2;
-        T2 = args{1};
-        args = args(2:end);
+
+    if isempty(args.axis)
+        % create axis limits automatically based on motion of frame origin
+        t = tform2trvec(Ttraj);
+        mn = min(t) - 1.5;  % min value + length of axis + some
+        mx = max(t) + 1.5;  % max value + length of axis + some
+        axlim = [mn; mx];
+        axlim = axlim(:)';
+        plot_args.axis = axlim;
     else
-        T1 = eye(3,3);
+        plot_args.axis = args.axis;
     end
-elseif isa(P2, 'function_handle')
-    % we were passed a handle
-    %
-    % tranimate( @func(x), x, options)
-    T2 = [];
-    for x = args{1}
-        T2 = cat(3, T2, P2(x));
+    
+    plot_args_cell = struct2cell(plot_args);
+
+    % convert plot options from a struct to a cell array
+    names = fieldnames(plot_args);
+    values = struct2cell(plot_args);
+    plot_args_cell = {};
+    for i=1:length(names)
+        plot_args_cell{end+1} = names{i};
+        plot_args_cell{end+1} = values{i};
     end
-end
 
-% at this point
-%   T1 is the initial pose
-%   T2 is the final pose
-%
-%  T2 may be a sequence
-
-if size(T2,3) > 1
-    % tranimate2(Ts)
-    % we were passed a homog sequence
-    if ~isempty(P1)
-        error('only 1 input argument if sequence specified');
+    if args.retain
+        hold on
+    else
+        hplot = plottform2d(Ttraj(:,:,1), plot_args_cell{:});  % create first frame
     end
-    Ttraj = T2;
-else
-    % tranimate2(P1, P2)
-    % create a path between them
-    Ttraj = trinterp2(T1, T2, linspace(0, 1, opt.nsteps));
+
+    if args.clock
+        htime = uicontrol(Parent=gcf, ...
+                Style="text", ...
+                HorizontalAlignment="left", ...
+                Position=[50 20 100 20]...
+                );
+    end
+    
+    % animate it for all poses in the sequence
+    if args.movie ~= ""
+        anim = Animate(args.movie);
+    end
+    r = rateControl(args.fps);
+    for i=1:args.nsteps
+        T = Ttraj(:,:,i);
+        if args.retain
+            plottform2d(T, plot_args_cell{:});
+        else
+            plottform2d(T, handle=hplot);
+        end
+        
+        if args.clock
+            htime.String = sprintf("time %g", t(i));
+        end
+
+        if args.movie ~= ""
+            anim.add();
+        end
+
+        drawnow
+        waitfor(r);
+    end
+    
+    if args.movie ~= ""
+        anim.close();
+    end
+    if args.cleanup
+        try
+            delete(hplot);
+        catch
+        end
+    end
+end % animtform
+
+function tg = traj(T1, T2, tlimits, t)
+
+    T1 = [T1(1:2,1:2) [0; 0] T1(1:2, 3); 0 0 1 0; 0 0 0 1];
+    T2 = [T2(1:2,1:2) [0; 0] T2(1:2, 3); 0 0 1 0; 0 0 0 1];
+
+    tg = transformtraj(T1, T2, tlimits, t);
+
+    tg(3,:,:) = [];
+    tg(:,3,:) = [];
 end
 
-if isempty(opt.axis)
-    % create axis limits automatically based on motion of frame origin
-    t = transl2(Ttraj);
-    mn = min(t) - 1.5;  % min value + length of axis + some
-    mx = max(t) + 1.5;  % max value + length of axis + some
-    axlim = [mn; mx];
-    axlim = axlim(:)';
-    args = [args 'axis' axlim];
-else
-    args = [args 'axis' opt.axis];
-end
+function T = X2SE2(X)
+    % convert various forms to to SE(2) hom transform
 
-if opt.retain
-    hold on
-    ud.hg = [];  % indicate no animation
-else
-    ud.hg = trplot2(eye(3,3), args{:});  % create a frame at the origin
-end
-ud.Ttraj = Ttraj;
-
-if ~isempty(opt.time)
-    ud.htime = uicontrol('Parent', gcf, 'Style', 'text', ...
-        'HorizontalAlignment', 'left', 'Position', [50 20 100 20]);
-end
-% animate it for all poses in the sequence
-
-t = timer('ExecutionMode', 'fixedRate', ...
-    'BusyMode', 'queue', ...
-    'UserData', ud, ...
-    'TasksToExecute', length(ud.Ttraj), ...
-    'Period', 1/opt.fps/2);
-t.TimerFcn = @timer_callback;
-start(t);
-
-waitfor(t)
-delete(t)
-if ~isempty(opt.movie)
-    ud.anim.close()
-end
-if opt.cleanup
-    delete(ud.hg);
-end
-end
-
-function guts(ud, i)
-if isa(ud.Ttraj, 'so2')
-    T = ud.Ttraj(i);
-else
-    T = ud.Ttraj(:,:,i);
-end
-if ud.opt.retain
-    trplot2(T, ud.args{:});
-else
-    trplot2(T, 'handle', ud.hg);
-end
-
-if ~isempty(ud.opt.movie)
-    ud.anim.add();
-end
-
-if ~isempty(ud.opt.time)
-    set(ud.htime, 'String', sprintf('time %g', ud.opt.time(i)));
-end
-drawnow
-
-end
-
-function timer_callback(timerObj, ~)
-ud = get(timerObj, 'UserData');
-if ~ishandle(ud.hg)
-    % the figure has been closed
-    stop(timerObj);
-    delete(timerObj);
-end
-
-i = timerObj.TasksExecuted;
-
-guts(ud, i);
-
+    if isrotm2d(X)
+        T = rotm2tform(X);
+    elseif istform2d(X)
+        T = X;
+    elseif isa(X, "se2")
+        T = X.tform();
+    elseif isa(X, "rigidtform2d")
+        T = X.T();
+    elseif isa(X, "Twist2d")
+        T = X.tform();
+    elseif isa(X, "so2")
+        T = rotm2tform(X.rotm());
+    else
+        error("RVC3:animtform:badarg", "argument must be 2x2 or 3x3 matrix, so2, se2");
+    end
 end
