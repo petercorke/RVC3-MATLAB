@@ -11,7 +11,7 @@ classdef RVCTest < matlab.unittest.TestCase
             
             import matlab.unittest.fixtures.PathFixture
             
-            rvc3Dir = fullfile(fileparts( mfilename("fullpath") ), "..", "newtoolbox");
+            rvc3Dir = fullfile(fileparts( mfilename("fullpath") ), "..", "toolbox");
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir)) );
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir, "data")) );
         end
