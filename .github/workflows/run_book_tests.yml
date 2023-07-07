@@ -1,7 +1,7 @@
 name: Run all book tests
 
 on: 
-  # Automatically run this action when a new push is made
+  # Automatically run this action when a new push is made to repo
   push:
       
   # Allows you to run this workflow manually from the Actions tab
@@ -18,13 +18,8 @@ jobs:
       - name: Set up MATLAB
         # This uses the latest release of MATLAB. Can specify "release" if needed.
         uses: matlab-actions/setup-matlab@v1
-      #- name: Package mltbx
-      #  uses: matlab-actions/run-command@v1.0.1
-      #  with:
-      #    # Package mltbx file. Ensure that mltbx file exists before returning.
-      #    command: matlab.addons.toolbox.packageToolbox('rvc3setup.prj'), assert(exist('RVC3.mltbx', 'file'));
       - name: Run MATLAB Tests
-        # Change folder to book tests
+        # Only run tests in folder test/book
         uses: matlab-actions/run-tests@v1
         with:
           select-by-folder: test/book
