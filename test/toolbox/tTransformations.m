@@ -1,7 +1,7 @@
-%% This is for testing the Homogeneous Transformation functions in the robotics Toolbox
-
 classdef tTransformations < RVCTest & matlab.unittest.TestCase
-    %tBug2 Unit tests for Bug2 class
+    %tTransformations This is for testing the Homogeneous Transformation functions
+
+    % Copyright 2023 Peter Corke, Witold Jachimczyk, Remo Pillat    
 
     methods (Test)
 
@@ -245,7 +245,7 @@ classdef tTransformations < RVCTest & matlab.unittest.TestCase
             testcase.verifyEqual(det(tformnorm(R)), 1, absTol=1e-14);
 
             t = [1 2 3];
-            T = se3(R, t).tform
+            T = se3(R, t).tform;
             Tn = tformnorm(T);
             testcase.verifyEqual(det(tformnorm(t2r(Tn))), 1, absTol=1e-14);
             testcase.verifyEqual(Tn(1:3,4), t');

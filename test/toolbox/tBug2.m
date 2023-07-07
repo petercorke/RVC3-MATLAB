@@ -1,5 +1,7 @@
 classdef tBug2 < RVCTest & matlab.unittest.TestCase
     %tBug2 Unit tests for Bug2 class
+
+    % Copyright 2023 Peter Corke, Witold Jachimczyk, Remo Pillat    
     
     methods (Test)
         function mapConstructor(testCase)
