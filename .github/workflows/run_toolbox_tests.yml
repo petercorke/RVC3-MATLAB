@@ -1,4 +1,4 @@
-name: Run all book tests
+name: Run all toolbox tests
 
 on: 
   # Automatically run this action when a new push is made to repo
@@ -19,7 +19,7 @@ jobs:
         # This uses the latest release of MATLAB. Can specify "release" if needed.
         uses: matlab-actions/setup-matlab@v1
       - name: Run MATLAB Tests
-        # Only run tests in test/book folder
+        # Only run tests in test/toolbox folder
         uses: matlab-actions/run-tests@v1
         with:
-          select-by-folder: test/book
+          select-by-folder: test/toolbox
