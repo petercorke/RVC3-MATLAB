@@ -4318,6 +4318,33 @@
             <DIR_SIGNIFIER Location="1">
                 <Info/>
             </DIR_SIGNIFIER>
+            <File Location="toolbox">
+                <Info/>
+                <File Location="tBug2.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="tTransformations.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="RVCTest.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <DIR_SIGNIFIER Location="1">
+                    <Info/>
+                </DIR_SIGNIFIER>
+            </File>
         </File>
     </Files>
     <ProjectData Location="Root"/>
