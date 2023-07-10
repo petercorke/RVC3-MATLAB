@@ -25,7 +25,7 @@ if length(phi) == 3
     psi = phi(3);
     phi = phi(1);
 elseif nargin ~= 3
-    error('SMTB:eul2jac:badarg', 'bad arguments');
+    error('RVC3:eul2jac:badarg', 'bad arguments');
 end
 J = [ 0, -sin(phi), cos(phi)*sin(theta)
     0,  cos(phi), sin(phi)*sin(theta)

@@ -37,7 +37,7 @@ elseif nargin >= 3
     y = r;
     % roll = args{2}
 else
-    error('SMTB:rpy2jac:badarg', 'bad arguments')
+    error('RVC3:rpy2jac:badarg', 'bad arguments')
 end
 
 

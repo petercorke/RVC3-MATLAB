@@ -116,7 +116,7 @@ function hout = plottform2d(X, options)
     end
     
     % sort out the colors of axes and text
-    axcolors = [options.color options.color options.color];
+    axcolors = [options.color; options.color];
 
     % figure the dimensions of the axes, if not given
     if isempty(options.axis)
@@ -194,13 +194,13 @@ function hout = plottform2d(X, options)
         for i=1:2
             quiver(mstart(1,i), mstart(2,i), ...
                 diff(1,i), diff(2,i), ...
-                AutoScale=false, MaxHeadSize=options.LineWidth, Color=axcolors(i), LineWidth=options.LineWidth, Parent=hg);
+                AutoScale=false, MaxHeadSize=options.LineWidth, Color=axcolors(i,:), LineWidth=options.LineWidth, Parent=hg);
         end
     else
         for i=1:2
             plot([mstart(i,1) mend(i,1)], ...
                  [mstart(i,2) mend(i,2)], ...
-                 Color=axcolor(i), ...
+                 Color=axcolors(i,:), ...
                  LineWidth=options.LineWidth, ...
                  Parent=hg);
         end
@@ -216,9 +216,9 @@ function hout = plottform2d(X, options)
 
         % add the labels to each axis
         text(x1(1), x1(2), sprintf(fmt, options.labels(1)), ...
-            "Parent", hg, "Color", axcolors(1), text_options_cell{:});
+            "Parent", hg, "Color", axcolors(1,:), text_options_cell{:});
         text(y1(1), y1(2), sprintf(fmt, options.labels(2)), ...
-            "Parent", hg, "Color", axcolors(2), text_options_cell{:});
+            "Parent", hg, "Color", axcolors(2,:), text_options_cell{:});
     end
 
     % label the frame
