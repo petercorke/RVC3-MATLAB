@@ -23,3 +23,5 @@ jobs:
         uses: matlab-actions/run-tests@v1
         with:
           select-by-folder: test/book
+          startup-options: -webfigures
+          code-coverage-cobertura: code-coverage/coverage.xml
