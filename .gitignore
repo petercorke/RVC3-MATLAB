@@ -10,3 +10,7 @@
 # Simulink temporary files
 **/slprj/
 *.autosave
+
+# Never commit files that are downloaded by user
+toolbox/examples/visodom/**
+toolbox/examples/mosaic/**
