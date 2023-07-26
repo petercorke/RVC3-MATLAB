@@ -1,13 +1,15 @@
 classdef tTransformations < RVCTest & matlab.unittest.TestCase
-    %tTransformations This is for testing the Homogeneous Transformation functions
+    % Testing 3D Homogeneous Transformation functions
 
-    % Copyright 2023 Peter Corke, Witold Jachimczyk, Remo Pillat    
+    % Copyright 2023 Peter Corke, Witold Jachimczyk, Remo Pillat 
+
+    methods (TestMethodTeardown)
+        function closeFigure(testcase)
+            close("all")
+        end
+    end
 
     methods (Test)
-
-        % function teardownOnce(testcase)
-        %     close('all')
-        % end
 
         %% first of all check we can tell a good matrix from a bad one
         function isrotm(testcase)
