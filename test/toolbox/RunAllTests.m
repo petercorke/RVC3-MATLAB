@@ -13,9 +13,9 @@ suite = testsuite('IncludeSubfolders', false);
 runner = TestRunner.withTextOutput;
 
 % add a coverage report
-reportFile = fullfile('..', 'coverage.xml');
+reportFile = fullfile('.', 'coverage.xml');
 reportFormat = CoberturaFormat(reportFile);
-plugin = CodeCoveragePlugin.forFolder('..', 'Producing',reportFormat);
+plugin = CodeCoveragePlugin.forFolder('.', 'Producing',reportFormat);
 runner.addPlugin(plugin);
 
 
@@ -23,11 +23,15 @@ runner.addPlugin(plugin);
 fprintf('---------------------------------- Setup path ------------------------------------\n')
 fprintf('-->> current working folder is %s\n', pwd)
 
+% display the version of MATLAB
+ver
 
 %% Run all unit tests in my repository
 fprintf('---------------------------------- Run the unit tests ------------------------------------\n')
 
 results = runner.run(suite);
+
+!ls -R
 
 % Assert no tests failed
 assert(all(~[results.Failed]));
