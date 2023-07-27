@@ -29,6 +29,8 @@ jobs:
     needs: unittest
     runs-on: ubuntu-latest
     steps:
+    - name: list all files
+      run: pwd; ls -R
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
