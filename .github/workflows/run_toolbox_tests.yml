@@ -26,6 +26,9 @@ jobs:
   codecov:
     # If all tests pass:
     # Run coverage and upload to codecov
+    name: Coverage upload
+    runs-on: ubuntu-latest
+    steps:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
