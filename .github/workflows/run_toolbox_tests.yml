@@ -21,7 +21,9 @@ jobs:
         # Only run tests in test/toolbox folder
         uses: matlab-actions/run-tests@v1
         with:
+          source-folder: toolbox
           select-by-folder: test/toolbox
+          code-coverage-cobertura: coverage.xml
       - name: show all files
         run: ls -R
       - name: Upload coverage reports to Codecov
