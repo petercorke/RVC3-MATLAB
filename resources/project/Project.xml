@@ -4344,6 +4344,41 @@
                 <DIR_SIGNIFIER Location="1">
                     <Info/>
                 </DIR_SIGNIFIER>
+                <File Location="tTransformations2d.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="tmkgrid.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="tPlucker.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="tPGraph.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="tTwist.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
             </File>
         </File>
     </Files>
