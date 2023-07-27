@@ -8,8 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  my-job:
-    name: Run tests
+  unittest:
     runs-on: ubuntu-latest
     steps:
       - name: Check out RVC3-MATLAB repository (for unit tests)
@@ -23,10 +22,11 @@ jobs:
         uses: matlab-actions/run-tests@v1
         with:
           select-by-folder: test/toolbox
+  
   codecov:
     # If all tests pass:
     # Run coverage and upload to codecov
-    name: Coverage upload
+    needs: unittest
     runs-on: ubuntu-latest
     steps:
     - name: Upload coverage reports to Codecov
