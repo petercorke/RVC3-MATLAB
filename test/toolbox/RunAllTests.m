@@ -9,13 +9,13 @@ import matlab.unittest.plugins.CodeCoveragePlugin
 import matlab.unittest.plugins.codecoverage.CoberturaFormat
 import matlab.unittest.TestRunner
 
-suite = testsuite('IncludeSubfolders', false);
+suite = testsuite("test/toolbox",IncludeSubfolders=false);
 runner = TestRunner.withTextOutput;
 
 % add a coverage report
 reportFile = fullfile('.', 'coverage.xml');
 reportFormat = CoberturaFormat(reportFile);
-plugin = CodeCoveragePlugin.forFolder('.', 'Producing',reportFormat);
+plugin = CodeCoveragePlugin.forFolder("./toolbox", IncludingSubfolders=true, Producing=reportFormat);
 runner.addPlugin(plugin);
 
 
@@ -30,8 +30,6 @@ ver
 fprintf('---------------------------------- Run the unit tests ------------------------------------\n')
 
 results = runner.run(suite);
-
-!ls -R
 
 % Assert no tests failed
 assert(all(~[results.Failed]));

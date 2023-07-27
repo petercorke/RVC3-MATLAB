@@ -22,24 +22,16 @@ jobs:
         uses: matlab-actions/run-tests@v1
         with:
           select-by-folder: test/toolbox
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          file: ./coverage.xml
 
-  # codecov:
-  #   # If all tests pass:
-  #   # Run coverage and upload to codecov
-  #   needs: unittest
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: list all files
-  #     run: ls -R
-  #   - name: Upload coverage reports to Codecov
-  #     uses: codecov/codecov-action@v3
-  #     env:
-  #       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-  #     with:
-  #       file: ./coverage.xml
+  codecov:
+    # If all tests pass:
+    # Run coverage and upload to codecov
+    needs: unittest
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        file: ./coverage.xml
