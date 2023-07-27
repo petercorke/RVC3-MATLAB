@@ -26,8 +26,8 @@ jobs:
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          file: ./coverage.xml
+        # with:
+        #   file: ./coverage.xml
 
   # codecov:
   #   # If all tests pass:
