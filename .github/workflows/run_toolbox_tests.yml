@@ -22,6 +22,8 @@ jobs:
         uses: matlab-actions/run-tests@v1
         with:
           select-by-folder: test/toolbox
+      - name: show all files
+        run: ls -R
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
