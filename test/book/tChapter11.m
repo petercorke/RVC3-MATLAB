@@ -17,6 +17,16 @@ classdef tChapter11 < RunMLX & RVCTest
         MLXFile = "chapter11.mlx"
     end
 
+    methods (TestClassSetup)
+        function shadowImtool(testCase)
+            % Shadow the existing helpview function, so we can just verify
+            % the calling arguments.
+            testCase.applyFixture(...
+                matlab.unittest.fixtures.PathFixture(fullfile(fileparts(mfilename("fullpath")), ...
+                "imtoolShadow")));            
+        end
+    end
+
     methods(Test)
         % Additional test points for the chapter
     end
