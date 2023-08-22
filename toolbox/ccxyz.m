@@ -19,9 +19,9 @@
 
 function [x,y] = ccxyz(lambda, e)
     xyz = cmfxyz(lambda);
-    if nargin == 1,
+    if nargin == 1
         cc = xyz ./ (sum(xyz')'*ones(1,3));
-    elseif nargin == 2,
+    elseif nargin == 2
         xyz = xyz .* (e(:)*ones(1,3));
         xyz = sum(xyz);
         cc = xyz ./ (sum(xyz')'*ones(1,3));
@@ -33,3 +33,4 @@ function [x,y] = ccxyz(lambda, e)
         x = cc(:,1);
         y = cc(:,2);
     end
+end

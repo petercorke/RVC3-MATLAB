@@ -1,7 +1,7 @@
 %RPY2JAC Jacobian from RPY angle rates to angular velocity
 %
 % J = RPY2JAC(YPR, OPTIONS) is a Jacobian matrix (3x3) that maps ZYX yaw-pitch-roll angle
-% rates to angular velocity at the operating point RPY=[Y,P,R].
+% rates to angular velocity at the operating point YPR=[Y,P,R].
 %
 % J = RPY2JAC(Y, P, R, OPTIONS) as above but the yaw-pitch-roll angles are passed
 % as separate arguments.
@@ -21,27 +21,30 @@
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
-function J = rpy2jac(r, varargin)
+function J = rpy2jac(varargin)
 
-opt.order = {'zyx', 'xyz', 'yxz'};
-[opt,args] = tb_optparse(opt, varargin);
+if numel(varargin{1}) == 3
+    % angle passed as a vector
+    ypr = varargin{1};
+    p = ypr(2);
+    y = ypr(1);
 
-
-% unpack the arguments
-if size(r,2) == 3
-    p = r(:,2);
-    y = r(:,1);
-%     roll = r(:,1);
 elseif nargin >= 3
-    p = args{1};
-    y = r;
-    % roll = args{2}
+    p = varargin{2};
+    y = varargin{1};
+
 else
     error('RVC3:rpy2jac:badarg', 'bad arguments')
 end
 
+if isstring(varargin{end}) || ischar(varargin{end})
+    order = lower(string(varargin{end}));
+else
+    order = "zyx";
+end
 
-switch opt.order
+
+switch order
     case 'xyz'
         J = [
             sin(p)          0       1

@@ -1,4 +1,3 @@
-function handles = plotellipse(E, varargin)
 %PLOTELLIPSE Draw an ellipse
 %
 %   PLOTELLIPSE(E) draws an ellipse defined by X'EX = 1
@@ -16,8 +15,12 @@ function handles = plotellipse(E, varargin)
 %   
 %   PLOTELLIPSE(..., Name=Value) specifies additional
 %   options using one or more name-value pair arguments.
-%   Specify the options after all other input arguments.
-% 
+%
+% The ellipse is defined by x' * E * x = s^2 where x is in R^2
+% and s is the scale factor.
+%
+% Options:
+%
 %   confidence - Confidence interval, range 0 to 1. If a confidence interval 
 %                is given then E is interpretted as an inverse covariance
 %                matrix and the ellipse size is computed using an inverse 
@@ -38,8 +41,6 @@ function handles = plotellipse(E, varargin)
 %                Default: 1
 %
 %
-% The ellipse is defined by x' * E * x = s^2 where x is in R^2
-% and s is the scale factor.
 % For some common cases we require inv(E), for example
 %     - for robot manipulability
 %       \nu inv(J*J') \nu
@@ -67,50 +68,42 @@ function handles = plotellipse(E, varargin)
 %      % Draw 95% confidence ellipse
 %      PLOTELLIPSE(COVAR, confidence=0.95);
 %
+% References:
+% - Robotics, Vision & Control: Fundamental algorithms in MATLAB, 3rd Ed.
+%   P.Corke, W.Jachimczyk, R.Pillat, Springer 2023.
+%   Appendix C.1.4
 %
 % See also PLOTCIRCLE, PLOT_BOX, CHI2INV.
 
 % Copyright 2022-2023 Peter Corke, Witek Jachimczyk, Remo Pillat
 
-    opt.fillcolor = 'none';
-    opt.alpha = 1;
-    opt.edgecolor = 'k';
-    opt.alter = [];
-    opt.npoints = 40;
-    opt.confidence = [];
-    opt.inverted = 0;
-
-    [opt,arglist,ls] = tb_optparse(opt, varargin);
-
-    % process some arguments
-
-    if ~isempty(ls)
-        opt.edgecolor = ls{1};
-    end
+function handles = plotellipse(varargin)
+    ip = inputParser();
+    ip.KeepUnmatched = true;
+    ip.addRequired("E", @(x) isnumeric(x) && isreal(x));
+    ip.addOptional("center", [0 0], @(x) isnumeric(x) && isreal(x) && (numel(x) == 2));
+    ip.addOptional("ls", "", @(x) ischar(x) || isstring(x));
+    ip.addParameter("fillcolor", "none");
+    ip.addParameter("alpha", 1, @(x) isnumeric(x) && isreal(x) && isscalar(x));
+    ip.addParameter("edgecolor", "k");
+    ip.addParameter("alter", [], @(x) ishandle(x));
+    ip.addParameter("npoints", 40);
+    ip.addParameter("confidence", [], @(x) isnumeric(x));
+    ip.addParameter("inverted", false, @(x) islogical(x));
+    ip.parse(varargin{:});
+    args = ip.Results;
+    arglist = namedargs2cell(ip.Unmatched);
+    E = args.E;
 
     % process the probability
-    if isempty(opt.confidence)
+    if isempty(args.confidence)
         s = 1;
     else
         if exist('chi2inv', 'file') == 2
-            s = sqrt(chi2inv(opt.confidence, 2));
+            s = sqrt(chi2inv(args.confidence, 2));
         else
-            s = sqrt(chi2inv_rvc(opt.confidence, 2));
+            s = sqrt(chi2inv_rvc(args.confidence, 2));
         end
-    end
-
-    if ~isempty(arglist) && isnumeric(arglist{1})
-        % ellipse center is provided
-        center = arglist{1};
-        arglist = arglist(2:end);
-    else
-        % default to origin
-        center = zeros(1, size(E,1));
-    end
-
-    % check the ellipse to be altered
-    if ~isempty(opt.alter) && ~ishandle(opt.alter)
-        error('SMTB:plotellipse:badarg', 'argument to alter must be a valid graphic object handle');
     end
 
     holdon = ishold();
@@ -125,70 +118,68 @@ function handles = plotellipse(E, varargin)
         E = [A C;C B];
 
     elseif all(size(E) == [2 2])
-        if ~opt.inverted
+        if ~args.inverted
             E = inv(E);
         end
     else
-        error('ellipse is defined by a 2x2  matrix');
+        error('RVC3:plotellipse:badarg', ...
+            'ellipse is defined by a 1x3 or 2x2  matrix');
     end
 
 
     %% plot an ellipse
 
     % define points on a unit circle
-    th = linspace(0, 2*pi, opt.npoints);
+    th = linspace(0, 2*pi, args.npoints);
     pc = [cos(th);sin(th)];
 
     % warp it into the ellipse
     pe = sqrtm(E)*pc * s;
 
     % offset it to optional non-zero center point
-    center = center(:);
-    if nargin > 1
-        pe = bsxfun(@plus, center(1:2), pe);
-    end
+    pe = args.center(:) + pe;
     x = pe(1,:); y = pe(2,:);
 
     % plot 2D data
 
-    if length(center) > 2
+    if length(args.center) > 2
         % plot 3D data
-        z = ones(size(x))*center(3);
+        z = ones(size(x))*args.center(3);
     else
         z = zeros(size(x));
     end
 
 
-    if strcmpi(opt.fillcolor, 'none')
+    if strcmpi(args.fillcolor, "none")
         % outline only, draw a line
 
         if isempty(ls)
-            if ~isempty(opt.edgecolor)
-                arglist = ['Color', opt.edgecolor, arglist];
+            if ~isempty(args.edgecolor)
+                arglist = [{"Color"}, args.edgecolor, arglist];
             end
         else
-            arglist = [ls arglist];
+            arglist = [{args.ls}, arglist];
         end
 
-        if isempty(opt.alter)
+        if isempty(args.alter)
             h = plot3(x', y', z', arglist{:});
         else
-            set(opt.alter, 'xdata', x, 'ydata', y);
+            set(args.alter, "xdata", x, "ydata", y);
         end
     else
         % fillcolored, use a patch
 
-        if ~isempty(opt.edgecolor)
-            arglist = ['EdgeColor', opt.edgecolor, arglist];
+        if ~isempty(args.edgecolor)
+            arglist = ["EdgeColor", args.edgecolor, arglist];
         end
 
-        arglist = [ls, 'FaceAlpha', opt.alpha, arglist];
+        arglist = [ls, "FaceAlpha", args.alpha, arglist];
 
 
-        if isempty(opt.alter)
-            h = patch(x', y', z', opt.fillcolor, arglist{:});
+        if isempty(args.alter)
+            h = patch(x', y', z', args.fillcolor, arglist{:});
         else
-            set(opt.alter, 'xdata', x, 'ydata', y);
+            set(args.alter, "xdata", x, "ydata", y);
         end
 
     end

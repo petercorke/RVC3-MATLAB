@@ -40,8 +40,16 @@
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
-function out = printline(X, varargin)
-
+function out = printline(X, options)
+    arguments
+        X
+        options.mode (1,1) string = "rpy";
+        options.fmt (1,1) string = ""
+        options.unit (1,1) string {mustBeMember(options.unit, ["rad", "deg"])} = "rad"
+        options.fid (1,1) {mustBeInteger} = 1
+        options.label (1,1) string = ""
+    end
+    
     opt.fmt = [];
     opt.mode = {'rpy', 'euler', 'axang'};
     opt.unit = 'rad';
