@@ -17,6 +17,12 @@ jobs:
       - name: Set up MATLAB
         # This uses the latest release of MATLAB. Can specify "release" if needed.
         uses: matlab-actions/setup-matlab@v1
+      
+      - name: Print out ver details
+        uses: matlab-actions/run-command@v1
+        with:
+          command: ver
+          
       - name: Run MATLAB Tests
         # Only run tests in test/toolbox folder
         uses: matlab-actions/run-tests@v1
