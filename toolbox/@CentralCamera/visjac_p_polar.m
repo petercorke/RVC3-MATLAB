@@ -20,14 +20,14 @@
 
 function J = visjac_p_polar(cam, rt, Z)
 
-    if numcols(rt) > 1
+    if numel(rt) > 2
         J = [];
         if length(Z) == 1
             % if depth is a scalar, assume same for all points
-            Z = repmat(Z, 1, numcols(rt));
+            Z = repmat(Z, 1, size(rt, 2));
         end
         % recurse for each point
-        for i=1:numcols(rt)
+        for i=1:size(rt, 2)
             J = [J; visjac_p_polar(cam, rt(:,i), Z(i))];
         end
         return;

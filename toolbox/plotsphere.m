@@ -1,51 +1,51 @@
 %PLOTSPHERE Draw sphere
 %
-% PLOTSPHERE(C, R, LS) draws spheres in the current plot.  C is the 
-% center of the sphere (1x3), R is the radius and LS is an optional MATLAB 
+% PLOTSPHERE(C, R) draws spheres in the current plot.  C is the 
+% center of the sphere (1x3), and R is the radius. 
+%
+% PLOTSPHERE(C, R, COLOR) as above and COLOR is an optional MATLAB 
 % ColorSpec, either a letter or a 3-vector.  
 %
-% PLOTSPHERE(C, R, COLOR, ALPHA) as above but ALPHA specifies the opacity
-% of the sphere where 0 is transparant and 1 is opaque.  The default is 1.
-%
-% If C (Nx3) then N sphhere are drawn and H is Nx1.  If R (1x1) then all
+% If C (Nx3) then N spheres are drawn.  If R (1x1) then all
 % spheres have the same radius or else R (1xN) to specify the radius of
 % each sphere.
 %
 % H = PLOTSPHERE(...) as above but returns the handle(s) for the
 % spheres.
 %
-% Notes::
+% Notes:
 % - The sphere is always added, irrespective of figure hold state.
-% - The number of vertices to draw the sphere is hardwired.
 %
-% Example::
-%         plotsphere( mkgrid(2, 1), .2, 'b'); % Create four spheres
-%         lighting gouraud  % full lighting model
-%         light
+% Example:
+%    plotsphere(mkgrid(2, 1), .2, color="b"); % Create four spheres
+%    lighting gouraud  % full lighting model
+%    light
 %
-% See also: plotpoint, plot_box, plot_circle, plotellipse, plotpoly.
+% Options:
+%
+% color     - surface color as a MATLAB ColorSpec (defaults to "b")
+% alpha     - opaqueness (defaults to 1)
+% edgecolor - edge color as a MATLAB ColorSpec (defaults to "none")
+% n         - number of points on sphere (defaults to 40)
+%
+% See also PLOTELLIPSOID.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
-
-% TODO
-% inconsistant call format compared to other plot_xxx functions.
-
-function out = plotsphere(c, r, varargin)
-
-    opt.color = 'b';
-    opt.alpha = 1;
-    opt.mesh = 'none';
-    opt.n = 40;
-
-    [opt,args] = tb_optparse(opt, varargin);
+function out = plotsphere(c, r, color, opt)
+    arguments
+        c (:,3) {mustBeFloat,mustBeReal};
+        r (1,1) {mustBeFloat,mustBeReal,mustBePositive};
+        color string = "b";
+        opt.color = "";
+        opt.alpha = 1;
+        opt.edgecolor = "none";
+        opt.n = 40;
+    end
     
     % backward compatibility with RVC
-    if length(args) > 0
-        opt.color = args{1};
-    end
-    if length(args) > 1
-        opt.alpha = args{2};
+    if color ~= ""
+        opt.color = color;
     end
     
     daspect([1 1 1])
@@ -71,7 +71,10 @@ function out = plotsphere(c, r, varargin)
         z = r(i)*zs + c(i,3);
                 
         % the following displays a nice smooth sphere with glint!
-        h = surf(x,y,z, ones(size(z)), 'FaceColor', opt.color, 'EdgeColor', opt.mesh, 'FaceAlpha', opt.alpha);
+        h = surf(x,y,z, ones(size(z)), ...
+            'FaceColor', opt.color, ...
+            'EdgeColor', opt.edgecolor, ...
+            'FaceAlpha', opt.alpha);
         % camera patches disappear when shading interp is on
         %h = surfl(x,y,z)
     end
@@ -83,3 +86,4 @@ function out = plotsphere(c, r, varargin)
     if nargout > 0
         out = h;
     end
+end
