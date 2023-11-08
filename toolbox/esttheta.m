@@ -65,7 +65,7 @@ function k = pickregion(im)
     
     xy = ginput;
     
-    plot_poly(xy', 'g');
+    plotpoly(xy', 'g');
     
     [X,Y] = imeshgrid(im);
     

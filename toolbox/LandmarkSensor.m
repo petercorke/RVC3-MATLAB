@@ -179,10 +179,10 @@ classdef LandmarkSensor < Sensor
                         y = [y 0];
                     end
                     % no sensor zone, create one
-                    plot_poly([x; y], 'fillcolor', 'r', 'alpha', 0.1, 'edgecolor', 'none', 'animate', 'tag', 'sensor-area');
+                    plotpoly([x; y], 'fillcolor', 'r', 'alpha', 0.1, 'edgecolor', 'none', 'animate', 'tag', 'sensor-area');
                 else
                     %hg = get(h, 'Parent');
-                    plot_poly(h, s.robot.q);
+                    plotpoly(h, s.robot.q);
 
                 end
             end

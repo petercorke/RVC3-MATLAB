@@ -36,7 +36,7 @@
 % Notes::
 % - The box is added to the current plot irrespective of hold status.
 %
-% See also PLOT_POLY, PLOT_CIRCLE, PLOTELLIPSE.
+% See also PLOTPOLY, PLOT_CIRCLE, PLOTELLIPSE.
 
 % Copyright (C) 1993-2019 Peter I. Corke
 %

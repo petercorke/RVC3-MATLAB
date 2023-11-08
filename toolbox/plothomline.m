@@ -18,7 +18,7 @@
 %          L = homline([1 2]', [3 1]'); % homog line from (1,2) to (3,1)
 %          plot_homline(L, 'k--'); % plot dashed black line
 %
-% See also PLOT_BOX, PLOT_POLY, HOMLINE.
+% See also PLOT_BOX, PLOTPOLY, HOMLINE.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 

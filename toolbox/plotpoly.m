@@ -1,11 +1,11 @@
-%PLOT_POLY Draw a polygon
+%PLOTPOLY Draw a polygon
 %
-% plot_poly(P, OPTIONS) adds a closed polygon defined by vertices in the columns
+% plotpoly(P, OPTIONS) adds a closed polygon defined by vertices in the columns
 % of P (2xN), in the current plot.
 %
-% H = plot_poly(...) as above but returns a graphics handle.
+% H = plotpoly(...) as above but returns a graphics handle.
 %
-% plot_poly(H, )
+% plotpoly(H, )
 %
 % OPTIONS::
 %  'fillcolor',F    the color of the circle's interior, MATLAB color spec
@@ -31,10 +31,10 @@
 % Example::
 %
 %          POLY = [0 1 2; 0 1 0];
-%          H = plot_poly(POLY, 'animate', 'r'); % draw a red polygon
+%          H = plotpoly(POLY, 'animate', 'r'); % draw a red polygon
 %
-%          H = plot_poly(POLY, 'animate', 'r'); % draw a red polygon that can be animated
-%          plot_poly(H, transl(2,1,0) );  % transform its vertices by (2,1)
+%          H = plotpoly(POLY, 'animate', 'r'); % draw a red polygon that can be animated
+%          plotpoly(H, transl(2,1,0) );  % transform its vertices by (2,1)
 %
 % See also PLOT_BOX, PLOT_CIRCLE, PATCH, Polygon.
 
@@ -47,10 +47,10 @@
 % TODO: move this 'axis' logic to circle + ellipse
 
 
-function h_ = plot_poly(p, varargin)
+function h_ = plotpoly(p, varargin)
 
 if ishandle(p)
-    % PLOT_POLY(H, T)
+    % PLOTPOLY(H, T)
     %  - animate existing polygon
     tr = varargin{1};
     if isvec(tr,3)

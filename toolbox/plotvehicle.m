@@ -58,7 +58,7 @@
 %   car, the image is scaled to be that length in the plot.
 % - Set 'fps' to Inf to have zero pause
 %
-% See also Vehicle.plot, Animate, plot_poly, demos/car_animation
+% See also Vehicle.plot, Animate, plotpoly, demos/car_animation
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
@@ -200,6 +200,6 @@ else
                 0.6*L2  -W
                 -L1      -W ]';
     end
-    h = plot_poly(corners, 'animate', 'axis', opt.axis, args{:});
+    h = plotpoly(corners, 'animate', 'axis', opt.axis, args{:});
 end
 end

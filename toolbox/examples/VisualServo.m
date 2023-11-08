@@ -192,14 +192,14 @@ classdef VisualServo < handle
             end
             
             % mark the initial target shape
-            plot_poly( reshape(uv(1,:), 2, []), 'ro--', 'MarkerEdgeColor', 'k', 'MarkerSize', 8, 'DisplayName', 'start');
+            plotpoly( reshape(uv(1,:), 2, []), 'ro--', 'MarkerEdgeColor', 'k', 'MarkerSize', 8, 'DisplayName', 'start');
             uv(end,:)
             
             % mark the final target shape
             if ~isempty(vs.uv_star)
-                plot_poly(vs.uv_star', 'rh:', 'MarkerSize', 8, 'MarkerFaceColor', 'k', 'DisplayName', 'goal')
+                plotpoly(vs.uv_star', 'rh:', 'MarkerSize', 8, 'MarkerFaceColor', 'k', 'DisplayName', 'goal')
             else
-                plot_poly( reshape(uv(1,:), 2, []), 'rh--', 'MarkerSize', 8, 'MarkerFaceColor', 'k', 'DisplayName', 'goal');
+                plotpoly( reshape(uv(1,:), 2, []), 'rh--', 'MarkerSize', 8, 'MarkerFaceColor', 'k', 'DisplayName', 'goal');
             end
             axis([0 vs.camera.npix(1) 0 vs.camera.npix(2)]);
             daspect([1 1 1])

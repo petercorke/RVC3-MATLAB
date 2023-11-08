@@ -10,7 +10,7 @@ hold on
 % show and label primaries
 prim = lambda2rg(cie_primaries);
 
-plot_poly( prim', '--k')
+plotpoly( prim', '--k')
 plot(prim(1,1), prim(1,2), 'ko', 'MarkerFaceColor', 'r', 'MarkerSize', 12);
 plot(prim(2,1), prim(2,2), 'ko', 'MarkerFaceColor', 'g', 'MarkerSize', 12);
 plot(prim(3,1), prim(3,2), 'ko', 'MarkerFaceColor', 'b', 'MarkerSize', 12);

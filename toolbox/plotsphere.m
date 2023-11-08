@@ -23,7 +23,7 @@
 %         lighting gouraud  % full lighting model
 %         light
 %
-% See also: plotpoint, plot_box, plot_circle, plotellipse, plot_poly.
+% See also: plotpoint, plot_box, plot_circle, plotellipse, plotpoly.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 

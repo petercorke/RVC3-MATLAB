@@ -32,7 +32,7 @@
 % - The 'alter' option can be used to create a smooth animation.
 % - The circle(s) is added to the current plot irrespective of hold status.
 %
-% See also PLOTELLIPSE, PLOT_BOX, PLOT_POLY.
+% See also PLOTELLIPSE, PLOT_BOX, PLOTPOLY.
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
