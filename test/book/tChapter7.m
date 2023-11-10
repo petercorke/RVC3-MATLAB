@@ -17,6 +17,18 @@ classdef tChapter7 < RunMLX & RVCTest
         MLXFile = "chapter7.mlx"
     end
 
+    methods (TestClassSetup)
+        function ignoreWarnings(testCase)
+            %ignoreWarnings Ignore warnings that are expected when running the MLX file
+            
+            import matlab.unittest.fixtures.SuppressedWarningsFixture
+            
+            testCase.applyFixture( SuppressedWarningsFixture(...
+                "symbolic:solve:SolutionsDependOnConditions" ...  % Symbolic solve
+                ) );
+        end
+    end    
+
     methods(Test)
         % Additional test points for the chapter
     end
