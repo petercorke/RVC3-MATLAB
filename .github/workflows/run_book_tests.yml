@@ -29,7 +29,7 @@ jobs:
         uses: matlab-actions/setup-matlab@v2-beta
         with:
           release: R2023b
-          products: MATLAB Simulink Robotics_System_Toolbox Automated_Driving_Toolbox Computer_Vision_Toolbox Image_Processing_Toolbox Deep_Learning_Toolbox Model_Predictive_Control_Toolbox Optimization_Toolbox ROS_Toolbox Signal_Processing_Toolbox Statistics_and_Machine_Learning_Toolbox Symbolic_Math_Toolbox UAV_Toolbox Control_System_Toolbox
+          products: MATLAB Simulink Robotics_System_Toolbox Navigation_Toolbox UAV_Toolbox Automated_Driving_Toolbox Computer_Vision_Toolbox Image_Processing_Toolbox Deep_Learning_Toolbox Model_Predictive_Control_Toolbox Optimization_Toolbox ROS_Toolbox Signal_Processing_Toolbox Statistics_and_Machine_Learning_Toolbox Symbolic_Math_Toolbox Control_System_Toolbox
 
       - name: Print out ver details
         uses: matlab-actions/run-command@v1
