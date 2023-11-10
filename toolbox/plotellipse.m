@@ -78,11 +78,18 @@
 % Copyright 2022-2023 Peter Corke, Witek Jachimczyk, Remo Pillat
 
 function handles = plotellipse(varargin)
+    % If the second parameter is a Linespec, add a default center.
+    % inputParser cannot handle only passing the 2nd optional argument.
+    if length(varargin) > 1 && validateLinespec(varargin{2})
+        varargin = [varargin(1) {[0 0]} varargin(2:end)];
+    end
+
+    % Standard input parsing
     ip = inputParser();
     ip.KeepUnmatched = true;
     ip.addRequired("E", @(x) isnumeric(x) && isreal(x));
     ip.addOptional("center", [0 0], @(x) isnumeric(x) && isreal(x) && (numel(x) == 2));
-    ip.addOptional("ls", "", @(x) ischar(x) || isstring(x));
+    ip.addOptional("ls", "", @validateLinespec);
     ip.addParameter("fillcolor", "none");
     ip.addParameter("alpha", 1, @(x) isnumeric(x) && isreal(x) && isscalar(x));
     ip.addParameter("edgecolor", "k");
@@ -153,7 +160,7 @@ function handles = plotellipse(varargin)
     if strcmpi(args.fillcolor, "none")
         % outline only, draw a line
 
-        if isempty(ls)
+        if isempty(args.ls)
             if ~isempty(args.edgecolor)
                 arglist = [{"Color"}, args.edgecolor, arglist];
             end
@@ -173,7 +180,7 @@ function handles = plotellipse(varargin)
             arglist = ["EdgeColor", args.edgecolor, arglist];
         end
 
-        arglist = [ls, "FaceAlpha", args.alpha, arglist];
+        arglist = ["FaceAlpha", args.alpha, arglist];
 
 
         if isempty(args.alter)
@@ -191,5 +198,12 @@ function handles = plotellipse(varargin)
     if nargout > 0
         handles = h;
     end
+end
+
+function valid = validateLinespec(linespec)
+
+[style, color, marker] = colstyle(linespec);
+valid = ~isempty(style) || ~isempty(color) || ~isempty(marker);
+
 end
 

@@ -20,13 +20,19 @@
 function xplot(varargin)
 
     ip = inputParser();
-    ip.addOptional("t", []);
-    ip.addRequired("q");
+    if isnumeric(varargin{1}) && isvector(varargin{1})
+        % Syntax: XPLOT(T,Q)
+        ip.addRequired("t");
+        ip.addRequired("q", @(x) isnumeric(x) && (size(x,2) == 6));
+    else
+        % Syntax: XPLOT(Q)
+        ip.addRequired("q", @(x) isnumeric(x) && (size(x,2) == 6));
+    end
     ip.addParameter("unwrap", false, @(x) islogical(x));
     ip.parse(varargin{:});
     args = ip.Results;
 
-    q = args.q
+    q = args.q;
     t = args.t;
     if isempty(t)
         t = [0:size(q, 1)-1]';

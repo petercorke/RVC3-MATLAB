@@ -577,7 +577,7 @@ classdef EKF < handle
                 P = ekf.P_est(n:n+1,n:n+1);
                 % TODO reinstate the interval landmark
                 %plotellipse(xf, P, interval, 0, [], varargin{:});
-                plotellipse( P, "inverted", true, "confidence", opt.confidence, xf, args{:});
+                plotellipse( P, xf, args{:}, "inverted", true, "confidence", opt.confidence);
                 grid on; hold on;
                 plot(xf(1), xf(2), 'k.', 'MarkerSize', 10)                
             end
