@@ -201,6 +201,12 @@ function handles = plotellipse(varargin)
 end
 
 function valid = validateLinespec(linespec)
+%validateLinespec Validate a LineSpec input
+
+if ~(ischar(linespec) || isStringScalar(linespec))
+    valid = false;
+    return;
+end
 
 [style, color, marker] = colstyle(linespec);
 valid = ~isempty(style) || ~isempty(color) || ~isempty(marker);
