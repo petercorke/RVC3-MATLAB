@@ -1,4 +1,5 @@
-classdef tChapter14 < RunMLX & RVCTest
+classdef tChapter14 < RVCTest
+    %< RunMLX & RVCTest
     %tChapter14 Unit tests for chapter 14 book code
     %   The RunMLX base class will automatically run the MLX code in the
     %   "MLXFile" property and ensure there are no errors.
