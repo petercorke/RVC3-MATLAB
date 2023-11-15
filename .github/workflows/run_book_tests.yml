@@ -22,7 +22,11 @@ jobs:
           sudo apt-get install xvfb
           Xvfb :99 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
-          
+
+      - name: Install GStreamer and plugins for VideoReader
+        run: |
+          sudo apt-get install libgstreamer-plugins-bad1.0-0 gstreamer1.0-plugins-ugly
+                    
       - name: Set up MATLAB
         # This uses the latest release of MATLAB. Can specify "release" if needed.
         # Use v2-beta for Java Swing access
@@ -30,10 +34,10 @@ jobs:
         with:
           products: MATLAB Simulink Robotics_System_Toolbox Navigation_Toolbox UAV_Toolbox Automated_Driving_Toolbox Computer_Vision_Toolbox Image_Processing_Toolbox Deep_Learning_Toolbox Model_Predictive_Control_Toolbox Optimization_Toolbox ROS_Toolbox Signal_Processing_Toolbox Statistics_and_Machine_Learning_Toolbox Symbolic_Math_Toolbox Control_System_Toolbox
 
-      #- name: Print out ver details
-      #  uses: matlab-actions/run-command@v1
-      #  with:
-      #    command: ver
+      - name: Print out ver details
+        uses: matlab-actions/run-command@v1
+        with:
+          command: ver; exit;
         
       - name: Run MATLAB Tests
         # Only run tests in folder test/book
