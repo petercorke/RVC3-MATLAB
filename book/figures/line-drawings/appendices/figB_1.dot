@@ -1,0 +1,49 @@
+digraph prof {
+    size="6,4"; ratio = fill; rankdir="TB";
+    node [style=filled; penwidth=0];
+    "all matrices" -> complex
+    "all matrices" -> real
+
+    real -> "non square"
+    real -> square
+
+    square -> general
+    square -> "SE(n)"
+    square -> normal
+    normal -> symmetric
+    normal -> orthogonal
+        
+    
+    normal -> "skew-symmetric"
+/*
+    orthogonal -> "det=-1"
+    orthogonal -> "det=+1"
+    "det=+1" -> "SE(n)"
+*/
+    orthogonal -> SOn [label="det=+1"];
+    orthogonal -> notSOn [label="det=-1"];
+    general -> "invertible" [label="det&ne;0"]
+    general -> singular [label="det=0"];
+    symmetric -> pdefinite
+    symmetric -> npdefinite
+
+    pdefinite -> diagonal
+    pdefinite -> ndiagonal
+
+    diagonal -> identity
+    diagonal -> "non identity"
+SOn [label="SO(n)" color=lightblue];
+notSOn [label="" color=lightblue];
+ndiagonal [shape=circle label=" "; color=lightblue];
+invertible [color=lightblue];
+"skew-symmetric";
+orthogonal [label="orthogonal O(n)"];
+pdefinite [label="+ve definite"; color=lightblue];
+npdefinite [label=""];
+diagonal [color=lightblue];
+"non identity" [shape=circle label=""; color=lightblue];
+identity [color=lightblue];
+orthogonal [color=lightblue];
+"SE(n)" [color=lightblue];
+{rank=same; square "non square"}
+} 
