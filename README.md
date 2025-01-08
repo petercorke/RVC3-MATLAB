@@ -1,8 +1,9 @@
 # Robotics, Vision & Control: 3rd edition in MATLAB (2023)
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/petercorke/RVC3-MATLAB/graphs/commit-activity)
+[![Build Status](https://github.com/petercorke/RVC3-MATLAB/actions/workflows/run_toolbox_tests.yml/badge.svg)](https://github.com/petercorke/RVC3-MATLAB/actions?query=workflow%3Abuild)
 [![codecov](https://codecov.io/gh/petercorke/RVC3-MATLAB/branch/main/graph/badge.svg?token=68OAE87GM2)](https://codecov.io/gh/petercorke/RVC3-MATLAB)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/petercorke/RVC3-MATLAB/graphs/commit-activity)
 [![GitHub stars](https://img.shields.io/github/stars/petercorke/RVC3-MATLAB.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/petercorke/RVC3-MATLAB/stargazers/)
 
 <table style="border:0px">
