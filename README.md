@@ -38,7 +38,7 @@ This repo contains MATLAB code resources that support the book:
 
 There are two ways to do this.
 
-## Open in MATLAB Online™
+## 1. Open in MATLAB Online™
 
 This is the zero-install option, and requires that you have a MATLAB Online licence.
 MATLAB Online can work on a tablet, but not a phone.
@@ -55,10 +55,10 @@ and then do one of the following:
 This will clone the repository into your MATLAB Drive and open the chapter LiveScript
 in a browser tab.  
 
-## Open in desktop MATLAB session
+## 2. Open in desktop MATLAB session
 
-You need to have MATLAB installed and the required Toolboxes.  Install the extra
-resources
+You need to have MATLAB installed as well as the required Toolboxes.  Install the extra
+book-specific resources
 ```shell
 git clone git@github.com:petercorke/RVC3-MATLAB.git
 ```
@@ -98,7 +98,6 @@ For Parts IV and Chap. 15
 - Deep Learning Toolbox™
 - Statistics and Machine Learning Toolbox™
 
-
 For Chap. 16 only:
 - ROS Toolbox
 - Model Predictive Control Toolbox™
@@ -106,6 +105,7 @@ For Chap. 16 only:
 
 Those shown in bold are sufficient to run a large subset
 of the code examples.
+
 ## Apps
 
 This package provides additional interactive tools including:
@@ -123,7 +123,8 @@ in Simulink by:
 # Additional book resources
 
 This GitHub repo provides additional resources for readers including:
-- The code to produce every MATLAB figure in the book, see the [`book/figures`](book/figures) folder
+- The code to produce every MATLAB figure in the book, see the [`book/figures/code`](book/figures/code) folder
+- Many of the line drawings that appears as figures in the book, see the [`book/figures/line-drawings`](book/figures/line-drawings) folder
 - All example scripts, see the [`toolbox/examples`](toolbox/examples) folder.
 - To run the visual odometry example in Sect. 14.8.3 you need to download two image sequence, each over 100MB:
 ```
