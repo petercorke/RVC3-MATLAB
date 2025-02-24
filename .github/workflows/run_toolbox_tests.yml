@@ -16,7 +16,10 @@ jobs:
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."          
       - name: Set up MATLAB
         # This uses the latest release of MATLAB. Can specify "release" if needed.
-        uses: matlab-actions/setup-matlab@v1
+        uses: matlab-actions/setup-matlab@v2
+        with:
+          # Run tests with prerelease as soon as available; switch to GR once it's live
+          release: latest-including-prerelease
       
       - name: Print out ver details
         uses: matlab-actions/run-command@v1
