@@ -4,7 +4,7 @@ classdef tPGraph < RVCTest & matlab.unittest.TestCase
     % Copyright 2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
     methods (TestMethodTeardown)
-        function closeFigure(testcase)
+        function closeFigure(~)
             close("all")
         end
     end
