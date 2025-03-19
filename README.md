@@ -117,8 +117,9 @@ in Simulink by:
 
 * double-clicking in the MATLAB file browser, or
 * from the MATLAB consolde by `>> sl_XXXX`
-* programatically by `open("sl_XXXX")`
+* programmatically by `open("sl_XXXX")`
 
+The main library of RVC3 Toolbox Simulink blocks can be opened by calling `roblocks`.
 
 # Additional book resources
 
