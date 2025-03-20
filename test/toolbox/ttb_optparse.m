@@ -70,10 +70,6 @@ classdef ttb_optparse < RVCTest & matlab.unittest.TestCase
         function validLineSpecRepeated(testCase)
             %validLineSpecRepeated Test for having repeated tokens
 
-            % This test case fails for now, because of a bug that is also
-            % triggered by chapter 5 code.
-            testCase.assumeFail("Waiting for fix");
-
             repeatedColor = ':kk';
             [~,~,actualLineSpec] = tb_optparse(struct, {repeatedColor});
             testCase.verifyEqual(actualLineSpec{1}, repeatedColor);
