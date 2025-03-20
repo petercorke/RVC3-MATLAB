@@ -4384,20 +4384,27 @@
                         <Info/>
                     </DIR_SIGNIFIER>
                     <Info/>
-                    <File Location="mroblocksForwarding.slx">
-                        <Info>
-                            <Category UUID="FileClassCategory">
-                                <Label UUID="design"/>
-                            </Category>
-                        </Info>
-                    </File>
-                    <File Location="troblocksForwarding.m">
-                        <Info>
-                            <Category UUID="FileClassCategory">
-                                <Label UUID="test"/>
-                            </Category>
-                        </Info>
-                    </File>
+                </File>
+                <File Location="mroblocksForwarding.slx">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="design"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="troblocksForwarding.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="ttb_optparse.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
                 </File>
             </File>
         </File>
