@@ -1,4 +1,4 @@
-classdef troblocksForwarding < matlab.unittest.TestCase
+classdef troblocksForwarding < RVCTest & matlab.unittest.TestCase
     %troblocksForwarding Test block forwarding of blocks in roblocks library
     %   We introduced block forwarding when we introduced the sub-libraries
     %   generallib, mobilelib, and visualservolib.
