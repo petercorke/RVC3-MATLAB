@@ -54,7 +54,6 @@ jobs:
             Optimization_Toolbox
             Parallel_Computing_Toolbox
             Simulink
-            Simulink_Test
             Robotics_System_Toolbox
             ROS_Toolbox
             Signal_Processing_Toolbox
@@ -77,4 +76,4 @@ jobs:
           startup-options: -webfigures
           code-coverage-cobertura: code-coverage/coverage.xml
           # Run tests in parallel. Requires Parallel_Computing_Toolbox in "products" list above
-          use-parallel: true
+          use-parallel: false
