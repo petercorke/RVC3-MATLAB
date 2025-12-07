@@ -1,4 +1,4 @@
-name: Run all book tests
+name: Run all book tests (matrix, per chapter)
 
 on: 
   # Automatically run this action when a new push is made to repo
@@ -13,11 +13,54 @@ on:
   workflow_dispatch:
 
 jobs:
-  my-job:
-    name: Run tests
+  book-tests:
+    name: Run ${{ matrix.chapter }} tests
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false   # keep running other chapters if one fails
+      matrix:
+        include:
+          - chapter: Chapter02
+            test_folder: test/book/chapter02
+            products: >
+              Image_Processing_Toolbox
+              MATLAB
+              Navigation_Toolbox
+              Symbolic_Math_Toolbox
+            junit: test-results/Chapter02.xml
+            cobertura: code-coverage/Chapter02.xml
+
+          - chapter: Chapter03
+            test_folder: test/book/chapter03
+            products: >
+              MATLAB
+              Robotics_System_Toolbox
+            junit: test-results/Chapter03.xml
+            cobertura: code-coverage/Chapter03.xml
+
+            # Automated_Driving_Toolbox
+            # Computer_Vision_Toolbox
+            # Control_System_Toolbox
+            # Deep_Learning_Toolbox
+            # Image_Processing_Toolbox
+            # MATLAB
+            # Model_Predictive_Control_Toolbox
+            # Navigation_Toolbox
+            # Optimization_Toolbox
+            # Parallel_Computing_Toolbox
+            # Simulink
+            # Robotics_System_Toolbox
+            # ROS_Toolbox
+            # Signal_Processing_Toolbox
+            # Statistics_and_Machine_Learning_Toolbox
+            # Symbolic_Math_Toolbox
+            # UAV_Toolbox
+          # ...one row per tChapterXX.m   
+    
+    
     steps:
-      - name: Check out RVC3-MATLAB repository (for unit tests)
+      - name: Check out RVC3-MATLAB repository
         uses: actions/checkout@v4
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."          
 
@@ -42,24 +85,9 @@ jobs:
         # Use v2 for Java Swing access
         uses: matlab-actions/setup-matlab@v2
         with:
-          products: >
-            Automated_Driving_Toolbox
-            Computer_Vision_Toolbox
-            Control_System_Toolbox
-            Deep_Learning_Toolbox
-            Image_Processing_Toolbox
-            MATLAB
-            Model_Predictive_Control_Toolbox
-            Navigation_Toolbox
-            Optimization_Toolbox
-            Parallel_Computing_Toolbox
-            Simulink
-            Robotics_System_Toolbox
-            ROS_Toolbox
-            Signal_Processing_Toolbox
-            Statistics_and_Machine_Learning_Toolbox
-            Symbolic_Math_Toolbox
-            UAV_Toolbox
+          # Define products for each chapter in strategy matrix above
+          products: ${{ matrix.products }}
+
           # Run tests with prerelease as soon as available; switch to GR once it's live
           release: latest-including-prerelease
 
@@ -68,12 +96,124 @@ jobs:
         with:
           command: ver; exit;
         
-      - name: Run MATLAB Tests
-        # Only run tests in folder test/book
+      - name: Run MATLAB Tests for ${{ matrix.chapter }}
         uses: matlab-actions/run-tests@v2
         with:
-          select-by-folder: test/book
+          # Only tests for this chapter
+          select-by-folder: ${{ matrix.test_folder }}
+          
+          # Per-chapter logs
+          test-results-junit: ${{ matrix.junit }}
+          code-coverage-cobertura: ${{ matrix.cobertura }}
+          
+          source-folder: toolbox; toolbox/internal; test/book/base
           startup-options: -webfigures
-          code-coverage-cobertura: code-coverage/coverage.xml
           # Run tests in parallel. Requires Parallel_Computing_Toolbox in "products" list above
           use-parallel: false
+          
+      - name: Upload logs and coverage for ${{ matrix.chapter }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: book-${{ matrix.chapter }}
+          path: |
+            ${{ matrix.junit }}
+            ${{ matrix.cobertura }}
+            
+  test-dashboard:
+    name: Book test dashboard
+    needs: book-tests
+    runs-on: ubuntu-latest
+    if: always()   # run even if some chapter jobs failed
+
+    steps:
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts  # everything ends up under ./artifacts/
+
+      - name: Summarize JUnit failures into run summary
+        run: |
+          python - << 'PY'
+          import os
+          import pathlib
+          import xml.etree.ElementTree as ET
+
+          artifacts_root = pathlib.Path("artifacts")
+
+          chapters = {}  # chapter -> {"passed": bool, "failures": [..]}
+
+          # Look for JUnit XML files inside any artifact
+          for junit in artifacts_root.rglob("test-results/*.xml"):
+              chapter = junit.stem  # e.g. "Chapter10"
+              tree = ET.parse(junit)
+              root = tree.getroot()
+
+              failures = []
+
+              # Handle both <testsuite> root and <testsuites> -> <testsuite>
+              testsuites = []
+              if root.tag == "testsuite":
+                  testsuites = [root]
+              else:
+                  testsuites = list(root.iter("testsuite"))
+
+              for ts in testsuites:
+                  for case in ts.iter("testcase"):
+                      case_name = case.get("name", "")
+                      classname = case.get("classname", "")
+                      for failure in case.findall("failure"):
+                          msg = (failure.get("message") or "").strip()
+                          text = (failure.text or "").strip()
+                          detail = msg or text or "Test failed"
+                          failures.append({
+                              "classname": classname,
+                              "name": case_name,
+                              "detail": detail,
+                          })
+
+              chapters[chapter] = {
+                  "passed": len(failures) == 0,
+                  "failures": failures,
+              }
+
+          lines = []
+          lines.append("# Book Test Dashboard\n")
+
+          if not chapters:
+              lines.append("_No JUnit result files found in artifacts. "
+                           "Check that the matrix jobs ran and uploaded artifacts._")
+          else:
+              # Sort chapters like Chapter01, Chapter02, ...
+              for chapter in sorted(chapters.keys()):
+                  info = chapters[chapter]
+                  if info["passed"]:
+                      lines.append(f"- ✅ **{chapter}** – all tests passed")
+                  else:
+                      fails = info["failures"]
+                      lines.append(f"- ❌ **{chapter}** – {len(fails)} failing test(s)")
+                      for f in fails:
+                          name = f["name"] or "<unnamed>"
+                          cls = f["classname"] or "<no class>"
+                          detail = f["detail"].replace("\n", " ")
+                          # Keep detail short-ish
+                          if len(detail) > 160:
+                              detail = detail[:157] + "..."
+                          lines.append(
+                              f"  - `{cls}.{name}` – {detail}"
+                          )
+
+              lines.append("\n---\n")
+              lines.append(
+                  "🔎 For full logs and coverage for a chapter, open the "
+                  "_Run ChapterXX tests_ job and download the "
+                  "artifact named `book-ChapterXX`."
+              )
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+              with open(summary_path, "w", encoding="utf-8") as f:
+                  f.write("\n".join(lines))
+          else:
+              print("\\n".join(lines))
+          PY
