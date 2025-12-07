@@ -4299,16 +4299,10 @@
                     </DIR_SIGNIFIER>
                 </File>
                 <File Location="base">
-                    <File Location="RVCTest.m">
-                        <Info/>
-                    </File>
                     <Info/>
                     <DIR_SIGNIFIER Location="1">
                         <Info/>
                     </DIR_SIGNIFIER>
-                    <File Location="RunMLX.m">
-                        <Info/>
-                    </File>
                 </File>
                 <File Location="chapter03">
                     <File Location="tChapter3.m">
@@ -4415,6 +4409,18 @@
                             <Label UUID="test"/>
                         </Category>
                     </Info>
+                </File>
+            </File>
+            <File Location="tools">
+                <Info/>
+                <File Location="RVCTest.m">
+                    <Info/>
+                </File>
+                <DIR_SIGNIFIER Location="1">
+                    <Info/>
+                </DIR_SIGNIFIER>
+                <File Location="RunMLX.m">
+                    <Info/>
                 </File>
             </File>
         </File>

@@ -106,7 +106,7 @@ jobs:
           test-results-junit: ${{ matrix.junit }}
           code-coverage-cobertura: ${{ matrix.cobertura }}
           
-          source-folder: toolbox; toolbox/internal; test/book/base
+          source-folder: toolbox; toolbox/internal; test/tools
           startup-options: -webfigures
           # Run tests in parallel. Requires Parallel_Computing_Toolbox in "products" list above
           use-parallel: false

@@ -38,7 +38,7 @@ jobs:
         # Only run tests in test/toolbox folder
         uses: matlab-actions/run-tests@v2
         with:
-          source-folder: toolbox; toolbox/internal; test/book/base
+          source-folder: toolbox; toolbox/internal; test/tools
           select-by-folder: test/toolbox
           test-results-junit: test-results/unit_tests.xml
           code-coverage-cobertura: code-coverage/unit_tests_coverage.xml

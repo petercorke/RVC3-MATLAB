@@ -25,7 +25,7 @@ classdef RVCTest < matlab.unittest.TestCase
             
             import matlab.unittest.fixtures.PathFixture
             
-            rvc3Dir = fullfile(fileparts( mfilename("fullpath") ), "..", "..", "toolbox");
+            rvc3Dir = fullfile(fileparts( mfilename("fullpath") ),"..","..","toolbox");
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir)) );
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir, "data")) );
             testCase.applyFixture( PathFixture(fullfile(rvc3Dir, "examples")) );
@@ -36,7 +36,7 @@ classdef RVCTest < matlab.unittest.TestCase
         function setRootProperties(testCase)
             %setRootProperties Set properties to define root folders
 
-            repoDir = fullfile(fileparts( mfilename("fullpath") ), "..", "..");
+            repoDir = fullfile(fileparts( mfilename("fullpath") ),"..","..");
             testCase.RVCToolboxRoot = fullfile(repoDir, "toolbox");
             testCase.BookRoot = fullfile(repoDir, "book");
         end
