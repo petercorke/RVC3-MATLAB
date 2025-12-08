@@ -32,7 +32,9 @@ classdef RunMLX < RVCTest
 
             % Make sure that all Simulink models are closed while
             % everything is still on the path.
-            testCase.addTeardown(@() bdclose("all"))
+            if ~isempty(ver("simulink"))
+                testCase.addTeardown(@() bdclose("all"))
+            end
 
             % Go into a temporary folder, just in case the chapter file
             % download / creates any files.
