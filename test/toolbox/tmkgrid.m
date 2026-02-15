@@ -1,5 +1,7 @@
 classdef tmkgrid < matlab.unittest.TestCase & RVCTest
-    %Unit test for mkgrid class
+    %tmkgrid Unit test for mkgrid class
+
+    % Copyright 2023-2025 Peter Corke, Witold Jachimczyk, Remo Pillat
     
     methods (Test)
         function fixToBugInCh11(testCase)

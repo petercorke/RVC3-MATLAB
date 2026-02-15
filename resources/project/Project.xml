@@ -4183,38 +4183,10 @@
         </File>
         <File Location="test">
             <File Location="book">
-                <File Location="tChapter2.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
                 <Info/>
-                <File Location="RVCTest.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="RunMLX.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="design"/>
-                        </Category>
-                    </Info>
-                </File>
                 <DIR_SIGNIFIER Location="1">
                     <Info/>
                 </DIR_SIGNIFIER>
-                <File Location="tChapter3.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
                 <File Location="tChapter5.m">
                     <Info>
                         <Category UUID="FileClassCategory">
@@ -4313,6 +4285,38 @@
                         </Category>
                     </Info>
                 </File>
+                <File Location="chapter02">
+                    <File Location="tChapter2.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                </File>
+                <File Location="base">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                </File>
+                <File Location="chapter03">
+                    <File Location="tChapter3.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                </File>
             </File>
             <Info/>
             <DIR_SIGNIFIER Location="1">
@@ -4378,6 +4382,45 @@
                             <Label UUID="test"/>
                         </Category>
                     </Info>
+                </File>
+                <File Location="simulink">
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <Info/>
+                </File>
+                <File Location="mroblocksForwarding.slx">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="design"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="troblocksForwarding.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+                <File Location="ttb_optparse.m">
+                    <Info>
+                        <Category UUID="FileClassCategory">
+                            <Label UUID="test"/>
+                        </Category>
+                    </Info>
+                </File>
+            </File>
+            <File Location="tools">
+                <Info/>
+                <File Location="RVCTest.m">
+                    <Info/>
+                </File>
+                <DIR_SIGNIFIER Location="1">
+                    <Info/>
+                </DIR_SIGNIFIER>
+                <File Location="RunMLX.m">
+                    <Info/>
                 </File>
             </File>
         </File>

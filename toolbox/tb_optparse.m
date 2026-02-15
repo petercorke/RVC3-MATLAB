@@ -80,11 +80,9 @@
 
 % Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 
-function [opt,others,ls] = tb_optparse(in, argvIn, cls)
+%#ok<*AGROW>
 
-if nargin == 1
-    argv = {};
-end
+function [opt,others,ls] = tb_optparse(in, argvIn, cls)
 
 if nargin < 3
     cls = [];
@@ -307,28 +305,11 @@ if nargout == 3
     ls = [];
     for i=1:length(arglist)
         s = arglist{i};
-        if ~ischar(s)
-            continue;
-        end
-        % get color
-        [b,e] = regexp(s, '[rgbcmywk]');
-        s2 = s(b:e);
-        s(b:e) = [];
-        
-        % get line style
-        [b,e] = regexp(s, '(--)|(-.)|-|:');
-        s2 = [s2 s(b:e)]; %#ok<*AGROW>
-        s(b:e) = [];
-        
-        % get marker style
-        [b,e] = regexp(s, '[o\+\*\.xsd\^v><ph]');
-        s2 = [s2 s(b:e)]; %#ok<*NASGU>
-        s(b:e) = [];
-        
+
         % found one
-        if isempty(s)
+        if rvc.internal.isLineSpec(s)
             ls = arglist{i};
-            arglist(i) = []; 
+            arglist(i) = [];
             break;
         end
     end

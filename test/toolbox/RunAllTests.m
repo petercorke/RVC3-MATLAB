@@ -2,6 +2,8 @@
 %
 % run from this folder, will produce test report + coverage.xml file
 
+% Copyright 2023-2025 Peter Corke, Witold Jachimczyk, Remo Pillat
+
 %% set up the test runner
 import matlab.unittest.plugins.CodeCoveragePlugin
 import matlab.unittest.plugins.codecoverage.CoberturaFormat
