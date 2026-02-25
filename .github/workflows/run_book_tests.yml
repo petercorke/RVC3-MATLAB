@@ -39,6 +39,289 @@ jobs:
             junit: test-results/Chapter03.xml
             cobertura: code-coverage/Chapter03.xml
 
+          - chapter: Chapter04
+            test_folder: test/book/chapter04
+            products: >
+              MATLAB
+              Robotics_System_Toolbox
+            junit: test-results/Chapter04.xml
+            cobertura: code-coverage/Chapter04.xml   
+
+          - chapter: Chapter04
+            test_folder: test/book/chapter04
+            products: >
+              MATLAB
+              Simulink
+              Robotics_System_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter04.xml
+            cobertura: code-coverage/Chapter04.xml   
+
+          - chapter: Chapter05
+            test_folder: test/book/chapter05
+            products: >
+              MATLAB
+              Simulink
+              Image_Processing_Toolbox
+              Navigation_Toolbox
+              Robotics_System_Toolbox
+            junit: test-results/Chapter05.xml
+            cobertura: code-coverage/Chapter05.xml
+            
+          - chapter: Chapter06
+            test_folder: test/book/chapter06
+            products: >
+              MATLAB
+              Computer_Vision_Toolbox
+              Image_Processing_Toolbox
+              Navigation_Toolbox
+              Robotics_System_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+            junit: test-results/Chapter06.xml
+            cobertura: code-coverage/Chapter06.xml   
+            
+          - chapter: Chapter07
+            test_folder: test/book/chapter07
+            products: >
+              MATLAB
+              Simulink
+              Robotics_System_Toolbox
+              Symbolic_Math_Toolbox
+            junit: test-results/Chapter07.xml
+            cobertura: code-coverage/Chapter07.xml   
+            
+          - chapter: Chapter08
+            test_folder: test/book/chapter08
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter08.xml
+            cobertura: code-coverage/Chapter08.xml   
+            
+          - chapter: Chapter09
+            test_folder: test/book/chapter09
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter09.xml
+            cobertura: code-coverage/Chapter09.xml   
+            
+          - chapter: Chapter10
+            test_folder: test/book/chapter10
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter10.xml
+            cobertura: code-coverage/Chapter10.xml   
+
+          - chapter: Chapter11
+            test_folder: test/book/chapter11
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter11.xml
+            cobertura: code-coverage/Chapter11.xml               
+            
+          - chapter: Chapter12
+            test_folder: test/book/chapter12
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter12.xml
+            cobertura: code-coverage/Chapter12.xml   
+            
+          - chapter: Chapter13
+            test_folder: test/book/chapter13
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter13.xml
+            cobertura: code-coverage/Chapter13.xml   
+          
+          - chapter: Chapter14
+            test_folder: test/book/chapter14
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter14.xml
+            cobertura: code-coverage/Chapter14.xml   
+            
+          - chapter: Chapter15
+            test_folder: test/book/chapter15
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter15.xml
+            cobertura: code-coverage/Chapter15.xml   
+            
+          - chapter: Chapter16
+            test_folder: test/book/chapter16
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/Chapter16.xml
+            cobertura: code-coverage/Chapter16.xml   
+            
+          - chapter: ChapterAppendices
+            test_folder: test/book/chapterAppendices
+            products: >
+              Automated_Driving_Toolbox
+              Computer_Vision_Toolbox
+              Control_System_Toolbox
+              Deep_Learning_Toolbox
+              Image_Processing_Toolbox
+              MATLAB
+              Model_Predictive_Control_Toolbox
+              Navigation_Toolbox
+              Optimization_Toolbox
+              Parallel_Computing_Toolbox
+              Simulink
+              Robotics_System_Toolbox
+              ROS_Toolbox
+              Signal_Processing_Toolbox
+              Statistics_and_Machine_Learning_Toolbox
+              Symbolic_Math_Toolbox
+              UAV_Toolbox
+            junit: test-results/ChapterAppendices.xml
+            cobertura: code-coverage/ChapterAppendices.xml   
+
+
             # Automated_Driving_Toolbox
             # Computer_Vision_Toolbox
             # Control_System_Toolbox
