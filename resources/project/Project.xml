@@ -2215,9 +2215,9 @@
                                 <Info/>
                                 <File Location="simulink_cache.xml">
                                     <Info>
-                                    <Category UUID="FileClassCategory">
-                                    <Label UUID="derived"/>
-                                    </Category>
+                                        <Category UUID="FileClassCategory">
+                                            <Label UUID="derived"/>
+                                        </Category>
                                     </Info>
                                 </File>
                                 <DIR_SIGNIFIER Location="1">
@@ -2230,14 +2230,14 @@
                             <File Location="checksumOfCache.mat">
                                 <Info>
                                     <Category UUID="FileClassCategory">
-                                    <Label UUID="derived"/>
+                                        <Label UUID="derived"/>
                                     </Category>
                                 </Info>
                             </File>
                             <File Location="varInfo.mat">
                                 <Info>
                                     <Category UUID="FileClassCategory">
-                                    <Label UUID="derived"/>
+                                        <Label UUID="derived"/>
                                     </Category>
                                 </Info>
                             </File>
@@ -2317,15 +2317,15 @@
                                 </DIR_SIGNIFIER>
                                 <File Location="info">
                                     <DIR_SIGNIFIER Location="1">
-                                    <Info/>
+                                        <Info/>
                                     </DIR_SIGNIFIER>
                                     <Info/>
                                     <File Location="binfo.mat">
-                                    <Info>
-                                    <Category UUID="FileClassCategory">
-                                    <Label UUID="derived"/>
-                                    </Category>
-                                    </Info>
+                                        <Info>
+                                            <Category UUID="FileClassCategory">
+                                                <Label UUID="derived"/>
+                                            </Category>
+                                        </Info>
                                     </File>
                                 </File>
                                 <Info/>
@@ -2339,14 +2339,14 @@
                             <File Location="sfun">
                                 <File Location="info">
                                     <File Location="binfo.mat">
-                                    <Info>
-                                    <Category UUID="FileClassCategory">
-                                    <Label UUID="derived"/>
-                                    </Category>
-                                    </Info>
+                                        <Info>
+                                            <Category UUID="FileClassCategory">
+                                                <Label UUID="derived"/>
+                                            </Category>
+                                        </Info>
                                     </File>
                                     <DIR_SIGNIFIER Location="1">
-                                    <Info/>
+                                        <Info/>
                                     </DIR_SIGNIFIER>
                                     <Info/>
                                 </File>
@@ -4187,104 +4187,6 @@
                 <DIR_SIGNIFIER Location="1">
                     <Info/>
                 </DIR_SIGNIFIER>
-                <File Location="tChapter5.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter4.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tAppendices.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter16.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter15.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter13.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter14.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter11.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter12.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter7.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter6.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter10.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter9.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
-                <File Location="tChapter8.m">
-                    <Info>
-                        <Category UUID="FileClassCategory">
-                            <Label UUID="test"/>
-                        </Category>
-                    </Info>
-                </File>
                 <File Location="chapter02">
                     <File Location="tChapter2.m">
                         <Info>
@@ -4293,12 +4195,6 @@
                             </Category>
                         </Info>
                     </File>
-                    <Info/>
-                    <DIR_SIGNIFIER Location="1">
-                        <Info/>
-                    </DIR_SIGNIFIER>
-                </File>
-                <File Location="base">
                     <Info/>
                     <DIR_SIGNIFIER Location="1">
                         <Info/>
@@ -4316,6 +4212,194 @@
                     <DIR_SIGNIFIER Location="1">
                         <Info/>
                     </DIR_SIGNIFIER>
+                </File>
+                <File Location="chapter04">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter4.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="appendices">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                </File>
+                <File Location="chapter05">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter5.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter06">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter6.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter07">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter7.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter08">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter8.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter09">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter9.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter10">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter10.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter11">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter11.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter12">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter12.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter13">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter13.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter14">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter14.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter15">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter15.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapter16">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tChapter16.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
+                </File>
+                <File Location="chapterAppendices">
+                    <Info/>
+                    <DIR_SIGNIFIER Location="1">
+                        <Info/>
+                    </DIR_SIGNIFIER>
+                    <File Location="tAppendices.m">
+                        <Info>
+                            <Category UUID="FileClassCategory">
+                                <Label UUID="test"/>
+                            </Category>
+                        </Info>
+                    </File>
                 </File>
             </File>
             <Info/>
