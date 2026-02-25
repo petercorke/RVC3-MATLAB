@@ -35,17 +35,10 @@ jobs:
             test_folder: test/book/chapter03
             products: >
               MATLAB
+              Optimization_Toolbox
               Robotics_System_Toolbox
             junit: test-results/Chapter03.xml
             cobertura: code-coverage/Chapter03.xml
-
-          - chapter: Chapter04
-            test_folder: test/book/chapter04
-            products: >
-              MATLAB
-              Robotics_System_Toolbox
-            junit: test-results/Chapter04.xml
-            cobertura: code-coverage/Chapter04.xml   
 
           - chapter: Chapter04
             test_folder: test/book/chapter04
