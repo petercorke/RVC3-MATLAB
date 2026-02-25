@@ -1,11 +1,11 @@
 %[text] %[text:anchor:F4CCA683] # Robotics, Vision & Control 3e: for MATLAB
 %[text] %[text:anchor:874DADDE] # Appendices
 %[text:tableOfContents]{"heading":"Table of Contents"}
-%[text] %[text:anchor:H_FD45E4DF] Copyright 2022\-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+%[text] %[text:anchor:H_FD45E4DF] Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
 %[text] %[text:anchor:F954A5D5] ## Appendix C: Geometry
 %[text] %[text:anchor:BAEBF2AC] ### C.1 Euclidean Geometry
-%[text] %[text:anchor:E4239FA6] #### C.1\.2 Lines
-%[text] %[text:anchor:E7791A79] #### C.1\.2\.2 Lines in 3D and Plücker Coordinates
+%[text] %[text:anchor:E4239FA6] #### C.1.2 Lines
+%[text] %[text:anchor:E7791A79] #### C.1.2.2 Lines in 3D and Plücker Coordinates
 P = [2 3 4]; Q = [3 5 7];
 L = Plucker(P,Q)
 L.v
@@ -17,7 +17,7 @@ L.point([0 1 2])
 [x,d] = L.closest([1 2 3]) %#ok<*ASGLU> 
 L.intersect_plane([0 0 1 0])
 %%
-%[text] %[text:anchor:B107E972] #### C.1\.4 Ellipses and Ellipsoids
+%[text] %[text:anchor:B107E972] #### C.1.4 Ellipses and Ellipsoids
 E = [1 1;1 2];
 clf; plotellipse(E); hold on
 [x,e] = eig(E)
@@ -26,7 +26,7 @@ p = x(:,1)*r(1); quiver(0,0,p(1),p(2),0,"r");
 p = x(:,2)*r(2); quiver(0,0,p(1),p(2),0,"r");
 atan2d(x(2,1),x(1,1))
 %%
-%[text] %[text:anchor:81891655] #### C.1\.4\.1 Drawing an Ellipse
+%[text] %[text:anchor:81891655] #### C.1.4.1 Drawing an Ellipse
 E = [1 1; 1 2];
 th = linspace(0,2*pi,50);
 y = [cos(th);sin(th)];
@@ -34,7 +34,7 @@ x = inv(sqrtm(E))*y;
 clf; plot(x(1,:),x(2,:));
 clf; plotellipse(E)
 %%
-%[text] %[text:anchor:A199F180] #### C.1\.4\.2 Fitting an Ellipse to Data
+%[text] %[text:anchor:A199F180] #### C.1.4.2 Fitting an Ellipse to Data
 rng(0);  % reset random number generator
 x = [];  % empty point set
 while size(x,2) < 500
@@ -61,8 +61,8 @@ E_est
 plotellipse(E_est,"r")
 %%
 %[text] %[text:anchor:22C91717] ### C.2 Homogeneous Coordinates
-%[text] %[text:anchor:A2EF233A] #### C.2\.1 Two Dimensions
-%[text] %[text:anchor:25F2AFB3] #### C.2\.1\.1 Points and Lines
+%[text] %[text:anchor:A2EF233A] #### C.2.1 Two Dimensions
+%[text] %[text:anchor:25F2AFB3] #### C.2.1.1 Points and Lines
 l1 = [1 -1 0];
 l2 = [1 -1 -1];
 plothomline(l1,"b")
@@ -103,7 +103,7 @@ surfc(x,y,gaussfunc([0 0],P,x,y))
 s = chi2inv(0.5,2)
 %%
 %[text] %[text:anchor:DD77BE42] ## Appendix H: Kalman Filter
-%[text] %[text:anchor:72ADDA8C] ### H.2 Nonlinear Systems \-\- Extended Kalman Filter
+%[text] %[text:anchor:72ADDA8C] ### H.2 Nonlinear Systems -- Extended Kalman Filter
 x = 2*randn(1000000,1) + 5;
 y = (x+2).^2/4;
 clf; histogram(y, Normalization="pdf");
@@ -150,16 +150,19 @@ ypk = findpeaks(y,MinPeakDistance=5)'  % transpose for display
 z
 [zmax,i] = max(z(:))
 [y,x] = ind2sub(size(z),i)
-LMaxFinder = vision.LocalMaximaFinder(MaximumNumLocalMaxima=3, ...
-                NeighborhoodSize=[3 3],Threshold=0);
-LMaxFinder(z)
+
+%% vision.LocalMaximaFinder has been deprecated. See errata: https://github.com/petercorke/RVC3-MATLAB/wiki/Errata
+
+% LMaxFinder = vision.LocalMaximaFinder(MaximumNumLocalMaxima=3, ...
+%                 NeighborhoodSize=[3 3],Threshold=0);
+% LMaxFinder(z)
 %[text] 
 %[text] Suppress syntax warnings in this file
 %#ok<*NASGU>
 %#ok<*AGROW>
 %#ok<*MINV> 
 
-%[appendix]
+%[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":40}

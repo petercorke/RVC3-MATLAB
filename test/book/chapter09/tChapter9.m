@@ -17,6 +17,16 @@ classdef tChapter9 < RunMLX & RVCTest
         MLXFile = "chapter9.mlx"
     end
 
+    methods (TestClassSetup)
+        function disableScopesWarning(testCase)
+            %disableScopesWarning Prevent warning related to scopes opening automatically
+
+            import matlab.unittest.fixtures.SuppressedWarningsFixture            
+            testCase.applyFixture( ...
+                SuppressedWarningsFixture("Spcuilib:scopeblock:ScopeNoSupportParsim"));
+        end
+    end    
+
     methods(Test)
         % Additional test points for the chapter
     end

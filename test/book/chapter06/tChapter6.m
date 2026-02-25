@@ -17,6 +17,16 @@ classdef tChapter6 < RunMLX & RVCTest
         MLXFile = "chapter6.mlx"
     end
 
+    methods (TestClassSetup)
+        function disableSoftwareRenderingWarning(testCase)
+            %disableSoftwareRenderingWarning Disable warning that has no functional effect
+
+            import matlab.unittest.fixtures.SuppressedWarningsFixture            
+            testCase.applyFixture( ...
+                SuppressedWarningsFixture("MATLAB:graphics:SoftwareMarkerSubsamplingm"));
+        end
+    end
+
     methods(Test)
         % Additional test points for the chapter
     end

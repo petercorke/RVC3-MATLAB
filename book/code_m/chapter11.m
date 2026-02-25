@@ -1,10 +1,10 @@
 %[text] %[text:anchor:F4CCA683] # Robotics, Vision & Control 3e: for MATLAB
 %[text] %[text:anchor:CAAB408D] # Chapter 11: Images and Image Processing
-%[text:tableOfContents]{"heading":"**Table of Contents**"}
+%[text:tableOfContents]{"heading":"Table of Contents"}
 %[text] %[text:anchor:DD428C66] # 
-%[text] Copyright 2022\-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
-%[text] %[text:anchor:C44A23DD] ## 11\.1 Obtaining an Image
-%[text] %[text:anchor:5AD1F85D] ### 11\.1\.1 Images from Files
+%[text] Copyright 2022-2023 Peter Corke, Witold Jachimczyk, Remo Pillat
+%[text] %[text:anchor:C44A23DD] ## 11.1 Obtaining an Image
+%[text] %[text:anchor:5AD1F85D] ### 11.1.1 Images from Files
 street = imread("street.png");
 
 whos street
@@ -39,7 +39,7 @@ imtool(flowers(:,:,1))
 md = imfinfo("roof.jpg")
 
 md.DigitalCamera
-%[text] %[text:anchor:8EAC253F] ### 11\.1\.2 Images from an Attached Camera
+%[text] %[text:anchor:8EAC253F] ### 11.1.2 Images from an Attached Camera
 % Not runnable section.
 % The following code only works if you have a webcam attached to your
 % computer. Uncomment if you want to run it.
@@ -53,7 +53,7 @@ md.DigitalCamera
 %im = cam.snapshot;
 
 %cam.preview
-%[text] %[text:anchor:13D2568B] ### 11\.1\.3 Images from a Video File
+%[text] %[text:anchor:13D2568B] ### 11.1.3 Images from a Video File
 vid = VideoReader("traffic_sequence.mpg");
 
 vid.NumFrames
@@ -71,13 +71,13 @@ while cont
   cont = vid.hasFrame && videoPlayer.isOpen;
   pause(0.05);
 end
-%[text] %[text:anchor:54CABEB2] ### 11\.1\.4 Images from the Web
+%[text] %[text:anchor:54CABEB2] ### 11.1.4 Images from the Web
 img = imread("http://uk.jokkmokk.jp/photo/nr4/latest.jpg");
 
 size(img)
 
 imshow(img)
-%[text] %[text:anchor:5B5701F4] ### 11\.1\.5 Images from Code
+%[text] %[text:anchor:5B5701F4] ### 11.1.5 Images from Code
 im = testpattern("rampx",256,2);
 im = testpattern("siny",256,2);
 im = testpattern("squares",256,50,25);
@@ -98,7 +98,7 @@ canvas = insertShape(canvas,"Line",[100 100 800 800], ...
 
 imshow(canvas)
 %%
-%[text] %[text:anchor:61BDB3A2] ## 11\.2 Image Histograms
+%[text] %[text:anchor:61BDB3A2] ## 11.2 Image Histograms
 church = rgb2gray(imread("church.png"));
 imhist(church)
 
@@ -110,7 +110,7 @@ size(p)
 [~,p] = findpeaks(counts,x,MinPeakDistance=60);
 p' % transpose for display
 %%
-%[text] %[text:anchor:9736A4AD] ## 11\.3 Monadic Operations
+%[text] %[text:anchor:9736A4AD] ## 11.3 Monadic Operations
 imd = im2double(church);
 
 im = im2uint8(imd);
@@ -138,7 +138,7 @@ im = lin2rgb(church);
 
 imshow(church/64,[])
 %%
-%[text] %[text:anchor:38013E66] ## 11\.4 Dyadic Operations
+%[text] %[text:anchor:38013E66] ## 11.4 Dyadic Operations
 subject = im2double(imread("greenscreen.jpg"));
 imshow(subject)
 
@@ -159,7 +159,7 @@ bg = imresize(bg,size(subject,[1 2]));
 imshow(bg.*(1-mask))
 
 imshow(subject.*mask + bg.*(1-mask))
-%[text] %[text:anchor:EDFF06F1] ### 11\.4\.1 Application: Motion detection
+%[text] %[text:anchor:EDFF06F1] ### 11.4.1 Application: Motion detection
 vid = VideoReader("traffic_sequence.mpg");
 
 bg = im2double(im2gray(vid.readFrame())); 
@@ -173,11 +173,11 @@ while vid.hasFrame()
   imshow(bg);
 end
 %%
-%[text] %[text:anchor:AE329B49] ## 11\.5 Spatial Operations
-%[text] %[text:anchor:1A46459C] ### 11\.5\.1 Linear Spatial Filtering
+%[text] %[text:anchor:AE329B49] ## 11.5 Spatial Operations
+%[text] %[text:anchor:1A46459C] ### 11.5.1 Linear Spatial Filtering
 %Y = imfilter(X,K,"conv");
 
-%[text] %[text:anchor:348E58ED] #### 11\.5\.1\.1 Image Smoothing
+%[text] %[text:anchor:348E58ED] #### 11.5.1.1 Image Smoothing
 
 K = ones(21,21) / 21^2;
 
@@ -196,7 +196,7 @@ surfl(-15:15,-15:15,K);
 K = fspecial("disk",8);
 
 %[text] 
-%[text] %[text:anchor:855F2550] #### 11\.5\.1\.3 Edge Detection
+%[text] %[text:anchor:855F2550] #### 11.5.1.3 Edge Detection
 
 castle = im2double(imread("castle.png"));
 
@@ -241,7 +241,7 @@ p = lap(360,570:600);
 plot(570:600,p,"-o");
 
 bw = edge(castle,"log");
-%[text] %[text:anchor:3FAEB9E9] ### 11\.5\.2 Template Matching
+%[text] %[text:anchor:3FAEB9E9] ### 11.5.2 Template Matching
 mona = im2double(rgb2gray(imread("monalisa.png")));
 A = mona(170:220,245:295);
 
@@ -285,16 +285,19 @@ S = normxcorr2(wally,crowd);
 
 imshow(S,[]), colorbar
 
-peakFinder = vision.LocalMaximaFinder(MaximumNumLocalMaxima=5, ...
-  NeighborhoodSize=[3 3],Threshold=min(S(:)));
-uvLoc = peakFinder.step(S);
-vals = S(sub2ind(size(S),uvLoc(:,2),uvLoc(:,1)))'
 
-labels = "Wally " + string(1:5) + ": " + string(vals);
-markedSim = insertObjectAnnotation(S,"circle",[uvLoc, ...
-  10*ones(5,1)],labels,FontSize=21);
-imshow(markedSim)
-%[text] %[text:anchor:5981651E] ### 11\.5\.3 Nonlinear Operations
+%% vision.LocalMaximaFinder has been deprecated. See errata: https://github.com/petercorke/RVC3-MATLAB/wiki/Errata
+
+% peakFinder = vision.LocalMaximaFinder(MaximumNumLocalMaxima=5, ...
+%   NeighborhoodSize=[3 3],Threshold=min(S(:)));
+% uvLoc = peakFinder.step(S);
+% vals = S(sub2ind(size(S),uvLoc(:,2),uvLoc(:,1)))'
+
+% labels = "Wally " + string(1:5) + ": " + string(vals);
+% markedSim = insertObjectAnnotation(S,"circle",[uvLoc, ...
+%   10*ones(5,1)],labels,FontSize=21);
+% imshow(markedSim)
+%[text] %[text:anchor:5981651E] ### 11.5.3 Nonlinear Operations
 out = nlfilter(mona,[7 7],@(x)var(x(:)));
 
 mx = ordfilt2(mona,1,ones(5,5));
@@ -312,7 +315,7 @@ mxn = ordfilt2(mona,1,M);
 
 imshow(mona > mxn)
 %%
-%[text] %[text:anchor:8A53ACA5] ## 11\.6 Mathematical Morphology
+%[text] %[text:anchor:8A53ACA5] ## 11.6 Mathematical Morphology
 load eg_morph1.mat
 imshow(im,InitialMagnification=800)
 
@@ -323,7 +326,7 @@ mn = imerode(im,S);
 morphdemo(im,S,"min")
 
 mx = imdilate(mn,S);
-%[text] %[text:anchor:9676C371] ### 11\.6\.1 Noise Removal
+%[text] %[text:anchor:9676C371] ### 11.6.1 Noise Removal
 objects = imread("segmentation.png");
 
 S = strel("disk",4);
@@ -335,17 +338,17 @@ clean = imopen(closed,S);
 
 opened = imopen(objects,S);
 closed = imclose(opened,S);
-%[text] %[text:anchor:27B57E39] ### 11\.6\.2 Boundary Detection
+%[text] %[text:anchor:27B57E39] ### 11.6.2 Boundary Detection
 eroded = imerode(clean,strel("disk",1));
 
 imshow(clean-eroded)
-%[text] %[text:anchor:16339476] ### 11\.6\.3 Hit or Miss Transform
+%[text] %[text:anchor:16339476] ### 11.6.3 Hit or Miss Transform
 skeleton = bwmorph(clean,"skel",Inf);
 
 ends = bwmorph(skeleton,"endpoints");
 
 joints = bwmorph(skeleton,"branchpoints");
-%[text] %[text:anchor:3CB666F7] ### 11\.6\.4 Distance Transform
+%[text] %[text:anchor:3CB666F7] ### 11.6.4 Distance Transform
 im = zeros(256);
 im = insertShape(im,"FilledRectangle",[64 64 128 128], ...
   Color="w",Opacity=1);
@@ -354,8 +357,8 @@ edges = edge(im,"canny");
 
 dx = bwdist(edges);
 %%
-%[text] %[text:anchor:8649171A] ## 11\.7 Shape Changing
-%[text] %[text:anchor:F52A212B] ### 11\.7\.1 Cropping
+%[text] %[text:anchor:8649171A] ## 11.7 Shape Changing
+%[text] %[text:anchor:F52A212B] ### 11.7.1 Cropping
 mona = imread("monalisa.png");
 
 % The following 3 lines are interactive.
@@ -364,7 +367,7 @@ mona = imread("monalisa.png");
 %roi
 
 smile = imcrop(mona,[265 264 77 22]);
-%[text] %[text:anchor:564539E5] ### 11\.7\.2 Image Resizing
+%[text] %[text:anchor:564539E5] ### 11.7.2 Image Resizing
 roof = rgb2gray(imread("roof.jpg"));
 whos roof
 
@@ -373,12 +376,12 @@ smaller = roof(1:7:end,1:7:end);
 smaller = imresize(roof,1/7);
 
 bigger = imresize(smaller,7);
-%[text] %[text:anchor:57A9E901] ### 11\.7\.3 Image Pyramids
+%[text] %[text:anchor:57A9E901] ### 11.7.3 Image Pyramids
 p0 = impyramid(rgb2gray(mona),"reduce");
 p1 = impyramid(p0,"reduce");
 p2 = impyramid(p1,"reduce");
 p3 = impyramid(p2,"reduce");
-%[text] %[text:anchor:46D85206] ### 11\.7\.4 Image Warping
+%[text] %[text:anchor:46D85206] ### 11.7.4 Image Warping
 mona = im2double(rgb2gray(imread("monalisa.png")));
 [Ui,Vi] = meshgrid(1:size(mona,2),1:size(mona,1));
 
@@ -438,7 +441,7 @@ imshowpair(distorted,undistorted,"montage")
 %#ok<*NBRAK2>
 
 
-%[appendix]
+%[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":40}
