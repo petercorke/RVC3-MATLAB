@@ -6,8 +6,8 @@ classdef RTBPlot
     
     methods (Static)
         
-        function th = install_teach_panel(name, robot, q, opt)
-            
+        function th = install_teach_panel(name, robot, q, q_initial, opt)
+            % install the teach panel for the robot
             
             %-------------------------------
             % parameters for teach panel
@@ -109,21 +109,33 @@ classdef RTBPlot
                 
             else
                 % for an ETS*
-                for i=1:robot.n
-                    if robot(i).isprismatic
-                        qlim(i,:) = [0 2*robot(i).param]; %#ok<AGROW>
-                    else
-                        qlim(i,:) = pi*[-1 1]; %#ok<AGROW>
+                % Set the joint limits
+                qlim = zeros(robot.n, 2);
+                for i=1:length(robot)
+                    e = robot(i);
+                    if e.isjoint
+                        if e.isprismatic
+                            qlim(e.qvar,:) = [e.qlim(1) e.qlim(2)];
+                        elseif e.isrevolute
+                            if ~isempty(e.qlim)
+                                qlim(e.qvar,:) = [e.qlim(1) e.qlim(2)];
+                            else
+                                qlim(e.qvar,:) = pi*[-1 1];
+                            end
+                        end
                     end
                 end
                 
                 % set up scale factor, from actual limits in radians/metres to display units
                 qscale = ones(robot.n,1);
-                for j=1:robot.n
-                    if ~robot(i).isprismatic && opt.deg
-                        qscale(j) = 180/pi;
-                    else
-                        qscale(j) = 1;
+                for j=1:length(robot)
+                    e = robot(j);
+                    if e.isjoint
+                        if ~e.isprismatic && opt.deg 
+                            qscale(e.qvar) = 180/pi;
+                        else
+                            qscale(e.qvar) = 1;
+                        end
                     end
                 end
             end
@@ -134,6 +146,8 @@ classdef RTBPlot
             teachhandles.orientation = opt.orientation;
             teachhandles.opt = opt;
             
+            teachhandles.q_initial = q_initial;
+
             %---- now make the sliders
             n = robot.n;
             for j=1:n
@@ -429,7 +443,7 @@ classdef RTBPlot
             end
             
             % update all robots of this name
-            animate(teachhandles.robot, info.q);
+            animate(teachhandles.robot, info.q, teachhandles.q_initial);
             
             
             % compute the robot tool pose
@@ -579,7 +593,7 @@ classdef RTBPlot
             z = z + offset(3);
             
             % walls of the shape
-            surf(x,y,z, 'FaceColor', color, 'EdgeColor', 'none', varargin{:})
+            surf(x,y,z, 'FaceColor', color, 'EdgeColor', 'none', varargin{:});
             
             % put the ends on
             patch(x', y', z', color, 'EdgeColor', 'none', varargin{:});

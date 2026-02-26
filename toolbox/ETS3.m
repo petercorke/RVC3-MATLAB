@@ -170,6 +170,14 @@ classdef ETS3
             v = isjoint(ets) && (ets.what(1) == 'T');
         end
 
+        function v = isrevolute(ets)
+            %ETS2.isrevolute  Test if transform is revolute joint
+            %
+            % E.isrevolute is true if the transform element is a joint, that is, its
+            % parameter is of the form 'qN' and it controls a rotation.
+            v = isjoint(ets) && (ets.what(1) == 'R');
+        end
+
         function k = find(ets, j)
             %ETS3.find  Find joints in transform sequence
             %
@@ -330,9 +338,10 @@ classdef ETS3
             % ETS.teach(Q, OPTIONS) as above but the robot joint angles are set to Q (1xN).
             %
             % Options::
-            % 'eul'           Display tool orientation in Euler angles (default)
-            % 'rpy'           Display tool orientation in roll/pitch/yaw angles
-            % 'approach'      Display tool orientation as approach vector (z-axis)
+            % orientation=
+            %   - 'eul'           Display tool orientation in Euler angles (default)
+            %   - 'rpy'           Display tool orientation in roll/pitch/yaw angles
+            %   - 'approach'      Display tool orientation as approach vector (z-axis)
             % '[no]deg'       Display angles in degrees (default true)
             %
             % GUI::
@@ -344,6 +353,10 @@ classdef ETS3
             %   set then for
             %   - a revolute joint they are assumed to be [-pi, +pi]
             %   - a prismatic joint they are assumed unknown and an error occurs.
+            % - For orientation option, you can directly write one of 'eul', 'rpy' or 
+            %   'approach', optionally, you can use the option name 'orientation' before them, 
+            %   or (after R2021a) use 'orientation=xxx' format, but put it at the end
+            %   of the option argument list.
             %
             % See also ETS3.plot.
 
@@ -356,28 +369,83 @@ classdef ETS3
 
             %---- handle options
             opt.deg = true;
-            opt.orientation = {'rpy', 'eul', 'approach'};
+            % opt.orientation = {'rpy', 'eul', 'approach'};
+            opt.orientation = {'eul', 'rpy', 'approach'};    % By default we use Euler angles
             opt.d_2d = false;
             opt.callback = [];
             opt = tb_optparse(opt, varargin);
             if nargin == 1
                 q = zeros(1,robot.n);
-            elseif nargin == 2
-                q = varargin{1};
-                varargin = {};
+                % Set the default values for prismatic to the mean value 
+                % of its largest and smallest allowed value.
+                for i = 1:length(robot)
+                    e = robot(i);
+                    if isprismatic(e)
+                        q(e.qvar) = mean(e.qlim);
+                    end
+                    % Check if there is an joint angle limit for the
+                    % revolute joint, if so, and the range does not include
+                    % zero, choose the mean value of its largest and
+                    % smallest allowed value. Else, keep 0 as the default.
+                    if isrevolute(e) && ~isempty(e.qlim)
+                        if e.qlim(1) > 0 || e.qlim(2) < 0
+                            q(e.qvar) = mean(e.qlim);
+                        end
+                    end
+                end
             else
                 q = varargin{1};
-                varargin = varargin{2:end};
-            end
-            if isempty(findobj('Tag', 'ETS3'))
-                robot.plot(q, varargin{:})
+                % Exclude q and delete the orientation option from
+                % varargin, so that the rest options can be sent to
+                % the function "robot.plot".
+                varargin = varargin(2:end); % Use () to mantain cell structure
+                orientation_dict = {'orientation', 'rpy', 'eul', 'approach'};
+                remove_idx = cellfun(@(x) (ischar(x) || isstring(x)) && any(strcmp(x, orientation_dict)), varargin);
+                varargin(remove_idx) = [];
+
+                % If the joint parameters are specified, check if the inputs
+                % are legal.
+                for i = 1:length(robot)
+                    e = robot(i);
+                    if isprismatic(e)
+                        if q(e.qvar) < e.qlim(1) || q(e.qvar) > e.qlim(2)
+                            error("Prismatic Joint Parameter Out of Range!")
+                        end
+                        if q(e.qvar) == 0
+                            error("Prismatic Joint Parameter Should Not Be Zero!")
+                            % Set q(e.qvar) to zero will cause 'Matrix'
+                            % property value to be invalid in the scaling
+                            % step of ETS3/animate.
+                        elseif q(e.qvar) < 0
+                            error("Prismatic Joint Parameter Should Not Be Negative!")
+                        end
+                    end
+                    if isrevolute(e)
+                        if ~isempty(e.qlim)
+                            if q(e.qvar) < e.qlim(1) || q(e.qvar) > e.qlim(2)
+                                error("Prismatic Joint Parameter Out of Range!")
+                            end
+                        else    % If qlim not set, use [-pi, +pi]
+                            if q(e.qvar) < -pi || q(e.qvar) > pi
+                                error("Revolute Joint Parameter Out of Range!")
+                            end
+                        end
+                    end
+                end
             end
 
-            RTBPlot.install_teach_panel('ETS3', robot, q, opt);
+            % Save a copy for the initial q, used for scaling
+            q_initial = q(:,:);
+
+            if isempty(findobj('Tag', 'ETS3'))
+                robot.plot(q, q_initial, varargin{:})
+            end
+
+            RTBPlot.install_teach_panel('ETS3', robot, q, q_initial, opt);
         end
 
 
-        function plot(ets, qq, varargin)
+        function plot(ets, qq, q_initial, varargin)
             %ETS3.plot Graphical display and animation
             %
             % ETS.plot(Q, options) displays a graphical animation of a robot based on
@@ -530,10 +598,10 @@ classdef ETS3
             % enable mouse-based 3D rotation
             rotate3d on
 
-            ets.animate(qq);
+            ets.animate(qq, q_initial);
         end
 
-        function animate(ets, qq)
+        function animate(ets, qq, q_initial)
 
             assert(numel(qq) == ets.n, 'RTB:ETS3:badarg', 'Joint angles should have %d columns', ets.n,2);
 
@@ -556,11 +624,15 @@ classdef ETS3
                     set(h.element(i), 'Matrix', T.tform);
 
                     if isprismatic(e)
+                        % for prismatic joints, scale the box
+                        original = q_initial(e.qvar);
                         switch e.what
                             case 'Tx'
-                                set(h.pjoint(e.qvar), 'Matrix', diag([q(e.qvar) 1 1 1]));
+                                set(h.pjoint(e.qvar), 'Matrix', diag([q(e.qvar)/original 1 1 1]));
                             case 'Ty'
-                                set(h.pjoint(e.qvar), 'Matrix', diag([1 q(e.qvar) 1 1]));
+                                set(h.pjoint(e.qvar), 'Matrix', diag([1 q(e.qvar)/original 1 1]));
+                            case 'Tz'
+                                set(h.pjoint(e.qvar), 'Matrix', diag([1 1 q(e.qvar)/original 1]));
                         end
                     end
                 end
@@ -651,14 +723,14 @@ classdef ETS3
                     % it's a joint element: revolute or prismatic
                     switch e.what
                         case 'Tx'
-                            h.pjoint(e.qvar) = hgtransform('Tag', 'prismatic', 'Parent', h.element(i), 'Matrix', diag([q(e.qvar) 1 1 1]));
-                            RTBPlot.box('x', opt.jointdiam*s, [0 1], opt.pjointcolor, [], 'Parent', h.pjoint(i));
+                            h.pjoint(e.qvar) = hgtransform('Tag', 'prismatic', 'Parent', h.element(i), 'Matrix', [1 0 0 q(e.qvar); 0 1 0 0; 0 0 1 0; 0 0 0 1]);
+                            RTBPlot.box('x', opt.jointdiam*s, [0 q(e.qvar)], opt.pjointcolor, [], 'Parent', h.pjoint(e.qvar));
                         case 'Ty'
-                            h.pjoint(e.qvar) = hgtransform('Tag', 'prismatic', 'Parent', h.element(i), 'Matrix', diag([1 q(e.qvar) 1 1]));
-                            RTBPlot.box('y', opt.jointdiam*s, [0 1], opt.pjointcolor, [], 'Parent', h.pjoint(i));
+                            h.pjoint(e.qvar) = hgtransform('Tag', 'prismatic', 'Parent', h.element(i), 'Matrix', [1 0 0 0; 0 1 0 q(e.qvar); 0 0 1 0; 0 0 0 1]);
+                            RTBPlot.box('y', opt.jointdiam*s, [0 q(e.qvar)], opt.pjointcolor, [], 'Parent', h.pjoint(e.qvar));
                         case 'Tz'
-                            h.pjoint(e.qvar) = hgtransform('Tag', 'prismatic', 'Parent', h.element(i), 'Matrix', diag([1 1 q(e.qvar) 1]));
-                            RTBPlot.box('z', opt.jointdiam*s, [0 1], opt.pjointcolor, [], 'Parent', h.pjoint(i));
+                            h.pjoint(e.qvar) = hgtransform('Tag', 'prismatic', 'Parent', h.element(i), 'Matrix', [1 0 0 0; 0 1 0 0; 0 0 1 q(e.qvar); 0 0 0 1]);
+                            RTBPlot.box('z', opt.jointdiam*s, [0 q(e.qvar)], opt.pjointcolor, [], 'Parent', h.pjoint(e.qvar));
                         case 'Rx'
                             RTBPlot.cyl('x', opt.jointdiam*s, opt.jointlen*s*[-1 1], opt.jointcolor, [], 'Parent', h.element(i));
                         case 'Ry'
