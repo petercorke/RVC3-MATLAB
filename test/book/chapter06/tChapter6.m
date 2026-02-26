@@ -23,7 +23,7 @@ classdef tChapter6 < RunMLX & RVCTest
 
             import matlab.unittest.fixtures.SuppressedWarningsFixture            
             testCase.applyFixture( ...
-                SuppressedWarningsFixture("MATLAB:graphics:SoftwareMarkerSubsamplingm"));
+                SuppressedWarningsFixture("MATLAB:graphics:SoftwareMarkerSubsampling"));
         end
     end
 
