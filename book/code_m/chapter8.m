@@ -59,6 +59,7 @@ qd = inv(J)*[0 0.2 0 0 0 0]';
 qd'  % transpose for display
 %%
 %[text] %[text:anchor:BDA546B1] ### 8\.3\.2 Velocity Ellipsoid and Manipulability
+figure;
 planar2 = ETS2.Rz("q1")*ETS2.Tx(1)*ETS2.Rz("q2")*ETS2.Tx(1);
 planar2.teach(deg2rad([30 40]),"vellipse");
 J = puma.geometricJacobian(conf.qn,"link6");
